@@ -18,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signIn } from "@/lib/auth-client";
 
 // Schema Zod direto no client
 const loginSchema = z.object({
@@ -44,17 +43,33 @@ export function LoginForm() {
     setIsLoading(true);
     setError(null);
     try {
-      const result = await signIn.email({
-        email: data.email,
-        password: data.password,
+      const res = await fetch("/api/auth/[...betterauth]", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
       });
-      if (result?.error) {
-        setError("Email ou senha incorretos.");
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Erro na resposta do backend:", errorText);
+        setError("Erro ao fazer login. Verifique suas credenciais.");
+        return;
+      }
+
+      const result = await res.json();
+      if (result.error) {
+        console.error("Erro no login:", result.error);
+        setError("Erro ao fazer login. Verifique suas credenciais.");
       } else {
+        console.info("Login bem-sucedido:", data.email);
         router.push("/painel");
       }
-    } catch {
-      setError("Erro ao tentar fazer login.");
+    } catch (err) {
+      console.error("Erro ao tentar fazer login:", err);
+      setError("Erro ao tentar fazer login. Tente novamente mais tarde.");
     } finally {
       setIsLoading(false);
     }

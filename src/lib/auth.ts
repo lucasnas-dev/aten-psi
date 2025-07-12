@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
 import { tenants, users } from "@/db/schema";
+import logger from "@/lib/logger";
 
 const FIVE_MINUTES = 5 * 60;
 
@@ -15,32 +16,24 @@ export const auth = betterAuth({
     usePlural: false,
     schema,
   }),
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    },
-  },
   plugins: [
     customSession(async ({ user, session }) => {
-      const userData: typeof users.$inferSelect | undefined =
-        await db.query.users.findFirst({
-          where: eq(users.id, user.id),
-        });
+      logger.info("Custom session plugin triggered");
 
-      const tenantData: typeof tenants.$inferSelect | undefined =
-        userData?.tenantId
-          ? await db.query.tenants.findFirst({
-              where: eq(tenants.id, userData.tenantId),
-            })
-          : undefined;
+      const userData = await db.query.users.findFirst({
+        where: eq(users.id, user.id),
+      });
+
+      const tenantData = userData?.tenantId
+        ? await db.query.tenants.findFirst({
+            where: eq(tenants.id, userData.tenantId),
+          })
+        : undefined;
 
       return {
         user: {
           ...user,
-          role: userData?.role,
-          crp: userData?.crp,
-          active: userData?.active,
+          emailVerified: userData?.emailVerified,
           tenant: tenantData
             ? {
                 id: tenantData.id,
@@ -56,25 +49,15 @@ export const auth = betterAuth({
   user: {
     modelName: "users",
     additionalFields: {
-      crp: {
-        type: "string",
-        fieldName: "crp",
-        required: false,
-      },
-      role: {
-        type: "string",
-        fieldName: "role",
+      emailVerified: {
+        type: "boolean",
+        fieldName: "emailVerified",
         required: false,
       },
       tenantId: {
         type: "string",
         fieldName: "tenantId",
         required: true,
-      },
-      active: {
-        type: "boolean",
-        fieldName: "active",
-        required: false,
       },
     },
   },
@@ -98,3 +81,6 @@ export const auth = betterAuth({
     signIn: "/authentication",
   },
 });
+
+// Log básico para indicar que o Better Auth foi configurado
+logger.info("Better Auth configurado com sucesso");

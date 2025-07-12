@@ -43,20 +43,26 @@ export function SignUpForm() {
   async function onSubmit(data: SignUpFormValues) {
     setIsLoading(true);
     setError(null);
+    console.log("Dados enviados para o backend:", data); // Log dos dados enviados
     try {
-      // Exemplo: chamada para uma API de cadastro (você precisa criar essa rota)
-      const res = await fetch("/api/cadastro", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        }),
       });
       const result = await res.json();
+      console.log("Resposta do backend:", result); // Log da resposta do backend
       if (!res.ok || result.error) {
         setError(result.error || "Erro ao cadastrar.");
       } else {
         router.push("/authentication");
       }
-    } catch {
+    } catch (err) {
+      console.error("Erro ao tentar cadastrar:", err); // Log de erro
       setError("Erro ao tentar cadastrar.");
     } finally {
       setIsLoading(false);
@@ -120,6 +126,7 @@ export function SignUpForm() {
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     className="pr-10 pl-10"
+                    autoComplete="new-password"
                     {...field}
                   />
                 </FormControl>

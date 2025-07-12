@@ -30,7 +30,7 @@ export default function LoginPage() {
           <div className="flex flex-col space-y-4 p-6">
             <p className="text-muted-foreground text-center text-sm">
               Não tem uma conta?{" "}
-              <Link href="/cadastro" className="text-primary hover:underline">
+              <Link href="/register" className="text-primary hover:underline">
                 Cadastre-se
               </Link>
             </p>
