@@ -65,7 +65,7 @@ export function LoginForm() {
         setError("Erro ao fazer login. Verifique suas credenciais.");
       } else {
         console.info("Login bem-sucedido:", data.email);
-        router.push("/painel");
+        router.push("/dashboard");
       }
     } catch (err) {
       console.error("Erro ao tentar fazer login:", err);
