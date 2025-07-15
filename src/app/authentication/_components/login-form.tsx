@@ -18,8 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signIn } from "@/lib/auth-client"; // Certifique-se de exportar authClient corretamente
 
-// Schema Zod direto no client
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
   password: z
@@ -43,38 +43,23 @@ export function LoginForm() {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/[...betterauth]", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
+      // Login com sessão Better Auth (email e senha)
+      const { error: loginError } = await signIn.email({
+        email: data.email,
+        password: data.password,
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Erro na resposta do backend:", errorText);
-        setError("Erro ao fazer login. Verifique suas credenciais.");
-        return;
-      }
-
-      const result = await res.json();
-      if (result.error) {
-        console.error("Erro no login:", result.error);
+      if (loginError) {
         setError("Erro ao fazer login. Verifique suas credenciais.");
       } else {
-        console.info("Login bem-sucedido:", data.email);
         router.push("/dashboard");
       }
-    } catch (err) {
-      console.error("Erro ao tentar fazer login:", err);
+    } catch {
       setError("Erro ao tentar fazer login. Tente novamente mais tarde.");
     } finally {
       setIsLoading(false);
     }
   }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

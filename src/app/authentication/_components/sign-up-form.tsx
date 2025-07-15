@@ -18,52 +18,52 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signUp } from "@/lib/auth-client";
 
 // Schema Zod direto no client
 const signUpSchema = z.object({
-  name: z.string().min(2, { message: "Nome obrigatório" }),
-  email: z.string().email({ message: "Email inválido" }),
+  name: z.string().trim().min(2, { message: "Nome obrigatório" }),
+  email: z.string().trim().email({ message: "Email inválido" }),
   password: z
     .string()
+    .trim()
     .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
 });
+
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
-export function SignUpForm() {
+export default function SignUpForm() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
   });
 
   async function onSubmit(data: SignUpFormValues) {
     setIsLoading(true);
     setError(null);
-    console.log("Dados enviados para o backend:", data); // Log dos dados enviados
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        }),
+      const { error: signUpError } = await signUp.email({
+        name: data.name,
+        email: data.email,
+        password: data.password,
       });
-      const result = await res.json();
-      console.log("Resposta do backend:", result); // Log da resposta do backend
-      if (!res.ok || result.error) {
-        setError(result.error || "Erro ao cadastrar.");
+
+      if (signUpError) {
+        setError(signUpError.message || "Erro ao cadastrar. Tente novamente.");
       } else {
-        router.push("/authentication");
+        router.push("/authentication"); // Redirecione para login ou dashboard
       }
-    } catch (err) {
-      console.error("Erro ao tentar cadastrar:", err); // Log de erro
-      setError("Erro ao tentar cadastrar.");
+    } catch {
+      setError("Erro inesperado ao cadastrar. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
