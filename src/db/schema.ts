@@ -27,6 +27,7 @@ export const users = pgTable("users", {
     .$defaultFn(() => false)
     .notNull(),
   image: text("image"),
+  tenant_id: varchar("tenant_id", { length: 255 }).references(() => tenants.id),
   created_at: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
@@ -78,7 +79,7 @@ export const verifications = pgTable("verifications", {
   updated_at: timestamp("updated_at").$defaultFn(() => new Date()),
 });
 
-// ===== PATIENTS TABLE (mantendo snake_case e campos extras) =====
+// ===== PATIENTS TABLE =====
 export const patients = pgTable("patients", {
   id: varchar("id", { length: 255 })
     .primaryKey()
@@ -86,7 +87,7 @@ export const patients = pgTable("patients", {
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }),
   phone: varchar("phone", { length: 20 }),
-  birth_date: varchar("birth_date", { length: 10 }).notNull(), // snake_case
+  birth_date: varchar("birth_date", { length: 10 }).notNull(),
   gender: varchar("gender", { length: 20 }),
   address: text("address"),
   notes: text("notes"),
@@ -98,10 +99,10 @@ export const patients = pgTable("patients", {
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
-// ===== RELATIONS (ajuste para snake_case) =====
+// ===== RELATIONS =====
 export const tenantsRelations = relations(tenants, ({ many }) => ({
-  users: many(users),
-  patients: many(patients),
+  users: many(users, { relationName: "tenant_users" }), // Adicione um nome de relação único
+  patients: many(patients, { relationName: "tenant_patients" }),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({

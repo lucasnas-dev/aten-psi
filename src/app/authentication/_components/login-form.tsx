@@ -3,10 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon, LockKeyhole, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { ensureTenant } from "@/actions/ensure-tenant";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signIn } from "@/lib/auth-client"; // Certifique-se de exportar authClient corretamente
+import { signIn } from "@/lib/auth-client";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -34,6 +36,27 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Hook do next-safe-action para a ação de garantir tenant
+  const { execute: executeEnsureTenant, isExecuting: isEnsuring } = useAction(
+    ensureTenant,
+    {
+      onSuccess: () => {
+        // Após garantir o tenant, redireciona para o dashboard
+        router.push("/dashboard");
+      },
+      onError: ({ error }) => {
+        if (error.serverError) {
+          setError(error.serverError);
+        } else if (error.validationErrors) {
+          setError("Dados inválidos");
+        } else {
+          setError("Erro ao configurar conta");
+        }
+        setIsLoading(false);
+      },
+    },
+  );
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
@@ -43,7 +66,6 @@ export function LoginForm() {
     setIsLoading(true);
     setError(null);
     try {
-      // Login com sessão Better Auth (email e senha)
       const { error: loginError } = await signIn.email({
         email: data.email,
         password: data.password,
@@ -51,15 +73,20 @@ export function LoginForm() {
 
       if (loginError) {
         setError("Erro ao fazer login. Verifique suas credenciais.");
+        setIsLoading(false);
       } else {
-        router.push("/dashboard");
+        // Garante que o usuário tenha tenant usando next-safe-action
+        executeEnsureTenant({
+          name: `tenant-${data.email.split("@")[0]}-${Date.now()}`,
+        });
+        // O redirect acontecerá no onSuccess do useAction
       }
     } catch {
       setError("Erro ao tentar fazer login. Tente novamente mais tarde.");
-    } finally {
       setIsLoading(false);
     }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -124,8 +151,16 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Entrando..." : "Entrar"}
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isLoading || isEnsuring}
+        >
+          {isLoading
+            ? "Entrando..."
+            : isEnsuring
+              ? "Configurando conta..."
+              : "Entrar"}
         </Button>
       </form>
     </Form>

@@ -16,6 +16,7 @@ export const auth = betterAuth({
       emailVerified: "email_verified",
       createdAt: "created_at",
       updatedAt: "updated_at",
+      tenantId: "tenant_id",
     },
   },
   session: {
