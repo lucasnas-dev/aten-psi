@@ -60,7 +60,7 @@ export default function SignUpForm() {
       if (signUpError) {
         setError(signUpError.message || "Erro ao cadastrar. Tente novamente.");
       } else {
-        router.push("/authentication"); // Redirecione para login ou dashboard
+        router.push("./login"); // Redirecione para login ou dashboard
       }
     } catch {
       setError("Erro inesperado ao cadastrar. Tente novamente.");
