@@ -77,7 +77,7 @@ export function LoginForm() {
       } else {
         // Garante que o usuário tenha tenant usando next-safe-action
         executeEnsureTenant({
-          name: `tenant-${data.email.split("@")[0]}-${Date.now()}`,
+          name: crypto.randomUUID(), // Em vez do email + timestamp
         });
         // O redirect acontecerá no onSuccess do useAction
       }

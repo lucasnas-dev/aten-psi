@@ -5,8 +5,50 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1752288182738,
-      "tag": "0000_giant_morlocks",
+      "when": 1752600991683,
+      "tag": "0000_early_wendigo",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1752601872951,
+      "tag": "0001_mean_kat_farrell",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752603537293,
+      "tag": "0002_productive_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1752603909623,
+      "tag": "0003_unknown_inhumans",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1752604425328,
+      "tag": "0004_jittery_blockbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1752606092464,
+      "tag": "0005_clumsy_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1752618541726,
+      "tag": "0006_famous_komodo",
       "breakpoints": true
     }
   ]

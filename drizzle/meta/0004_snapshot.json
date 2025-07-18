@@ -1,6 +1,6 @@
 {
-  "id": "14f23f0f-6d82-447c-90b7-538055013bc3",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "b7a99ad0-c929-4969-8b1f-cc2ceb82120e",
+  "prevId": "3174d12d-4031-47a5-8780-bcf48f4e2a8e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -14,8 +14,21 @@
           "primaryKey": true,
           "notNull": true
         },
+        "accountId": {
+          "name": "accountId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "provider": {
           "name": "provider",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'email'"
+        },
+        "providerId": {
+          "name": "providerId",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -24,7 +37,8 @@
           "name": "providerAccountId",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'email'"
         },
         "userId": {
           "name": "userId",

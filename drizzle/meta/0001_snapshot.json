@@ -1,6 +1,6 @@
 {
-  "id": "14f23f0f-6d82-447c-90b7-538055013bc3",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "33b1eb01-d69c-4304-986f-34eb08c7a280",
+  "prevId": "14f23f0f-6d82-447c-90b7-538055013bc3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -12,6 +12,12 @@
           "name": "id",
           "type": "varchar(255)",
           "primaryKey": true,
+          "notNull": true
+        },
+        "accountId": {
+          "name": "accountId",
+          "type": "varchar(255)",
+          "primaryKey": false,
           "notNull": true
         },
         "provider": {

@@ -1,0 +1,1 @@
+ALTER TABLE "accounts" ADD COLUMN "providerId" varchar(255) NOT NULL;

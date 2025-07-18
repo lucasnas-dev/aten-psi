@@ -18,7 +18,7 @@ export const tenants = pgTable("tenants", {
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
-// ===== USERS TABLE =====
+// ===== USERS TABLE (CONSOLIDADO) =====
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -101,13 +101,17 @@ export const patients = pgTable("patients", {
 
 // ===== RELATIONS =====
 export const tenantsRelations = relations(tenants, ({ many }) => ({
-  users: many(users, { relationName: "tenant_users" }), // Adicione um nome de relação único
-  patients: many(patients, { relationName: "tenant_patients" }),
+  users: many(users),
+  patients: many(patients),
 }));
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
+  tenant: one(tenants, {
+    fields: [users.tenant_id],
+    references: [tenants.id],
+  }),
 }));
 
 export const accountsRelations = relations(accounts, ({ one }) => ({

@@ -1,0 +1,1 @@
+ALTER TABLE "accounts" ALTER COLUMN "providerAccountId" SET DEFAULT 'email';
