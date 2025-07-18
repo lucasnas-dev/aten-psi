@@ -10,9 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Contadores, StatusFilter } from "@/types/pacientes-table";
 
-interface PacientesFiltrosProps {
+import { Contadores, StatusFilter } from "./types";
+
+interface PatientsFiltersProps {
   termoBusca: string;
   onBuscaChange: (termo: string) => void;
   filtroStatus: StatusFilter;
@@ -21,14 +22,14 @@ interface PacientesFiltrosProps {
   totalItens: number;
 }
 
-export function PacientesFiltros({
+export function PatientsFilters({
   termoBusca,
   onBuscaChange,
   filtroStatus,
   onFiltroChange,
   contadores,
   totalItens,
-}: PacientesFiltrosProps) {
+}: PatientsFiltersProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">

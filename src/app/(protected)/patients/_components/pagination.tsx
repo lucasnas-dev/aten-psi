@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface PaginacaoProps {
+interface PaginationProps {
   paginacao: {
     totalItens: number;
     totalPaginas: number;
@@ -35,7 +35,7 @@ interface PaginacaoProps {
   };
 }
 
-export function Paginacao({ paginacao, controles }: PaginacaoProps) {
+export function Pagination({ paginacao, controles }: PaginationProps) {
   const {
     totalItens,
     totalPaginas,

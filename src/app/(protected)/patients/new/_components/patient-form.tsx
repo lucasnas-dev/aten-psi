@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 
-import { PatientFields } from "./PatientFields";
+import { PatientFields } from "./patient-fields";
 
 type PatientFormValues = z.infer<typeof upsertPatientSchema>;
 

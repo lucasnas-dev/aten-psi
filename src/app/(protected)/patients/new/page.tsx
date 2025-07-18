@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { PatientForm } from "@/app/(protected)/patients/new/_components/patientForm";
+import { PatientForm } from "@/app/(protected)/patients/new/_components/patient-form";
 import {
   Card,
   CardDescription,

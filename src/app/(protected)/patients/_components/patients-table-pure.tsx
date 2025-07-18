@@ -26,8 +26,28 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { calcularIdade, formatarData } from "@/lib/utils";
-import { Paciente } from "@/types/paciente";
+import { formatDate } from "@/lib/utils";
+
+import { Patient } from "./types";
+
+// Função para calcular idade
+const calculateAge = (birthDate: string) => {
+  const today = new Date();
+  const birth = new Date(birthDate);
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+
+  return age;
+};
+
+// Função para formatar data
+const formatDateString = (dateString: string) => {
+  return formatDate(new Date(dateString));
+};
 
 // ✅ COMPONENTE WRAPPER REUTILIZÁVEL
 const ActionButton = ({
@@ -61,19 +81,19 @@ const ActionButton = ({
   </Tooltip>
 );
 
-interface PacientesTablePuraProps {
-  pacientes: Paciente[];
-  onArquivar: (paciente: Paciente) => void;
+interface PatientsTablePureProps {
+  pacientes: Patient[];
+  onArquivar: (paciente: Patient) => void;
   termoBusca: string;
   filtroStatus: string;
 }
 
-export function PacientesTablePura({
+export function PatientsTablePure({
   pacientes,
   onArquivar,
   termoBusca,
   filtroStatus,
-}: PacientesTablePuraProps) {
+}: PatientsTablePureProps) {
   return (
     <div className="rounded-md border">
       <Table>
@@ -124,11 +144,11 @@ export function PacientesTablePura({
                 className="group border-border/50 hover:bg-muted/30 h-12 border-b transition-colors"
               >
                 <TableCell className="py-2">
-                  <div className="font-medium">{paciente.nome}</div>
+                  <div className="font-medium">{paciente.name}</div>
                 </TableCell>
 
                 <TableCell className="py-2">
-                  {calcularIdade(paciente.dataNascimento)} anos
+                  {calculateAge(paciente.birthDate)} anos
                 </TableCell>
 
                 <TableCell className="py-2">
@@ -139,22 +159,24 @@ export function PacientesTablePura({
 
                 <TableCell className="py-2">
                   <div className="text-muted-foreground text-sm">
-                    {paciente.telefone || "—"}
+                    {paciente.phone || "—"}
                   </div>
                 </TableCell>
 
                 <TableCell className="py-2">
                   <div className="text-muted-foreground text-sm">
-                    {formatarData(paciente.createdAt)}
+                    {formatDateString(paciente.createdAt)}
                   </div>
                 </TableCell>
 
                 <TableCell className="py-2">
                   <Badge
-                    variant={paciente.ativo ? "default" : "secondary"}
+                    variant={
+                      paciente.status === "active" ? "default" : "secondary"
+                    }
                     className="text-xs"
                   >
-                    {paciente.ativo ? "Ativo" : "Arquivado"}
+                    {paciente.status === "active" ? "Ativo" : "Arquivado"}
                   </Badge>
                 </TableCell>
 
@@ -182,12 +204,12 @@ export function PacientesTablePura({
                       <ActionButton
                         onClick={() => onArquivar(paciente)}
                         tooltip={
-                          paciente.ativo
+                          paciente.status === "active"
                             ? "Arquivar paciente"
                             : "Reativar paciente"
                         }
                       >
-                        {paciente.ativo ? (
+                        {paciente.status === "active" ? (
                           <Archive className="h-4 w-4" />
                         ) : (
                           <ArchiveRestore className="h-4 w-4" />
