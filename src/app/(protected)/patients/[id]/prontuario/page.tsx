@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function ProntuarioPage({ params }: { params: { id: string } }) {
   const pacienteId = params.id;
@@ -325,9 +326,6 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
           <TabsTrigger value="documentos">Documentos</TabsTrigger>
         </TabsList>
 
-        {/* Conteúdo das abas - omitido para brevidade, é o mesmo da versão anterior */}
-        {/* ... */}
-
         {/* Aba de Identificação */}
         <TabsContent value="identificacao">
           <Card>
@@ -434,7 +432,291 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                     </>
                   )}
                 </div>
-                {/* Restante do conteúdo omitido para brevidade */}
+
+                <div className="space-y-4">
+                  {editMode ? (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="profissao">Profissão</Label>
+                        <Input
+                          id="profissao"
+                          defaultValue={paciente.profissao}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="escolaridade">Escolaridade</Label>
+                        <Input
+                          id="escolaridade"
+                          defaultValue={paciente.escolaridade}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="endereco">Endereço</Label>
+                        <Input id="endereco" defaultValue={paciente.endereco} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="telefone">Telefone</Label>
+                        <Input id="telefone" defaultValue={paciente.telefone} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">E-mail</Label>
+                        <Input id="email" defaultValue={paciente.email} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <h3 className="text-muted-foreground text-sm font-medium">
+                          Profissão
+                        </h3>
+                        <p>{paciente.profissao}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-muted-foreground text-sm font-medium">
+                          Escolaridade
+                        </h3>
+                        <p>{paciente.escolaridade}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-muted-foreground text-sm font-medium">
+                          Endereço
+                        </h3>
+                        <p>{paciente.endereco}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-muted-foreground text-sm font-medium">
+                          Telefone
+                        </h3>
+                        <p>{paciente.telefone}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-muted-foreground text-sm font-medium">
+                          E-mail
+                        </h3>
+                        <p>{paciente.email}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Informações de Contato de Emergência */}
+              <div className="border-t pt-6">
+                <h3 className="mb-4 text-lg font-semibold">
+                  Contato de Emergência
+                </h3>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  {editMode ? (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="nomeEmergencia">Nome</Label>
+                        <Input
+                          id="nomeEmergencia"
+                          defaultValue={paciente.contatoEmergencia.nome}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="parentesco">Parentesco</Label>
+                        <Input
+                          id="parentesco"
+                          defaultValue={paciente.contatoEmergencia.parentesco}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="telefoneEmergencia">Telefone</Label>
+                        <Input
+                          id="telefoneEmergencia"
+                          defaultValue={paciente.contatoEmergencia.telefone}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <h4 className="text-muted-foreground text-sm font-medium">
+                          Nome
+                        </h4>
+                        <p>{paciente.contatoEmergencia.nome}</p>
+                      </div>
+                      <div>
+                        <h4 className="text-muted-foreground text-sm font-medium">
+                          Parentesco
+                        </h4>
+                        <p>{paciente.contatoEmergencia.parentesco}</p>
+                      </div>
+                      <div>
+                        <h4 className="text-muted-foreground text-sm font-medium">
+                          Telefone
+                        </h4>
+                        <p>{paciente.contatoEmergencia.telefone}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Informações Sigilosas */}
+              {showConfidentialInfo && (
+                <div className="bg-muted/30 rounded-lg border-t p-4 pt-6">
+                  <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                    <Lock className="text-primary h-5 w-5" />
+                    Informações Sigilosas
+                  </h3>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                      <h4 className="text-muted-foreground text-sm font-medium">
+                        Demanda Inicial
+                      </h4>
+                      <p className="mt-1 text-sm leading-relaxed">
+                        {paciente.demandaInicial}
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="text-muted-foreground text-sm font-medium">
+                        Encaminhamento
+                      </h4>
+                      <p className="mt-1 text-sm">{paciente.encaminhamento}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-muted-foreground text-sm font-medium">
+                        Convênio
+                      </h4>
+                      <p className="mt-1 text-sm">{paciente.convenio}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-muted-foreground text-sm font-medium">
+                        Psicólogo Responsável
+                      </h4>
+                      <div className="mt-1 text-sm">
+                        <p>{paciente.psicologo.nome}</p>
+                        <p className="text-muted-foreground">
+                          {paciente.psicologo.email}
+                        </p>
+                        <p className="text-muted-foreground">
+                          {paciente.psicologo.telefone}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+            {editMode && (
+              <CardFooter>
+                <Button className="ml-auto">Salvar Alterações</Button>
+              </CardFooter>
+            )}
+          </Card>
+        </TabsContent>
+
+        {/* Aba de Avaliação Inicial */}
+        <TabsContent value="avaliacao">
+          <Card>
+            <CardHeader>
+              <CardTitle>Avaliação Inicial</CardTitle>
+              <CardDescription>
+                Registro da primeira avaliação psicológica do paciente
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                    Queixa Principal
+                  </h3>
+                  {editMode ? (
+                    <Textarea
+                      defaultValue={paciente.avaliacaoInicial.queixaPrincipal}
+                      placeholder="Descreva a queixa principal do paciente..."
+                    />
+                  ) : (
+                    <p className="text-sm leading-relaxed">
+                      {paciente.avaliacaoInicial.queixaPrincipal}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                    História Clínica
+                  </h3>
+                  {editMode ? (
+                    <Textarea
+                      defaultValue={paciente.avaliacaoInicial.historiaClinica}
+                      placeholder="Descreva a história clínica do paciente..."
+                    />
+                  ) : (
+                    <p className="text-sm leading-relaxed">
+                      {paciente.avaliacaoInicial.historiaClinica}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                    Histórico Familiar
+                  </h3>
+                  {editMode ? (
+                    <Textarea
+                      defaultValue={paciente.avaliacaoInicial.historicoFamiliar}
+                      placeholder="Descreva o histórico familiar relevante..."
+                    />
+                  ) : (
+                    <p className="text-sm leading-relaxed">
+                      {paciente.avaliacaoInicial.historicoFamiliar}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                    Exame do Estado Mental
+                  </h3>
+                  {editMode ? (
+                    <Textarea
+                      defaultValue={paciente.avaliacaoInicial.exameEstadoMental}
+                      placeholder="Descreva o exame do estado mental..."
+                    />
+                  ) : (
+                    <p className="text-sm leading-relaxed">
+                      {paciente.avaliacaoInicial.exameEstadoMental}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                    Hipótese Diagnóstica
+                  </h3>
+                  {editMode ? (
+                    <Input
+                      defaultValue={
+                        paciente.avaliacaoInicial.hipoteseDiagnostica
+                      }
+                      placeholder="Ex: Transtorno de Ansiedade Generalizada (F41.1)"
+                    />
+                  ) : (
+                    <Badge variant="secondary" className="text-sm">
+                      {paciente.avaliacaoInicial.hipoteseDiagnostica}
+                    </Badge>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                    Impressão Geral
+                  </h3>
+                  {editMode ? (
+                    <Textarea
+                      defaultValue={paciente.avaliacaoInicial.impressaoGeral}
+                      placeholder="Descreva a impressão geral sobre o paciente..."
+                    />
+                  ) : (
+                    <p className="text-sm leading-relaxed">
+                      {paciente.avaliacaoInicial.impressaoGeral}
+                    </p>
+                  )}
+                </div>
               </div>
             </CardContent>
             {editMode && (
@@ -443,6 +725,399 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
               </CardFooter>
             )}
           </Card>
+        </TabsContent>
+
+        {/* Aba de Plano Terapêutico */}
+        <TabsContent value="plano">
+          <Card>
+            <CardHeader>
+              <CardTitle>Plano Terapêutico</CardTitle>
+              <CardDescription>
+                Estratégia e objetivos do processo terapêutico
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                      Abordagem Terapêutica
+                    </h3>
+                    {editMode ? (
+                      <Input
+                        defaultValue={paciente.planoTerapeutico.abordagem}
+                        placeholder="Ex: Terapia Cognitivo-Comportamental (TCC)"
+                      />
+                    ) : (
+                      <p className="text-sm">
+                        {paciente.planoTerapeutico.abordagem}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                      Frequência
+                    </h3>
+                    {editMode ? (
+                      <Select
+                        defaultValue={paciente.planoTerapeutico.frequencia}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a frequência" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Semanal">Semanal</SelectItem>
+                          <SelectItem value="Quinzenal">Quinzenal</SelectItem>
+                          <SelectItem value="Mensal">Mensal</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="text-sm">
+                        {paciente.planoTerapeutico.frequencia}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                      Duração das Sessões
+                    </h3>
+                    {editMode ? (
+                      <Input
+                        defaultValue={paciente.planoTerapeutico.duracao}
+                        placeholder="Ex: 50 minutos"
+                      />
+                    ) : (
+                      <p className="text-sm">
+                        {paciente.planoTerapeutico.duracao}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                      Reavaliação
+                    </h3>
+                    {editMode ? (
+                      <Input
+                        defaultValue={paciente.planoTerapeutico.reavaliacao}
+                        placeholder="Ex: A cada 3 meses"
+                      />
+                    ) : (
+                      <p className="text-sm">
+                        {paciente.planoTerapeutico.reavaliacao}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
+                    Objetivos Terapêuticos
+                  </h3>
+                  {editMode ? (
+                    <Textarea
+                      defaultValue={paciente.planoTerapeutico.objetivos.join(
+                        "\n",
+                      )}
+                      placeholder="Digite cada objetivo em uma linha..."
+                      rows={6}
+                    />
+                  ) : (
+                    <ul className="space-y-2">
+                      {paciente.planoTerapeutico.objetivos.map(
+                        (objetivo, index) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-2 text-sm"
+                          >
+                            <span className="text-primary">•</span>
+                            {objetivo}
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+            {editMode && (
+              <CardFooter>
+                <Button className="ml-auto">Salvar Alterações</Button>
+              </CardFooter>
+            )}
+          </Card>
+        </TabsContent>
+
+        {/* Aba de Evolução */}
+        <TabsContent value="evolucao">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Evolução do Tratamento</CardTitle>
+                  <CardDescription>
+                    Registro da evolução clínica do paciente
+                  </CardDescription>
+                </div>
+                <Button variant="outline" size="sm">
+                  Nova Evolução
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {paciente.evolucao.map((evolucao, index) => (
+                  <div
+                    key={index}
+                    className="border-primary border-l-4 py-2 pl-4"
+                  >
+                    <div className="mb-2 flex items-center gap-2">
+                      <Badge variant="outline">{evolucao.data}</Badge>
+                    </div>
+                    <p className="text-sm leading-relaxed">
+                      {evolucao.registro}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Aba de Registro de Sessões */}
+        <TabsContent value="sessoes">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Registro de Sessões</CardTitle>
+                  <CardDescription>
+                    Histórico detalhado de todas as sessões realizadas
+                  </CardDescription>
+                </div>
+                <Button variant="outline" size="sm">
+                  Nova Sessão
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {paciente.registroSessoes.map((sessao) => (
+                  <Card key={sessao.id} className="border-primary border-l-4">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Badge>{sessao.data}</Badge>
+                          <Badge variant="outline">{sessao.tipo}</Badge>
+                          <Badge
+                            variant={
+                              sessao.compareceu ? "default" : "destructive"
+                            }
+                          >
+                            {sessao.compareceu ? "Compareceu" : "Faltou"}
+                          </Badge>
+                        </div>
+                        <div className="text-muted-foreground text-sm">
+                          {sessao.horario} • {sessao.duracao}min •{" "}
+                          {sessao.modalidade}
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="mb-1 text-sm font-medium">
+                            Conteúdo da Sessão
+                          </h4>
+                          <p className="text-sm leading-relaxed">
+                            {sessao.conteudo}
+                          </p>
+                        </div>
+                        {sessao.observacoes && (
+                          <div>
+                            <h4 className="mb-1 text-sm font-medium">
+                              Observações
+                            </h4>
+                            <p className="text-muted-foreground text-sm leading-relaxed">
+                              {sessao.observacoes}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Aba de Encaminhamentos */}
+        <TabsContent value="encaminhamentos">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Encaminhamentos</CardTitle>
+                  <CardDescription>
+                    Registro de encaminhamentos para outros profissionais
+                  </CardDescription>
+                </div>
+                <Button variant="outline" size="sm">
+                  Novo Encaminhamento
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {paciente.encaminhamentos.map((encaminhamento, index) => (
+                  <Card key={index} className="border-secondary border-l-4">
+                    <CardContent className="pt-6">
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="text-muted-foreground text-sm font-medium">
+                              Data do Encaminhamento
+                            </h4>
+                            <p className="text-sm">{encaminhamento.data}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-muted-foreground text-sm font-medium">
+                              Profissional
+                            </h4>
+                            <p className="text-sm">
+                              {encaminhamento.profissional}
+                            </p>
+                          </div>
+                          <div>
+                            <h4 className="text-muted-foreground text-sm font-medium">
+                              Especialidade
+                            </h4>
+                            <Badge>{encaminhamento.especialidade}</Badge>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="text-muted-foreground text-sm font-medium">
+                              Motivo do Encaminhamento
+                            </h4>
+                            <p className="text-sm leading-relaxed">
+                              {encaminhamento.motivo}
+                            </p>
+                          </div>
+                          <div>
+                            <h4 className="text-muted-foreground text-sm font-medium">
+                              Retorno/Feedback
+                            </h4>
+                            <p className="text-sm leading-relaxed">
+                              {encaminhamento.retorno}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Aba de Documentos */}
+        <TabsContent value="documentos">
+          <div className="space-y-6">
+            {/* Documentos Emitidos */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Documentos Emitidos</CardTitle>
+                    <CardDescription>
+                      Documentos psicológicos emitidos para o paciente
+                    </CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Emitir Documento
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {paciente.documentosEmitidos.map((documento, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between rounded-lg border p-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <FileText className="text-muted-foreground h-5 w-5" />
+                        <div>
+                          <p className="text-sm font-medium">
+                            {documento.tipo}
+                          </p>
+                          <p className="text-muted-foreground text-xs">
+                            {documento.finalidade} • {documento.data}
+                          </p>
+                          <p className="text-muted-foreground text-xs">
+                            Destinatário: {documento.destinatario}
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Download className="mr-2 h-4 w-4" />
+                        Baixar
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Anexos */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Anexos</CardTitle>
+                    <CardDescription>
+                      Documentos anexos ao prontuário
+                    </CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Adicionar Anexo
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {paciente.anexos.map((anexo, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between rounded-lg border p-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <FileText className="text-muted-foreground h-5 w-5" />
+                        <div>
+                          <p className="text-sm font-medium">{anexo.tipo}</p>
+                          <p className="text-muted-foreground text-xs">
+                            {anexo.descricao}
+                          </p>
+                          <p className="text-muted-foreground text-xs">
+                            Data: {anexo.data}
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Download className="mr-2 h-4 w-4" />
+                        Visualizar
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Outras abas omitidas para brevidade */}
