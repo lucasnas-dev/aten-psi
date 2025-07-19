@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -150,67 +149,65 @@ export default function PatientsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Pacientes</h1>
-          <p className="text-muted-foreground">
-            Gerencie seus pacientes e acompanhe seu progresso
-          </p>
+    <div className="space-y-8 p-6">
+      {/* Filtros com botão Novo Paciente */}
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+        <div className="relative flex-1">
+          <Search className="text-primary/70 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
+          <Input
+            placeholder="Buscar por nome, email ou telefone..."
+            value={termoBusca}
+            onChange={(e) => setTermoBusca(e.target.value)}
+            className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 py-3 pl-12 text-base font-medium shadow-sm backdrop-blur-sm transition-all duration-300"
+          />
         </div>
-        <Button asChild>
-          <Link href="/patients/new" className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
+        <Select value={filtroStatus} onValueChange={setFiltroStatus}>
+          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 w-full py-3 text-base font-medium shadow-sm backdrop-blur-sm sm:w-[220px]">
+            <SelectValue placeholder="Filtrar por status" />
+          </SelectTrigger>
+          <SelectContent className="border-border bg-card shadow-lg">
+            <SelectItem value="todos" className="py-3 text-base font-medium">
+              Todos os pacientes
+            </SelectItem>
+            <SelectItem
+              value="ativo"
+              className="text-primary py-3 text-base font-medium"
+            >
+              📋 Apenas ativos
+            </SelectItem>
+            <SelectItem
+              value="inativo"
+              className="text-muted-foreground py-3 text-base font-medium"
+            >
+              📁 Apenas inativos
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <Button
+          asChild
+          className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r px-6 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+        >
+          <Link href="/patients/new" className="flex items-center gap-3">
+            <Plus className="h-5 w-5" />
             Novo Paciente
           </Link>
         </Button>
       </div>
 
-      {/* Filtros usando shadcn/ui */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="relative flex-1">
-              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-              <Input
-                placeholder="Buscar por nome, email ou telefone..."
-                value={termoBusca}
-                onChange={(e) => setTermoBusca(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={filtroStatus} onValueChange={setFiltroStatus}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Filtrar por status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos</SelectItem>
-                <SelectItem value="ativo">Apenas ativos</SelectItem>
-                <SelectItem value="inativo">Apenas inativos</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Tabela com tema dinâmico */}
+      <div className="border-border bg-card overflow-hidden rounded-xl border shadow-xl backdrop-blur-sm transition-all duration-300">
+        <PatientsTablePure
+          pacientes={pacientesPagina}
+          onArquivar={handleArquivar}
+          termoBusca={termoBusca}
+          filtroStatus={filtroStatus}
+        />
+      </div>
 
-      {/* Tabela usando componente existente */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Pacientes</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <PatientsTablePure
-            pacientes={pacientesPagina}
-            onArquivar={handleArquivar}
-            termoBusca={termoBusca}
-            filtroStatus={filtroStatus}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Paginação usando componente existente */}
-      <Pagination paginacao={paginacao} controles={controles} />
+      {/* Paginação com espaçamento */}
+      <div className="flex justify-center pt-4">
+        <Pagination paginacao={paginacao} controles={controles} />
+      </div>
     </div>
   );
 }

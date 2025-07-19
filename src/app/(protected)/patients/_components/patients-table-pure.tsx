@@ -69,13 +69,16 @@ const ActionButton = ({
         size="sm"
         asChild={asChild}
         onClick={onClick}
-        className="[&]:!bg-primary [&]:!text-primary-foreground hover:[&]:!bg-primary/90 h-8 w-8 p-0 transition-all duration-200 hover:scale-105"
+        className="from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 h-8 w-8 border-0 bg-gradient-to-r p-0 shadow-sm transition-all duration-300 hover:scale-105"
         {...props}
       >
         {children}
       </Button>
     </TooltipTrigger>
-    <TooltipContent side="top" className="font-medium">
+    <TooltipContent
+      side="top"
+      className="bg-card border-border text-card-foreground font-medium shadow-lg"
+    >
       <p>{tooltip}</p>
     </TooltipContent>
   </Tooltip>
@@ -95,23 +98,37 @@ export function PatientsTablePure({
   filtroStatus,
 }: PatientsTablePureProps) {
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className="bg-card rounded-md">
+      <Table className="bg-card">
         <TableHeader className="sticky top-0 z-10">
-          <TableRow className="bg-muted/50">
-            <TableHead className="w-[250px]">Paciente</TableHead>
-            <TableHead className="w-[120px]">Idade</TableHead>
-            <TableHead className="w-[200px]">Email</TableHead>
-            <TableHead className="w-[150px]">Telefone</TableHead>
-            <TableHead className="w-[120px]">Cadastro</TableHead>
-            <TableHead className="w-[80px]">Status</TableHead>
-            <TableHead className="w-[120px] text-center">Ações</TableHead>
+          <TableRow className="from-primary/15 to-secondary/15 border-border hover:from-primary/20 hover:to-secondary/20 h-14 bg-gradient-to-r transition-all duration-300">
+            <TableHead className="text-primary w-[250px] px-6 text-base font-bold">
+              Paciente
+            </TableHead>
+            <TableHead className="text-primary w-[120px] px-4 text-base font-bold">
+              Idade
+            </TableHead>
+            <TableHead className="text-primary w-[200px] px-4 text-base font-bold">
+              Email
+            </TableHead>
+            <TableHead className="text-primary w-[150px] px-4 text-base font-bold">
+              Telefone
+            </TableHead>
+            <TableHead className="text-primary w-[120px] px-4 text-base font-bold">
+              Cadastro
+            </TableHead>
+            <TableHead className="text-primary w-[80px] px-4 text-base font-bold">
+              Status
+            </TableHead>
+            <TableHead className="text-primary w-[120px] px-4 text-center text-base font-bold">
+              Ações
+            </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="bg-card">
           {pacientes.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={7} className="py-12 text-center">
+            <TableRow className="bg-card">
+              <TableCell colSpan={7} className="bg-card py-12 text-center">
                 <div className="flex flex-col items-center gap-4">
                   {termoBusca || filtroStatus !== "todos" ? (
                     <div className="text-muted-foreground">
@@ -141,48 +158,56 @@ export function PatientsTablePure({
             pacientes.map((paciente) => (
               <TableRow
                 key={paciente.id}
-                className="group border-border/50 hover:bg-muted/30 h-12 border-b transition-colors"
+                className="group border-border/50 hover:from-primary/8 hover:to-secondary/8 hover:border-primary/30 bg-card h-16 border-b transition-all duration-300 hover:bg-gradient-to-r"
               >
-                <TableCell className="py-2">
-                  <div className="font-medium">{paciente.name}</div>
+                <TableCell className="px-6 py-4">
+                  <div className="text-foreground group-hover:text-primary text-base font-semibold transition-colors">
+                    {paciente.name}
+                  </div>
                 </TableCell>
 
-                <TableCell className="py-2">
-                  {calculateAge(paciente.birthDate)} anos
+                <TableCell className="px-4 py-4">
+                  <span className="text-muted-foreground text-sm font-medium">
+                    {calculateAge(paciente.birthDate)} anos
+                  </span>
                 </TableCell>
 
-                <TableCell className="py-2">
-                  <div className="text-muted-foreground max-w-[180px] truncate text-sm">
+                <TableCell className="px-4 py-4">
+                  <div className="text-muted-foreground max-w-[180px] truncate text-sm font-medium">
                     {paciente.email || "—"}
                   </div>
                 </TableCell>
 
-                <TableCell className="py-2">
-                  <div className="text-muted-foreground text-sm">
+                <TableCell className="px-4 py-4">
+                  <div className="text-muted-foreground text-sm font-medium">
                     {paciente.phone || "—"}
                   </div>
                 </TableCell>
 
-                <TableCell className="py-2">
-                  <div className="text-muted-foreground text-sm">
+                <TableCell className="px-4 py-4">
+                  <div className="text-muted-foreground text-sm font-medium">
                     {formatDateString(paciente.createdAt)}
                   </div>
                 </TableCell>
 
-                <TableCell className="py-2">
+                <TableCell className="px-4 py-4">
                   <Badge
                     variant={
                       paciente.status === "active" ? "default" : "secondary"
                     }
-                    className="text-xs"
+                    className={`px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                      paciente.status === "active"
+                        ? "from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r shadow-sm"
+                        : "bg-muted text-muted-foreground border-border hover:bg-muted/80 border"
+                    }`}
                   >
-                    {paciente.status === "active" ? "Ativo" : "Arquivado"}
+                    {paciente.status === "active" ? "✅ Ativo" : "📁 Arquivado"}
                   </Badge>
                 </TableCell>
 
-                <TableCell className="py-2">
+                <TableCell className="px-4 py-4">
                   <TooltipProvider>
-                    <div className="flex items-center justify-center gap-1">
+                    <div className="flex items-center justify-center gap-2">
                       <ActionButton
                         asChild
                         tooltip="Visualizar detalhes do paciente"
