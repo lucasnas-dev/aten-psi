@@ -2,13 +2,13 @@
 
 import {
   Archive,
-  ArrowLeft,
   Calendar,
   Edit,
   FileText,
   Mail,
   MapPin,
   Phone,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 // Tipagem do paciente
@@ -116,15 +115,7 @@ export default function PatientDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/patients">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Link>
-          </Button>
-        </div>
+      <div className="space-y-6 p-6">
         <div className="flex h-[400px] items-center justify-center">
           <div className="text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
@@ -139,15 +130,7 @@ export default function PatientDetailsPage() {
 
   if (error || !patient) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/patients">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Link>
-          </Button>
-        </div>
+      <div className="space-y-6 p-6">
         <div className="flex h-[400px] items-center justify-center">
           <div className="text-center">
             <p className="text-muted-foreground">
@@ -160,25 +143,15 @@ export default function PatientDetailsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header com navegação */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/patients">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              {patient.name}
-            </h1>
-            <p className="text-muted-foreground">
-              Cadastrado em{" "}
-              {new Date(patient.createdAt).toLocaleDateString("pt-BR")}
-            </p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
+          <p className="text-muted-foreground">
+            Cadastrado em{" "}
+            {new Date(patient.createdAt).toLocaleDateString("pt-BR")}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge
@@ -192,6 +165,12 @@ export default function PatientDetailsPage() {
               Editar
             </Link>
           </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/patients/${patient.id}/psychological-record`}>
+              <FileText className="mr-2 h-4 w-4" />
+              Prontuário
+            </Link>
+          </Button>
           <Button variant="outline" size="sm" onClick={handleArchivePatient}>
             <Archive className="mr-2 h-4 w-4" />
             {patient.status === "active" ? "Arquivar" : "Ativar"}
@@ -199,144 +178,138 @@ export default function PatientDetailsPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Informações Pessoais */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Informações Pessoais</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Calendar className="text-muted-foreground h-4 w-4" />
-                <div>
-                  <p className="text-sm font-medium">Data de Nascimento</p>
-                  <p className="text-muted-foreground text-sm">
-                    {new Date(patient.birthDate).toLocaleDateString("pt-BR")}(
-                    {calculateAge(patient.birthDate)} anos)
-                  </p>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div>
-                <p className="text-sm font-medium">Gênero</p>
-                <p className="text-muted-foreground text-sm">
-                  {formatGender(patient.gender)}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Informações de Contato */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Contato</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              {patient.email && (
+      <div className="space-y-6">
+        {/* Informações Pessoais e Contato */}
+        <div>
+          <h2 className="mb-3 text-xl font-semibold">
+            Informações Pessoais e Contato
+          </h2>
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {/* Coluna 1 - Informações Pessoais */}
+              <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <Mail className="text-muted-foreground h-4 w-4" />
+                  <Calendar className="text-muted-foreground h-4 w-4" />
                   <div>
-                    <p className="text-sm font-medium">Email</p>
+                    <p className="text-sm font-medium">Data de Nascimento</p>
                     <p className="text-muted-foreground text-sm">
-                      {patient.email}
+                      {new Date(patient.birthDate).toLocaleDateString("pt-BR")}{" "}
+                      ({calculateAge(patient.birthDate)} anos)
                     </p>
                   </div>
                 </div>
-              )}
 
-              {patient.phone && (
-                <>
-                  <Separator />
-                  <div className="flex items-center gap-3">
-                    <Phone className="text-muted-foreground h-4 w-4" />
-                    <div>
-                      <p className="text-sm font-medium">Telefone</p>
-                      <p className="text-muted-foreground text-sm">
-                        {patient.phone}
-                      </p>
-                    </div>
+                <Separator />
+
+                <div className="flex items-center gap-3">
+                  <User className="text-muted-foreground h-4 w-4" />
+                  <div>
+                    <p className="text-sm font-medium">Gênero</p>
+                    <p className="text-muted-foreground text-sm">
+                      {formatGender(patient.gender)}
+                    </p>
                   </div>
-                </>
-              )}
-
-              {patient.address && (
-                <>
-                  <Separator />
-                  <div className="flex items-center gap-3">
-                    <MapPin className="text-muted-foreground h-4 w-4" />
-                    <div>
-                      <p className="text-sm font-medium">Endereço</p>
-                      <p className="text-muted-foreground text-sm">
-                        {patient.address}
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Observações */}
-        {patient.notes && (
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                Observações
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground text-sm whitespace-pre-wrap">
-                {patient.notes}
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Informações de Atendimento */}
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle>Histórico de Atendimento</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {patient.lastConsultation ? (
-                <div>
-                  <p className="text-sm font-medium">Última Consulta</p>
-                  <p className="text-muted-foreground text-sm">
-                    {new Date(patient.lastConsultation).toLocaleDateString(
-                      "pt-BR",
-                    )}
-                  </p>
                 </div>
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Nenhuma consulta registrada ainda.
-                </p>
-              )}
+              </div>
 
-              <Separator />
+              {/* Coluna 2 - Informações de Contato */}
+              <div className="space-y-2">
+                {patient.email && (
+                  <div className="flex items-center gap-3">
+                    <Mail className="text-muted-foreground h-4 w-4" />
+                    <div>
+                      <p className="text-sm font-medium">Email</p>
+                      <p className="text-muted-foreground text-sm">
+                        {patient.email}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  Ver Consultas
-                </Button>
-                <Button variant="outline" size="sm">
-                  Nova Consulta
-                </Button>
-                <Button variant="outline" size="sm">
-                  Ver Prontuário
-                </Button>
+                {patient.phone && (
+                  <>
+                    {patient.email && <Separator />}
+                    <div className="flex items-center gap-3">
+                      <Phone className="text-muted-foreground h-4 w-4" />
+                      <div>
+                        <p className="text-sm font-medium">Telefone</p>
+                        <p className="text-muted-foreground text-sm">
+                          {patient.phone}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Endereço - Largura completa */}
+            {patient.address && (
+              <>
+                <Separator />
+                <div className="flex items-center gap-3">
+                  <MapPin className="text-muted-foreground h-4 w-4" />
+                  <div>
+                    <p className="text-sm font-medium">Endereço</p>
+                    <p className="text-muted-foreground text-sm">
+                      {patient.address}
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Observações */}
+            {patient.notes && (
+              <>
+                <Separator />
+                <div className="flex items-start gap-3">
+                  <FileText className="text-muted-foreground mt-0.5 h-4 w-4" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Observações</p>
+                    <p className="text-muted-foreground mt-1 text-sm whitespace-pre-wrap">
+                      {patient.notes}
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Informações de Atendimento */}
+        <div>
+          <h2 className="mb-3 text-xl font-semibold">
+            Histórico de Atendimento
+          </h2>
+          <div className="space-y-2">
+            {patient.lastConsultation ? (
+              <div>
+                <p className="text-sm font-medium">Última Consulta</p>
+                <p className="text-muted-foreground text-sm">
+                  {new Date(patient.lastConsultation).toLocaleDateString(
+                    "pt-BR",
+                  )}
+                </p>
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                Nenhuma consulta registrada ainda.
+              </p>
+            )}
+
+            <Separator />
+
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                Ver Consultas
+              </Button>
+              <Button variant="outline" size="sm">
+                Nova Consulta
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

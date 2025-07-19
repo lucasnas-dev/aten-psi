@@ -6,17 +6,8 @@ import { ArrowLeft, Download, FileText, Lock, Printer } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -193,10 +184,10 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
   });
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-2 p-3">
       {/* Header da página */}
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-2">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
@@ -232,7 +223,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
             <Printer className="mr-2 h-4 w-4" />
             Imprimir
           </Button>
-          <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r">
+          <Button variant="outline">
             <Download className="mr-2 h-4 w-4" />
             Exportar PDF
           </Button>
@@ -240,81 +231,71 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Cabeçalho do Prontuário */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col items-start gap-6 md:flex-row">
-            <Avatar className="h-24 w-24">
-              <AvatarImage
-                src={`/placeholder.svg?height=96&width=96`}
-                alt={paciente.nome}
-              />
-              <AvatarFallback className="text-2xl">
-                {paciente.nome
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="flex-1 space-y-2">
-              <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-bold">{paciente.nome}</h2>
-                <Badge>Prontuário Ativo</Badge>
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <p className="text-muted-foreground text-sm">
-                    CPF: {paciente.cpf}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    Data de Nascimento: {paciente.dataNascimento} (
-                    {paciente.idade} anos)
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    Início do Atendimento: {paciente.dataInicioAtendimento}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground text-sm">
-                    Psicólogo(a): {paciente.psicologo.nome}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    CRP: {paciente.psicologo.crp}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    Data de Atualização: {dataAtual}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-                onClick={() => setShowConfidentialInfo(!showConfidentialInfo)}
-              >
-                <Lock className="h-4 w-4" />
-                {showConfidentialInfo
-                  ? "Ocultar Informações Sigilosas"
-                  : "Mostrar Informações Sigilosas"}
-              </Button>
-              <Badge variant="outline" className="justify-center">
-                <FileText className="mr-2 h-4 w-4" />
-                Registro CFP Nº {pacienteId}
+      <div className="mb-4">
+        <div className="flex flex-col items-start gap-4 md:flex-row">
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-bold">{paciente.nome}</h2>
+              <Badge className="text-sm font-semibold">
+                Prontuário Ativo
               </Badge>
             </div>
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              <div>
+                <p className="text-muted-foreground text-sm font-medium">
+                  CPF: {paciente.cpf}
+                </p>
+                <p className="text-muted-foreground text-sm font-medium">
+                  Data de Nascimento: {paciente.dataNascimento} (
+                  {paciente.idade} anos)
+                </p>
+                <p className="text-muted-foreground text-sm font-medium">
+                  Início do Atendimento: {paciente.dataInicioAtendimento}
+                </p>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm font-medium">
+                  Psicólogo(a): {paciente.psicologo.nome}
+                </p>
+                <p className="text-muted-foreground text-sm font-medium">
+                  CRP: {paciente.psicologo.crp}
+                </p>
+                <p className="text-muted-foreground text-sm font-medium">
+                  Data de Atualização: {dataAtual}
+                </p>
+              </div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2 text-sm font-semibold"
+              onClick={() => setShowConfidentialInfo(!showConfidentialInfo)}
+            >
+              <Lock className="h-3 w-3" />
+              {showConfidentialInfo
+                ? "Ocultar Sigilosas"
+                : "Mostrar Sigilosas"}
+            </Button>
+            <Badge
+              variant="outline"
+              className="justify-center text-sm font-semibold"
+            >
+              <FileText className="mr-1 h-3 w-3" />
+              CFP Nº {pacienteId}
+            </Badge>
+          </div>
+        </div>
+      </div>
 
       {/* Abas do Prontuário */}
       <Tabs
         defaultValue="identificacao"
         value={activeTab}
         onValueChange={setActiveTab}
-        className="space-y-4"
+        className="space-y-2"
       >
         <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7">
           <TabsTrigger value="identificacao">Identificação</TabsTrigger>
@@ -328,27 +309,25 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
 
         {/* Aba de Identificação */}
         <TabsContent value="identificacao">
-          <Card>
-            <CardHeader>
-              <CardTitle>Dados de Identificação</CardTitle>
-              <CardDescription>
-                Informações pessoais e de contato do paciente
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-4">
+          <div>
+            <h3 className="text-xl font-semibold mb-3">Dados de Identificação</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Informações pessoais e de contato do paciente
+            </p>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                <div className="space-y-1">
                   {editMode ? (
                     <>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="nome">Nome Completo</Label>
                         <Input id="nome" defaultValue={paciente.nome} />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="cpf">CPF</Label>
                         <Input id="cpf" defaultValue={paciente.cpf} />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="dataNascimento">
                           Data de Nascimento
                         </Label>
@@ -357,7 +336,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                           defaultValue={paciente.dataNascimento}
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="genero">Gênero</Label>
                         <Select defaultValue={paciente.genero}>
                           <SelectTrigger>
@@ -373,7 +352,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="estadoCivil">Estado Civil</Label>
                         <Select defaultValue={paciente.estadoCivil}>
                           <SelectTrigger>
@@ -433,32 +412,32 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                   )}
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-1">
                   {editMode ? (
                     <>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="profissao">Profissão</Label>
                         <Input
                           id="profissao"
                           defaultValue={paciente.profissao}
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="escolaridade">Escolaridade</Label>
                         <Input
                           id="escolaridade"
                           defaultValue={paciente.escolaridade}
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="endereco">Endereço</Label>
                         <Input id="endereco" defaultValue={paciente.endereco} />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="telefone">Telefone</Label>
                         <Input id="telefone" defaultValue={paciente.telefone} />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="email">E-mail</Label>
                         <Input id="email" defaultValue={paciente.email} />
                       </div>
@@ -501,28 +480,28 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Informações de Contato de Emergência */}
-              <div className="border-t pt-6">
-                <h3 className="mb-4 text-lg font-semibold">
+              <div className="border-t pt-2">
+                <h3 className="mb-1 text-lg font-semibold">
                   Contato de Emergência
                 </h3>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
                   {editMode ? (
                     <>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="nomeEmergencia">Nome</Label>
                         <Input
                           id="nomeEmergencia"
                           defaultValue={paciente.contatoEmergencia.nome}
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="parentesco">Parentesco</Label>
                         <Input
                           id="parentesco"
                           defaultValue={paciente.contatoEmergencia.parentesco}
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         <Label htmlFor="telefoneEmergencia">Telefone</Label>
                         <Input
                           id="telefoneEmergencia"
@@ -557,12 +536,12 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
 
               {/* Informações Sigilosas */}
               {showConfidentialInfo && (
-                <div className="bg-muted/30 rounded-lg border-t p-4 pt-6">
-                  <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                <div className="bg-muted/30 rounded-lg border-t p-2 pt-2">
+                  <h3 className="mb-1 flex items-center gap-2 text-lg font-semibold">
                     <Lock className="text-primary h-5 w-5" />
                     Informações Sigilosas
                   </h3>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                     <div>
                       <h4 className="text-muted-foreground text-sm font-medium">
                         Demanda Inicial
@@ -600,26 +579,24 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                   </div>
                 </div>
               )}
-            </CardContent>
+            </div>
             {editMode && (
-              <CardFooter>
-                <Button className="ml-auto">Salvar Alterações</Button>
-              </CardFooter>
+              <div className="mt-4 flex justify-end">
+                <Button>Salvar Alterações</Button>
+              </div>
             )}
-          </Card>
+          </div>
         </TabsContent>
 
         {/* Aba de Avaliação Inicial */}
         <TabsContent value="avaliacao">
-          <Card>
-            <CardHeader>
-              <CardTitle>Avaliação Inicial</CardTitle>
-              <CardDescription>
-                Registro da primeira avaliação psicológica do paciente
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
+          <div>
+            <h3 className="text-xl font-semibold mb-3">Avaliação Inicial</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Registro da primeira avaliação psicológica do paciente
+            </p>
+            <div className="space-y-4">
+              <div className="space-y-1">
                 <div>
                   <h3 className="text-muted-foreground mb-2 text-sm font-medium">
                     Queixa Principal
@@ -718,27 +695,25 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                   )}
                 </div>
               </div>
-            </CardContent>
+            </div>
             {editMode && (
-              <CardFooter>
-                <Button className="ml-auto">Salvar Alterações</Button>
-              </CardFooter>
+              <div className="mt-4 flex justify-end">
+                <Button>Salvar Alterações</Button>
+              </div>
             )}
-          </Card>
+          </div>
         </TabsContent>
 
         {/* Aba de Plano Terapêutico */}
         <TabsContent value="plano">
-          <Card>
-            <CardHeader>
-              <CardTitle>Plano Terapêutico</CardTitle>
-              <CardDescription>
-                Estratégia e objetivos do processo terapêutico
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-4">
+          <div>
+            <h3 className="text-xl font-semibold mb-3">Plano Terapêutico</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Estratégia e objetivos do processo terapêutico
+            </p>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                <div className="space-y-1">
                   <div>
                     <h3 className="text-muted-foreground mb-2 text-sm font-medium">
                       Abordagem Terapêutica
@@ -841,19 +816,19 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                   )}
                 </div>
               </div>
-            </CardContent>
+            </div>
             {editMode && (
-              <CardFooter>
-                <Button className="ml-auto">Salvar Alterações</Button>
-              </CardFooter>
+              <div className="mt-4 flex justify-end">
+                <Button>Salvar Alterações</Button>
+              </div>
             )}
-          </Card>
+          </div>
         </TabsContent>
 
         {/* Aba de Evolução */}
         <TabsContent value="evolucao">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Evolução do Tratamento</CardTitle>
@@ -867,7 +842,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {paciente.evolucao.map((evolucao, index) => (
                   <div
                     key={index}
@@ -889,7 +864,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
         {/* Aba de Registro de Sessões */}
         <TabsContent value="sessoes">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Registro de Sessões</CardTitle>
@@ -903,10 +878,10 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {paciente.registroSessoes.map((sessao) => (
                   <Card key={sessao.id} className="border-primary border-l-4">
-                    <CardHeader className="pb-3">
+                    <CardHeader className="pb-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <Badge>{sessao.data}</Badge>
@@ -926,7 +901,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <div>
                           <h4 className="mb-1 text-sm font-medium">
                             Conteúdo da Sessão
@@ -957,7 +932,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
         {/* Aba de Encaminhamentos */}
         <TabsContent value="encaminhamentos">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Encaminhamentos</CardTitle>
@@ -971,12 +946,12 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {paciente.encaminhamentos.map((encaminhamento, index) => (
                   <Card key={index} className="border-secondary border-l-4">
-                    <CardContent className="pt-6">
-                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <div className="space-y-3">
+                    <CardContent className="pt-3">
+                      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                        <div className="space-y-1">
                           <div>
                             <h4 className="text-muted-foreground text-sm font-medium">
                               Data do Encaminhamento
@@ -998,7 +973,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                             <Badge>{encaminhamento.especialidade}</Badge>
                           </div>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-1">
                           <div>
                             <h4 className="text-muted-foreground text-sm font-medium">
                               Motivo do Encaminhamento
@@ -1027,10 +1002,10 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
 
         {/* Aba de Documentos */}
         <TabsContent value="documentos">
-          <div className="space-y-6">
+          <div className="space-y-2">
             {/* Documentos Emitidos */}
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle>Documentos Emitidos</CardTitle>
@@ -1044,7 +1019,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {paciente.documentosEmitidos.map((documento, index) => (
                     <div
                       key={index}
@@ -1076,7 +1051,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
 
             {/* Anexos */}
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle>Anexos</CardTitle>
@@ -1090,7 +1065,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {paciente.anexos.map((anexo, index) => (
                     <div
                       key={index}

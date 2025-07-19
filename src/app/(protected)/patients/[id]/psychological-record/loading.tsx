@@ -1,6 +1,6 @@
 import { ArrowLeft, FileText } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProntuarioLoading() {
@@ -39,8 +39,8 @@ export default function ProntuarioLoading() {
       </div>
 
       {/* Cabeçalho do Prontuário */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
+      <div>
+        <div>
           <div className="flex flex-col items-start gap-6 md:flex-row">
             <div className="bg-muted h-24 w-24 animate-pulse rounded-full"></div>
 
@@ -68,8 +68,8 @@ export default function ProntuarioLoading() {
               <div className="bg-muted h-8 w-40 animate-pulse rounded-md"></div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Abas do Prontuário */}
       <Tabs defaultValue="identificacao" className="space-y-4">
@@ -97,8 +97,8 @@ export default function ProntuarioLoading() {
           </TabsTrigger>
         </TabsList>
 
-        <Card>
-          <CardContent className="space-y-6 p-6">
+        <div>
+          <div>
             <div className="space-y-2">
               <div className="bg-muted h-6 w-48 animate-pulse rounded-md"></div>
               <div className="bg-muted h-4 w-full max-w-md animate-pulse rounded-md"></div>
@@ -153,8 +153,8 @@ export default function ProntuarioLoading() {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </Tabs>
     </div>
   );

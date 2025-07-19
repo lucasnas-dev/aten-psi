@@ -2,13 +2,6 @@ import { CalendarDays, Clock, FileText, Users } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 export default function Home() {
   return (
@@ -82,11 +75,11 @@ export default function Home() {
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-4">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl">Gestão de Pacientes</CardTitle>
-                </CardHeader>
-                <CardContent>
+              <div className="space-y-3">
+                <div>
+                  <h3 className="text-xl">Gestão de Pacientes</h3>
+                </div>
+                <div>
                   <div className="flex items-center gap-4">
                     <Users className="text-primary h-10 w-10" />
                     <div>
@@ -96,20 +89,18 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter>
+                </div>
+                <div className="mt-4">
                   <Button variant="ghost" asChild className="w-full">
                     <Link href="/pacientes">Ver Pacientes</Link>
                   </Button>
-                </CardFooter>
-              </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl">
-                    Agendamento de Consultas
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <h3 className="text-xl">Agendamento de Consultas</h3>
+                </div>
+                <div>
                   <div className="flex items-center gap-4">
                     <CalendarDays className="text-primary h-10 w-10" />
                     <div>
@@ -119,18 +110,18 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter>
+                </div>
+                <div className="mt-4">
                   <Button variant="ghost" asChild className="w-full">
                     <Link href="/agenda">Gerenciar Agenda</Link>
                   </Button>
-                </CardFooter>
-              </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl">Controle de Sessões</CardTitle>
-                </CardHeader>
-                <CardContent>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <h3 className="text-xl">Controle de Sessões</h3>
+                </div>
+                <div>
                   <div className="flex items-center gap-4">
                     <Clock className="text-primary h-10 w-10" />
                     <div>
@@ -140,20 +131,18 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter>
+                </div>
+                <div className="mt-4">
                   <Button variant="ghost" asChild className="w-full">
                     <Link href="/sessoes">Ver Sessões</Link>
                   </Button>
-                </CardFooter>
-              </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl">
-                    Relatórios e Análises
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <h3 className="text-xl">Relatórios e Análises</h3>
+                </div>
+                <div>
                   <div className="flex items-center gap-4">
                     <FileText className="text-primary h-10 w-10" />
                     <div>
@@ -163,13 +152,13 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter>
+                </div>
+                <div className="mt-4">
                   <Button variant="ghost" asChild className="w-full">
                     <Link href="/relatorios">Ver Relatórios</Link>
                   </Button>
-                </CardFooter>
-              </Card>
+                </div>
+              </div>
             </div>
           </div>
         </section>

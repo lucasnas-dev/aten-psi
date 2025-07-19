@@ -185,7 +185,8 @@ export default function PatientsPage() {
         </Select>
         <Button
           asChild
-          className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r px-6 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+          variant="outline"
+          className="px-6 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
         >
           <Link href="/patients/new" className="flex items-center gap-3">
             <Plus className="h-5 w-5" />

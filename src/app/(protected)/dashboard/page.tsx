@@ -7,13 +7,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function DashboardPage() {
@@ -35,61 +28,53 @@ export default function DashboardPage() {
 
       {/* Cards de estatísticas */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total de Pacientes
-            </CardTitle>
+        <div className="space-y-2">
+          <div className="flex flex-row items-center justify-between">
+            <h3 className="text-sm font-medium">Total de Pacientes</h3>
             <Users className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">42</div>
             <p className="text-muted-foreground text-xs">
               +2 desde o mês passado
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Consultas Agendadas
-            </CardTitle>
+        <div className="space-y-2">
+          <div className="flex flex-row items-center justify-between">
+            <h3 className="text-sm font-medium">Consultas Agendadas</h3>
             <CalendarIcon className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">12</div>
             <p className="text-muted-foreground text-xs">Próximos 7 dias</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Horas de Sessão
-            </CardTitle>
+        <div className="space-y-2">
+          <div className="flex flex-row items-center justify-between">
+            <h3 className="text-sm font-medium">Horas de Sessão</h3>
             <Clock className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">24,5</div>
             <p className="text-muted-foreground text-xs">Este mês</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Anotações Pendentes
-            </CardTitle>
+        <div className="space-y-2">
+          <div className="flex flex-row items-center justify-between">
+            <h3 className="text-sm font-medium">Anotações Pendentes</h3>
             <FileText className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">3</div>
             <p className="text-muted-foreground text-xs">
               Precisam ser concluídas
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -101,44 +86,40 @@ export default function DashboardPage() {
         </TabsList>
 
         <TabsContent value="proximas" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Próximas Consultas</CardTitle>
-              <CardDescription>
-                Suas consultas agendadas para os próximos dias
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div>
+            <h3 className="mb-2 text-xl font-semibold">Próximas Consultas</h3>
+            <p className="text-muted-foreground mb-4 text-sm">
+              Suas consultas agendadas para os próximos dias
+            </p>
+            <div>
               <p className="text-muted-foreground text-sm">
                 Nenhuma consulta agendada no momento.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="pacientes" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pacientes Recentes</CardTitle>
-              <CardDescription>Últimos pacientes atendidos</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div>
+            <h3 className="mb-2 text-xl font-semibold">Pacientes Recentes</h3>
+            <p className="text-muted-foreground mb-4 text-sm">
+              Últimos pacientes atendidos
+            </p>
+            <div>
               <p className="text-muted-foreground text-sm">
                 Nenhum paciente recente.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="alertas" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Alertas e Lembretes</CardTitle>
-              <CardDescription>
-                Notificações importantes que requerem sua atenção
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div>
+            <h3 className="mb-2 text-xl font-semibold">Alertas e Lembretes</h3>
+            <p className="text-muted-foreground mb-4 text-sm">
+              Notificações importantes que requerem sua atenção
+            </p>
+            <div>
               <div className="space-y-4">
                 <div className="flex items-start gap-4 rounded-md border p-4">
                   <AlertCircle className="mt-0.5 h-5 w-5 text-orange-500" />
@@ -160,8 +141,8 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

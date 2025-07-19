@@ -215,7 +215,9 @@ export function PatientsTablePure({
                       </ActionButton>
 
                       <ActionButton asChild tooltip="Prontuário">
-                        <Link href={`/patients/${paciente.id}/prontuario`}>
+                        <Link
+                          href={`/patients/${paciente.id}/psychological-record`}
+                        >
                           <FileText className="h-4 w-4" />
                         </Link>
                       </ActionButton>
