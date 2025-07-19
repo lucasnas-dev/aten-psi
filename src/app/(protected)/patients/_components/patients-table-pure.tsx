@@ -209,13 +209,13 @@ export function PatientsTablePure({
                   <TooltipProvider>
                     <div className="flex items-center justify-center gap-2">
                       <ActionButton asChild tooltip="Ver detalhes">
-                        <Link href={`/pacientes/${paciente.id}`}>
+                        <Link href={`/patients/${paciente.id}`}>
                           <Eye className="h-4 w-4" />
                         </Link>
                       </ActionButton>
 
                       <ActionButton asChild tooltip="Prontuário">
-                        <Link href={`/pacientes/${paciente.id}/prontuario`}>
+                        <Link href={`/patients/${paciente.id}/prontuario`}>
                           <FileText className="h-4 w-4" />
                         </Link>
                       </ActionButton>
