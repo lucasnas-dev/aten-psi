@@ -48,8 +48,8 @@ export default function Home() {
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <nav className="flex items-center space-x-2">
-              <Button asChild>
-                <Link href="/login">Entrar</Link>
+              <Button asChild variant="secondary">
+                <Link href="/authentication/login">Entrar</Link>
               </Button>
             </nav>
           </div>
@@ -69,8 +69,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button asChild size="lg">
-                  <Link href="/login">Começar</Link>
+                <Button asChild size="lg" variant="secondary">
+                  <Link href="/authentication/login">Começar</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
                   <Link href="/sobre">Saiba Mais</Link>

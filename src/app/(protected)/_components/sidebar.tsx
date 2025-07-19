@@ -34,43 +34,50 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-white">
+    <div className="bg-sidebar flex h-full w-64 flex-col border-r shadow-lg">
       {/* Header */}
-      <div className="flex h-16 items-center justify-center border-b px-4">
-        <div className="flex items-center gap-2">
-          <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full font-bold">
+      <div className="border-sidebar-border/50 from-primary/5 via-sidebar to-secondary/5 flex h-16 items-center justify-center border-b bg-gradient-to-r px-4">
+        <div className="flex items-center gap-3">
+          <div className="from-primary to-secondary text-primary-foreground flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br text-lg font-bold shadow-md transition-transform hover:scale-105">
             A
           </div>
-          <div className="text-xl font-semibold">Aten PSI</div>
+          <div className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent">
+            Aten PSI
+          </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto py-4">
-        <nav className="space-y-1 px-2">
+      <div className="custom-scrollbar flex-1 overflow-y-auto py-6">
+        <nav className="space-y-2 px-3">
           {navigation.map((item) => {
             const Icon = item.icon;
+            const isActive =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
+
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  pathname === item.href || pathname.startsWith(`${item.href}/`)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                  "group flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out",
+                  isActive
+                    ? "from-primary to-secondary text-primary-foreground scale-[1.02] transform bg-gradient-to-r shadow-lg"
+                    : "text-sidebar-foreground/80 hover:from-primary/10 hover:to-secondary/10 hover:text-sidebar-foreground hover:scale-[1.01] hover:transform hover:bg-gradient-to-r hover:shadow-md",
                 )}
               >
                 <Icon
                   className={cn(
-                    "mr-3 h-5 w-5 flex-shrink-0",
-                    pathname === item.href ||
-                      pathname.startsWith(`${item.href}/`)
+                    "mr-3 h-5 w-5 flex-shrink-0 transition-all duration-300",
+                    isActive
                       ? "text-primary-foreground"
-                      : "text-gray-400 group-hover:text-gray-500",
+                      : "text-sidebar-foreground/60 group-hover:text-primary",
                   )}
                 />
-                {item.name}
+                <span className="transition-all duration-300">{item.name}</span>
+                {isActive && (
+                  <div className="bg-primary-foreground ml-auto h-2 w-2 rounded-full shadow-sm" />
+                )}
               </Link>
             );
           })}
@@ -78,23 +85,27 @@ export function Sidebar() {
       </div>
 
       {/* Footer with user info */}
-      <div className="border-t p-4">
+      <div className="border-sidebar-border/50 from-primary/3 via-sidebar to-secondary/3 border-t bg-gradient-to-r p-4">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
+          <div className="bg-sidebar-accent/50 hover:bg-sidebar-accent/60 flex items-center gap-3 rounded-lg p-3 transition-all">
+            <Avatar className="border-primary/20 h-10 w-10 border-2">
               <AvatarImage src="/placeholder.svg" alt="Avatar" />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarFallback className="from-primary/20 to-secondary/20 text-sidebar-foreground bg-gradient-to-br font-medium">
+                DL
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="text-sm font-medium">Dr. Lucas</span>
-              <span className="text-muted-foreground text-xs">
+              <span className="text-sidebar-foreground text-sm font-semibold">
+                Dr. Lucas
+              </span>
+              <span className="text-sidebar-foreground/60 text-xs">
                 lucas@exemplo.com
               </span>
             </div>
           </div>
           <Button
             variant="outline"
-            className="w-full justify-start"
+            className="hover:from-primary/10 hover:to-secondary/10 border-sidebar-border/50 hover:border-primary/30 w-full justify-start bg-gradient-to-r from-transparent to-transparent transition-all duration-300"
             onClick={handleLogout}
           >
             <LogOut className="mr-2 h-4 w-4" />
