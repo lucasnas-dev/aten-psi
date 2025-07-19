@@ -66,7 +66,7 @@ export function PatientFields({
             <FormItem>
               <FormLabel>Telefone</FormLabel>
               <FormControl>
-                <Input placeholder="(11) 98765-4321" {...field} />
+                <Input placeholder="(92) 99999-9999" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -129,23 +129,25 @@ export function PatientFields({
           )}
         />
       </div>
-      <FormField
-        control={control}
-        name="notes"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Observações</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Informações adicionais sobre o paciente"
-                className="min-h-[100px]"
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="pt-6">
+        <FormField
+          control={control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Observações</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Informações adicionais sobre o paciente"
+                  className="mt-2 min-h-[120px]"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
     </>
   );
 }

@@ -48,7 +48,7 @@ export default function PatientDetailsPage() {
       id: Number(patientId),
       name: "Maria Silva",
       email: "maria@email.com",
-      phone: "(11) 99999-9999",
+      phone: "(92) 99999-9999",
       birthDate: "1985-03-15",
       gender: "female",
       address: "Rua das Flores, 123 - São Paulo, SP",

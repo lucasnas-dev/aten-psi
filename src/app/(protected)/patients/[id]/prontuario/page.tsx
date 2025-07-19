@@ -1,6 +1,13 @@
 "use client";
 
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { ArrowLeft, Download, FileText, Lock, Printer } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,11 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DashboardHeader } from "@/app/_components/dashboard-header";
-import { DashboardShell } from "@/app/_components/dashboard-shell";
-import { Download, Printer, Lock, FileText } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,10 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import Link from "next/link";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProntuarioPage({ params }: { params: { id: string } }) {
   const pacienteId = params.id;
@@ -47,7 +46,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
     profissao: "Engenheiro de Software",
     escolaridade: "Ensino Superior Completo",
     endereco: "Rua das Flores, 123 - São Paulo, SP",
-    telefone: "(11) 98765-4321",
+    telefone: "(92) 99999-9999",
     email: "joao.silva@example.com",
     dataInicioAtendimento: "10/01/2025",
     psicologo: {
@@ -193,15 +192,38 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
   });
 
   return (
-    <DashboardShell>
-      <DashboardHeader
-        heading="Prontuário Psicológico"
-        text="Registro completo conforme exigências do CFP"
-      >
+    <div className="space-y-8 p-6">
+      {/* Header da página */}
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              asChild
+              className="border-border hover:bg-muted/80 bg-card/80 shadow-sm backdrop-blur-sm transition-all duration-300"
+            >
+              <Link
+                href={`/patients/${pacienteId}`}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Voltar ao Paciente
+              </Link>
+            </Button>
+            <div className="flex items-center gap-3">
+              <FileText className="text-primary h-8 w-8" />
+              <h1 className="text-primary text-3xl font-bold tracking-tight">
+                Prontuário Psicológico
+              </h1>
+            </div>
+          </div>
+          <p className="text-muted-foreground text-lg">
+            Registro completo conforme exigências do CFP
+          </p>
+        </div>
+
         <div className="flex space-x-2">
-          <Button variant="outline" asChild>
-            <Link href={`/pacientes/${pacienteId}`}>Voltar ao Paciente</Link>
-          </Button>
           <Button variant="outline" onClick={() => setEditMode(!editMode)}>
             {editMode ? "Cancelar Edição" : "Editar Prontuário"}
           </Button>
@@ -209,12 +231,12 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
             <Printer className="mr-2 h-4 w-4" />
             Imprimir
           </Button>
-          <Button>
+          <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r">
             <Download className="mr-2 h-4 w-4" />
             Exportar PDF
           </Button>
         </div>
-      </DashboardHeader>
+      </div>
 
       {/* Cabeçalho do Prontuário */}
       <Card className="mb-6">
@@ -240,25 +262,25 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
               </div>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     CPF: {paciente.cpf}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Data de Nascimento: {paciente.dataNascimento} (
                     {paciente.idade} anos)
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Início do Atendimento: {paciente.dataInicioAtendimento}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Psicólogo(a): {paciente.psicologo.nome}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     CRP: {paciente.psicologo.crp}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Data de Atualização: {dataAtual}
                   </p>
                 </div>
@@ -378,19 +400,19 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                   ) : (
                     <>
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">
+                        <h3 className="text-muted-foreground text-sm font-medium">
                           Nome Completo
                         </h3>
                         <p>{paciente.nome}</p>
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">
+                        <h3 className="text-muted-foreground text-sm font-medium">
                           CPF
                         </h3>
                         <p>{paciente.cpf}</p>
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">
+                        <h3 className="text-muted-foreground text-sm font-medium">
                           Data de Nascimento
                         </h3>
                         <p>
@@ -398,13 +420,13 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                         </p>
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">
+                        <h3 className="text-muted-foreground text-sm font-medium">
                           Gênero
                         </h3>
                         <p>{paciente.genero}</p>
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">
+                        <h3 className="text-muted-foreground text-sm font-medium">
                           Estado Civil
                         </h3>
                         <p>{paciente.estadoCivil}</p>
@@ -425,6 +447,6 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
 
         {/* Outras abas omitidas para brevidade */}
       </Tabs>
-    </DashboardShell>
+    </div>
   );
 }
