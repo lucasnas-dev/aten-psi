@@ -77,7 +77,7 @@ const ActionButton = ({
     </TooltipTrigger>
     <TooltipContent
       side="top"
-      className="bg-card border-border text-card-foreground font-medium shadow-lg px-2 py-1"
+      className="bg-card border-border text-card-foreground px-2 py-1 font-medium shadow-lg"
     >
       <span className="text-sm">{tooltip}</span>
     </TooltipContent>
@@ -208,19 +208,13 @@ export function PatientsTablePure({
                 <TableCell className="px-4 py-4">
                   <TooltipProvider>
                     <div className="flex items-center justify-center gap-2">
-                      <ActionButton
-                        asChild
-                        tooltip="Ver detalhes"
-                      >
+                      <ActionButton asChild tooltip="Ver detalhes">
                         <Link href={`/pacientes/${paciente.id}`}>
                           <Eye className="h-4 w-4" />
                         </Link>
                       </ActionButton>
 
-                      <ActionButton
-                        asChild
-                        tooltip="Prontuário"
-                      >
+                      <ActionButton asChild tooltip="Prontuário">
                         <Link href={`/pacientes/${paciente.id}/prontuario`}>
                           <FileText className="h-4 w-4" />
                         </Link>
@@ -229,9 +223,7 @@ export function PatientsTablePure({
                       <ActionButton
                         onClick={() => onArquivar(paciente)}
                         tooltip={
-                          paciente.status === "active"
-                            ? "Arquivar"
-                            : "Reativar"
+                          paciente.status === "active" ? "Arquivar" : "Reativar"
                         }
                       >
                         {paciente.status === "active" ? (
