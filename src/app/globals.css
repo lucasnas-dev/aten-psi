@@ -58,21 +58,21 @@
   --popover: oklch(0.97 0 0);
   --popover-foreground: oklch(0.05 0 0);
 
-  /* Primary Colors - Cinza médio suave uniforme */
-  --primary: oklch(0.6 0 0);
-  --primary-foreground: oklch(0.1 0 0);
+  /* Primary Colors - Cinza neutro profissional */
+  --primary: oklch(0.45 0.02 260);
+  --primary-foreground: oklch(0.98 0.01 260);
 
-  /* Secondary Colors - Mesmo cinza suave */
-  --secondary: oklch(0.6 0 0);
-  --secondary-foreground: oklch(0.1 0 0);
+  /* Secondary Colors - Mesmo cinza para uniformidade */
+  --secondary: oklch(0.45 0.02 260);
+  --secondary-foreground: oklch(0.98 0.01 260);
 
   /* Muted Colors */
   --muted: oklch(0.92 0 0);
   --muted-foreground: oklch(0.25 0 0);
 
-  /* Accent Colors - Mesmo cinza suave */
-  --accent: oklch(0.6 0 0);
-  --accent-foreground: oklch(0.1 0 0);
+  /* Accent Colors - Cinza claro neutro */
+  --accent: oklch(0.7 0.01 240);
+  --accent-foreground: oklch(0.2 0.01 240);
 
   /* Feedback Colors */
   --destructive: oklch(0.6 0.25 25);
