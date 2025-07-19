@@ -65,11 +65,11 @@ const ActionButton = ({
   <Tooltip>
     <TooltipTrigger asChild>
       <Button
-        variant="default"
+        variant="outline"
         size="sm"
         asChild={asChild}
         onClick={onClick}
-        className="from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 h-8 w-8 border-0 bg-gradient-to-r p-0 shadow-sm transition-all duration-300 hover:scale-105"
+        className="h-8 w-8 p-0 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
         {...props}
       >
         {children}
@@ -102,25 +102,25 @@ export function PatientsTablePure({
       <Table className="bg-card">
         <TableHeader className="sticky top-0 z-10">
           <TableRow className="from-primary/15 to-secondary/15 border-border hover:from-primary/20 hover:to-secondary/20 h-14 bg-gradient-to-r transition-all duration-300">
-            <TableHead className="text-primary w-[250px] px-6 text-base font-bold">
+            <TableHead className="w-[250px] px-6 text-base font-extrabold text-slate-700 dark:text-slate-300">
               Paciente
             </TableHead>
-            <TableHead className="text-primary w-[120px] px-4 text-base font-bold">
+            <TableHead className="w-[120px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
               Idade
             </TableHead>
-            <TableHead className="text-primary w-[200px] px-4 text-base font-bold">
+            <TableHead className="w-[200px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
               Email
             </TableHead>
-            <TableHead className="text-primary w-[150px] px-4 text-base font-bold">
+            <TableHead className="w-[150px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
               Telefone
             </TableHead>
-            <TableHead className="text-primary w-[120px] px-4 text-base font-bold">
+            <TableHead className="w-[120px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
               Cadastro
             </TableHead>
-            <TableHead className="text-primary w-[80px] px-4 text-base font-bold">
+            <TableHead className="w-[80px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
               Status
             </TableHead>
-            <TableHead className="text-primary w-[120px] px-4 text-center text-base font-bold">
+            <TableHead className="w-[120px] px-4 text-center text-base font-extrabold text-slate-700 dark:text-slate-300">
               Ações
             </TableHead>
           </TableRow>
@@ -195,7 +195,7 @@ export function PatientsTablePure({
                     variant={
                       paciente.status === "active" ? "default" : "secondary"
                     }
-                    className={`px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                    className={`px-2 py-1 text-xs font-medium transition-all duration-300 ${
                       paciente.status === "active"
                         ? "from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r shadow-sm"
                         : "bg-muted text-muted-foreground border-border hover:bg-muted/80 border"

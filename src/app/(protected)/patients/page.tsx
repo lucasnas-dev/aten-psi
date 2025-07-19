@@ -195,15 +195,13 @@ export default function PatientsPage() {
         </Button>
       </div>
 
-      {/* Tabela com tema dinâmico */}
-      <div className="border-border bg-card overflow-hidden rounded-xl border shadow-xl backdrop-blur-sm transition-all duration-300">
-        <PatientsTablePure
-          pacientes={pacientesPagina}
-          onArquivar={handleArquivar}
-          termoBusca={termoBusca}
-          filtroStatus={filtroStatus}
-        />
-      </div>
+      {/* Tabela sem card */}
+      <PatientsTablePure
+        pacientes={pacientesPagina}
+        onArquivar={handleArquivar}
+        termoBusca={termoBusca}
+        filtroStatus={filtroStatus}
+      />
 
       {/* Paginação com espaçamento */}
       <div className="flex justify-center pt-4">
