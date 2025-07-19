@@ -115,8 +115,8 @@ export const themes = [
   {
     name: "Padrão",
     value: "default" as const,
-    description: "Roxo moderno - criatividade e inovação",
-    color: "oklch(0.65 0.25 280)",
+    description: "Neutro clássico - preto, branco e cinza",
+    color: "oklch(0.2 0 0)",
   },
   {
     name: "Natureza",
