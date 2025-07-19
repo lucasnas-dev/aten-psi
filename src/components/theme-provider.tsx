@@ -3,21 +3,29 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "default" | "nature" | "creative" | "elegant" | "ocean";
+type Mode = "light" | "dark";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
   defaultTheme?: Theme;
+  defaultMode?: Mode;
   storageKey?: string;
 };
 
 type ThemeProviderState = {
   theme: Theme;
+  mode: Mode;
   setTheme: (theme: Theme) => void;
+  setMode: (mode: Mode) => void;
+  toggleMode: () => void;
 };
 
 const initialState: ThemeProviderState = {
   theme: "default",
+  mode: "light",
   setTheme: () => null,
+  setMode: () => null,
+  toggleMode: () => null,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
@@ -25,35 +33,50 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({
   children,
   defaultTheme = "default",
+  defaultMode = "light",
   storageKey = "aten-psi-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [mode, setMode] = useState<Mode>(defaultMode);
 
   useEffect(() => {
     const root = window.document.documentElement;
 
-    // Remove todos os temas anteriores
+    // Remove todos os temas e modos anteriores
     root.removeAttribute("data-theme");
+    root.classList.remove("light", "dark");
 
     // Aplica o novo tema (se não for o default)
     if (theme !== "default") {
       root.setAttribute("data-theme", theme);
     }
 
+    // Aplica o modo (light/dark)
+    root.classList.add(mode);
+
     // Debug: verificar se está aplicando
     console.log("🎨 Tema aplicado:", theme);
-    console.log("🏠 data-theme:", root.getAttribute("data-theme"));
+    console.log("� Modo aplicado:", mode);
+    console.log("�🏠 data-theme:", root.getAttribute("data-theme"));
+    console.log("📝 classes:", root.className);
 
     // Salva no localStorage
     localStorage.setItem(storageKey, theme);
-  }, [theme, storageKey]);
+    localStorage.setItem(`${storageKey}-mode`, mode);
+  }, [theme, mode, storageKey]);
 
   useEffect(() => {
-    // Carrega o tema do localStorage na inicialização
+    // Carrega o tema e modo do localStorage na inicialização
     const storedTheme = localStorage.getItem(storageKey) as Theme;
+    const storedMode = localStorage.getItem(`${storageKey}-mode`) as Mode;
+
     if (storedTheme) {
       setTheme(storedTheme);
+    }
+
+    if (storedMode) {
+      setMode(storedMode);
     }
   }, [storageKey]);
 
@@ -61,6 +84,13 @@ export function ThemeProvider({
     theme,
     setTheme: (theme: Theme) => {
       setTheme(theme);
+    },
+    mode,
+    setMode: (mode: Mode) => {
+      setMode(mode);
+    },
+    toggleMode: () => {
+      setMode(mode === "light" ? "dark" : "light");
     },
   };
 

@@ -2,6 +2,7 @@
 
 import { Bell, Settings } from "lucide-react";
 
+import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeSelector } from "@/components/theme-selector";
 import { Button } from "@/components/ui/button";
 
@@ -28,6 +29,7 @@ export function Header() {
       <div className="flex items-center gap-2">
         <div className="from-primary/5 to-secondary/5 border-border/50 flex items-center gap-1 rounded-lg border bg-gradient-to-r p-1 shadow-sm backdrop-blur-sm">
           <ThemeSelector />
+          <ModeToggle />
           <Button
             variant="ghost"
             size="icon"
