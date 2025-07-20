@@ -29,6 +29,7 @@ import {
 import { formatDate } from "@/lib/utils";
 
 import { Patient } from "./types";
+import { Pagination } from "./pagination";
 
 // Função para calcular idade
 const calculateAge = (birthDate: string) => {
@@ -89,6 +90,8 @@ interface PatientsTablePureProps {
   onArquivar: (paciente: Patient) => void;
   termoBusca: string;
   filtroStatus: string;
+  paginacao: any;
+  controles: any;
 }
 
 export function PatientsTablePure({
@@ -96,6 +99,8 @@ export function PatientsTablePure({
   onArquivar,
   termoBusca,
   filtroStatus,
+  paginacao,
+  controles,
 }: PatientsTablePureProps) {
   return (
     <div className="bg-card rounded-md">
@@ -155,90 +160,103 @@ export function PatientsTablePure({
               </TableCell>
             </TableRow>
           ) : (
-            pacientes.map((paciente) => (
-              <TableRow
-                key={paciente.id}
-                className="group border-border/50 hover:from-primary/8 hover:to-secondary/8 hover:border-primary/30 bg-card h-16 border-b transition-all duration-300 hover:bg-gradient-to-r"
-              >
-                <TableCell className="px-6 py-4">
-                  <div className="text-foreground group-hover:text-primary text-base font-semibold transition-colors">
-                    {paciente.name}
-                  </div>
-                </TableCell>
-
-                <TableCell className="px-4 py-4">
-                  <span className="text-muted-foreground text-sm font-medium">
-                    {calculateAge(paciente.birthDate)} anos
-                  </span>
-                </TableCell>
-
-                <TableCell className="px-4 py-4">
-                  <div className="text-muted-foreground max-w-[180px] truncate text-sm font-medium">
-                    {paciente.email || "—"}
-                  </div>
-                </TableCell>
-
-                <TableCell className="px-4 py-4">
-                  <div className="text-muted-foreground text-sm font-medium">
-                    {paciente.phone || "—"}
-                  </div>
-                </TableCell>
-
-                <TableCell className="px-4 py-4">
-                  <div className="text-muted-foreground text-sm font-medium">
-                    {formatDateString(paciente.createdAt)}
-                  </div>
-                </TableCell>
-
-                <TableCell className="px-4 py-4">
-                  <Badge
-                    variant={
-                      paciente.status === "active" ? "default" : "secondary"
-                    }
-                    className={`px-2 py-1 text-xs font-medium transition-all duration-300 ${
-                      paciente.status === "active"
-                        ? "from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r shadow-sm"
-                        : "bg-muted text-muted-foreground border-border hover:bg-muted/80 border"
-                    }`}
-                  >
-                    {paciente.status === "active" ? "✅ Ativo" : "📁 Arquivado"}
-                  </Badge>
-                </TableCell>
-
-                <TableCell className="px-4 py-4">
-                  <TooltipProvider>
-                    <div className="flex items-center justify-center gap-2">
-                      <ActionButton asChild tooltip="Ver detalhes">
-                        <Link href={`/patients/${paciente.id}`}>
-                          <Eye className="h-4 w-4" />
-                        </Link>
-                      </ActionButton>
-
-                      <ActionButton asChild tooltip="Prontuário">
-                        <Link
-                          href={`/patients/${paciente.id}/psychological-record`}
-                        >
-                          <FileText className="h-4 w-4" />
-                        </Link>
-                      </ActionButton>
-
-                      <ActionButton
-                        onClick={() => onArquivar(paciente)}
-                        tooltip={
-                          paciente.status === "active" ? "Arquivar" : "Reativar"
-                        }
-                      >
-                        {paciente.status === "active" ? (
-                          <Archive className="h-4 w-4" />
-                        ) : (
-                          <ArchiveRestore className="h-4 w-4" />
-                        )}
-                      </ActionButton>
+            <>
+              {pacientes.map((paciente) => (
+                <TableRow
+                  key={paciente.id}
+                  className="group border-border/50 hover:from-primary/8 hover:to-secondary/8 hover:border-primary/30 bg-card h-16 border-b transition-all duration-300 hover:bg-gradient-to-r"
+                >
+                  <TableCell className="px-6 py-4">
+                    <div className="text-foreground group-hover:text-primary text-base font-semibold transition-colors">
+                      {paciente.name}
                     </div>
-                  </TooltipProvider>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <span className="text-muted-foreground text-sm font-medium">
+                      {calculateAge(paciente.birthDate)} anos
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <div className="text-muted-foreground max-w-[180px] truncate text-sm font-medium">
+                      {paciente.email || "—"}
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <div className="text-muted-foreground text-sm font-medium">
+                      {paciente.phone || "—"}
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <div className="text-muted-foreground text-sm font-medium">
+                      {formatDateString(paciente.createdAt)}
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <Badge
+                      variant={
+                        paciente.status === "active" ? "default" : "secondary"
+                      }
+                      className={`px-2 py-1 text-xs font-medium transition-all duration-300 ${
+                        paciente.status === "active"
+                          ? "from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r shadow-sm"
+                          : "bg-muted text-muted-foreground border-border hover:bg-muted/80 border"
+                      }`}
+                    >
+                      {paciente.status === "active"
+                        ? "✅ Ativo"
+                        : "📁 Arquivado"}
+                    </Badge>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <TooltipProvider>
+                      <div className="flex items-center justify-center gap-2">
+                        <ActionButton asChild tooltip="Ver detalhes">
+                          <Link href={`/patients/${paciente.id}`}>
+                            <Eye className="h-4 w-4" />
+                          </Link>
+                        </ActionButton>
+
+                        <ActionButton asChild tooltip="Prontuário">
+                          <Link
+                            href={`/patients/${paciente.id}/psychological-record`}
+                          >
+                            <FileText className="h-4 w-4" />
+                          </Link>
+                        </ActionButton>
+
+                        <ActionButton
+                          onClick={() => onArquivar(paciente)}
+                          tooltip={
+                            paciente.status === "active"
+                              ? "Arquivar"
+                              : "Reativar"
+                          }
+                        >
+                          {paciente.status === "active" ? (
+                            <Archive className="h-4 w-4" />
+                          ) : (
+                            <ArchiveRestore className="h-4 w-4" />
+                          )}
+                        </ActionButton>
+                      </div>
+                    </TooltipProvider>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {/* Linha em branco fixa removida */}
+              {/* Linha de paginação */}
+              <TableRow className="bg-card border-b">
+                <TableCell className="px-6 py-2" colSpan={7}>
+                  <Pagination paginacao={paginacao} controles={controles} />
                 </TableCell>
               </TableRow>
-            ))
+            </>
           )}
         </TableBody>
       </Table>
