@@ -2,8 +2,10 @@
 
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useAction } from "next-safe-action/hooks";
+import { useEffect, useState } from "react";
 
+import { getPatients } from "@/actions/get-patients";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,135 +20,135 @@ import { Pagination } from "./_components/pagination";
 import { PatientsTablePure } from "./_components/patients-table-pure";
 import { Patient } from "./_components/types";
 
-// Dados mockados usando a tipagem existente
-const pacientesMock: Patient[] = [
-  {
-    id: "1",
-    name: "Maria Silva",
-    email: "maria@email.com",
-    phone: "(92) 99999-9999",
-    birthDate: "1990-05-15",
-    gender: "Feminino",
-    address: "Rua das Flores, 123, Centro, São Paulo - SP",
-    notes: "Paciente com histórico de ansiedade",
-    status: "active",
-    lastConsultation: "2025-01-10",
-    createdAt: "2024-12-01",
-    updatedAt: "2025-01-10",
-  },
-  {
-    id: "2",
-    name: "João Santos",
-    email: "joao@email.com",
-    phone: "(92) 99999-9999",
-    birthDate: "1985-03-22",
-    gender: "Masculino",
-    address: "Av. Paulista, 456, Bela Vista, São Paulo - SP",
-    notes: "Terapia cognitivo-comportamental",
-    status: "active",
-    lastConsultation: "2025-01-08",
-    createdAt: "2024-11-15",
-    updatedAt: "2025-01-08",
-  },
-  {
-    id: "3",
-    name: "Ana Costa",
-    email: "ana@email.com",
-    phone: "(92) 99999-9999",
-    birthDate: "1992-08-10",
-    gender: "Feminino",
-    address: "Rua Augusta, 789, Jardins, São Paulo - SP",
-    status: "inactive",
-    lastConsultation: "2024-12-15",
-    createdAt: "2024-10-20",
-    updatedAt: "2024-12-15",
-  },
-  {
-    id: "4",
-    name: "Pedro Oliveira",
-    email: "pedro@email.com",
-    phone: "(92) 99999-9999",
-    birthDate: "1988-11-30",
-    gender: "Masculino",
-    address: "Rua dos Pinheiros, 321, Pinheiros, São Paulo - SP",
-    notes: "Sessões de terapia familiar",
-    status: "active",
-    lastConsultation: "2025-01-12",
-    createdAt: "2024-12-05",
-    updatedAt: "2025-01-12",
-  },
-  {
-    id: "5",
-    name: "Carla Mendes",
-    email: "carla@email.com",
-    phone: "(92) 99999-9999",
-    birthDate: "1995-02-18",
-    gender: "Feminino",
-    address: "Rua da Consolação, 654, Consolação, São Paulo - SP",
-    status: "active",
-    lastConsultation: "2025-01-09",
-    createdAt: "2024-11-28",
-    updatedAt: "2025-01-09",
-  },
-];
-
 export default function PatientsPage() {
   const [termoBusca, setTermoBusca] = useState("");
-  const [filtroStatus, setFiltroStatus] = useState<string>("todos");
+  const [filtroStatus, setFiltroStatus] = useState<
+    "all" | "active" | "inactive"
+  >("all");
   const [paginaAtual, setPaginaAtual] = useState(1);
   const itensPorPagina = 10;
 
-  // Filtrar pacientes usando a lógica existente
-  const pacientesFiltrados = pacientesMock.filter((paciente) => {
-    const matchBusca =
-      paciente.name.toLowerCase().includes(termoBusca.toLowerCase()) ||
-      paciente.email.toLowerCase().includes(termoBusca.toLowerCase()) ||
-      paciente.phone.includes(termoBusca);
+  // Usar useAction para buscar pacientes
+  const {
+    execute: buscarPacientes,
+    result,
+    isExecuting,
+  } = useAction(getPatients);
 
-    const matchStatus =
-      filtroStatus === "todos" ||
-      (filtroStatus === "ativo" && paciente.status === "active") ||
-      (filtroStatus === "inativo" && paciente.status === "inactive");
+  // Buscar pacientes quando os filtros mudarem
+  useEffect(() => {
+    buscarPacientes({
+      search: termoBusca || undefined,
+      status: filtroStatus,
+      page: paginaAtual,
+      limit: itensPorPagina,
+    });
+  }, [termoBusca, filtroStatus, paginaAtual, buscarPacientes]);
 
-    return matchBusca && matchStatus;
-  });
-
-  // Paginação usando a estrutura existente
-  const totalPaginas = Math.ceil(pacientesFiltrados.length / itensPorPagina);
-  const inicio = (paginaAtual - 1) * itensPorPagina + 1;
-  const fim = Math.min(paginaAtual * itensPorPagina, pacientesFiltrados.length);
-
-  const paginacao = {
-    totalItens: pacientesFiltrados.length,
-    totalPaginas,
-    paginaAtual,
-    inicio,
-    fim,
-    temProxima: paginaAtual < totalPaginas,
-    temAnterior: paginaAtual > 1,
-    itensPorPagina,
+  // Dados dos pacientes e paginação vindos da action
+  const pacientesData = result?.data?.patients || [];
+  const paginacaoData = result?.data?.pagination || {
+    currentPage: 1,
+    totalPages: 1,
+    totalCount: 0,
+    hasNext: false,
+    hasPrev: false,
+    limit: itensPorPagina,
   };
 
+  // Mapear dados para o formato esperado pela tabela
+  const pacientes: Patient[] = pacientesData.map((p) => ({
+    id: p.id,
+    name: p.name,
+    email: p.email || "",
+    phone: p.phone || "",
+    birthDate: p.birth_date,
+    gender: p.gender || "",
+    address: [p.address, p.house_number, p.neighborhood, p.city, p.state]
+      .filter(Boolean)
+      .join(", "),
+    notes: p.notes || "",
+    status: p.status as "active" | "inactive",
+    lastConsultation: "", // TODO: Implementar quando houver consultas
+    createdAt: p.created_at?.toISOString() || "",
+    updatedAt: p.updated_at?.toISOString() || "",
+  }));
+
+  // Controles de paginação
   const controles = {
     irParaPagina: setPaginaAtual,
-    proximaPagina: () =>
-      setPaginaAtual((prev) => Math.min(prev + 1, totalPaginas)),
-    paginaAnterior: () => setPaginaAtual((prev) => Math.max(prev - 1, 1)),
+    proximaPagina: () => {
+      if (paginacaoData.hasNext) {
+        setPaginaAtual(paginacaoData.currentPage + 1);
+      }
+    },
+    paginaAnterior: () => {
+      if (paginacaoData.hasPrev) {
+        setPaginaAtual(paginacaoData.currentPage - 1);
+      }
+    },
     alterarItensPorPagina: () => {
       setPaginaAtual(1);
-      // Implementar lógica de itens por página se necessário
     },
   };
 
-  const pacientesPagina = pacientesFiltrados.slice(
-    (paginaAtual - 1) * itensPorPagina,
-    paginaAtual * itensPorPagina,
-  );
+  // Paginação ajustada para o formato esperado
+  const paginacao = {
+    totalItens: paginacaoData.totalCount,
+    totalPaginas: paginacaoData.totalPages,
+    paginaAtual: paginacaoData.currentPage,
+    inicio: (paginacaoData.currentPage - 1) * paginacaoData.limit + 1,
+    fim: Math.min(
+      paginacaoData.currentPage * paginacaoData.limit,
+      paginacaoData.totalCount,
+    ),
+    temProxima: paginacaoData.hasNext,
+    temAnterior: paginacaoData.hasPrev,
+    itensPorPagina: paginacaoData.limit,
+  };
 
   const handleArquivar = (paciente: Patient) => {
     console.log("Arquivar/Reativar paciente:", paciente);
-    // Implementar lógica de arquivar/reativar usando Server Actions
+    // TODO: Implementar lógica de arquivar/reativar usando Server Actions
   };
+
+  // Estado de loading
+  if (isExecuting) {
+    return (
+      <div className="space-y-8 p-6">
+        <div className="flex items-center justify-center py-20">
+          <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
+          <span className="text-muted-foreground ml-2">
+            Carregando pacientes...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // Estado de erro
+  if (result?.serverError) {
+    return (
+      <div className="space-y-8 p-6">
+        <div className="flex flex-col items-center justify-center space-y-4 py-20">
+          <p className="text-red-600">Erro ao carregar pacientes</p>
+          <Button
+            onClick={() =>
+              buscarPacientes({
+                search: termoBusca || undefined,
+                status: filtroStatus,
+                page: paginaAtual,
+                limit: itensPorPagina,
+              })
+            }
+            variant="outline"
+          >
+            Tentar novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 p-6">
@@ -161,22 +163,27 @@ export default function PatientsPage() {
             className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 py-3 pl-12 text-base font-medium shadow-sm backdrop-blur-sm transition-all duration-300"
           />
         </div>
-        <Select value={filtroStatus} onValueChange={setFiltroStatus}>
+        <Select
+          value={filtroStatus}
+          onValueChange={(value: "all" | "active" | "inactive") =>
+            setFiltroStatus(value)
+          }
+        >
           <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 w-full py-3 text-base font-medium shadow-sm backdrop-blur-sm sm:w-[220px]">
             <SelectValue placeholder="Filtrar por status" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card shadow-lg">
-            <SelectItem value="todos" className="py-3 text-base font-medium">
+            <SelectItem value="all" className="py-3 text-base font-medium">
               Todos os pacientes
             </SelectItem>
             <SelectItem
-              value="ativo"
+              value="active"
               className="text-primary py-3 text-base font-medium"
             >
               📋 Apenas ativos
             </SelectItem>
             <SelectItem
-              value="inativo"
+              value="inactive"
               className="text-muted-foreground py-3 text-base font-medium"
             >
               📁 Apenas inativos
@@ -197,7 +204,7 @@ export default function PatientsPage() {
 
       {/* Tabela sem card */}
       <PatientsTablePure
-        pacientes={pacientesPagina}
+        pacientes={pacientes}
         onArquivar={handleArquivar}
         termoBusca={termoBusca}
         filtroStatus={filtroStatus}
