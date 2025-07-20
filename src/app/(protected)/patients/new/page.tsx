@@ -8,7 +8,7 @@ export default function NewPatientPage() {
   const router = useRouter();
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-2 p-3">
       {/* Formulário direto */}
       <PatientForm
         onSuccess={() => {

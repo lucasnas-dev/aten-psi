@@ -1,5 +1,6 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
@@ -24,43 +25,65 @@ export const upsertPatient = tenantActionClient
       parsedInput: UpsertPatientInput;
       ctx: TenantCtx;
     }) => {
-      await db
-        .insert(patients)
-        .values({
-          // Map camelCase to snake_case as expected by the DB schema
-          ...(parsedInput.id ? { id: parsedInput.id } : {}),
-          name: parsedInput.name,
-          status: parsedInput.status,
-          birth_date: parsedInput.birthDate,
-          email: parsedInput.email,
-          phone: parsedInput.phone,
-          gender: parsedInput.gender,
-          address: parsedInput.address,
-          notes: parsedInput.notes,
-          tenant_id: ctx.user.tenantId, // <-- snake_case para o banco!
-        })
-        .onConflictDoUpdate({
-          target: [patients.id],
-          set: {
+      try {
+        // Se há ID, é update; se não há, é insert
+        if (parsedInput.id) {
+          // Update existing patient
+          await db
+            .update(patients)
+            .set({
+              name: parsedInput.name,
+              status: parsedInput.status,
+              birth_date: parsedInput.birthDate,
+              email: parsedInput.email,
+              phone: parsedInput.phone,
+              gender: parsedInput.gender,
+              cpf: parsedInput.cpf,
+              responsible_cpf: parsedInput.responsibleCpf,
+              cep: parsedInput.cep,
+              address: parsedInput.address,
+              house_number: parsedInput.houseNumber,
+              city: parsedInput.city,
+              state: parsedInput.state,
+              neighborhood: parsedInput.neighborhood,
+              notes: parsedInput.notes,
+              updated_at: new Date(),
+            })
+            .where(eq(patients.id, parsedInput.id));
+        } else {
+          // Insert new patient
+          await db.insert(patients).values({
             name: parsedInput.name,
             status: parsedInput.status,
             birth_date: parsedInput.birthDate,
             email: parsedInput.email,
             phone: parsedInput.phone,
             gender: parsedInput.gender,
+            cpf: parsedInput.cpf,
+            responsible_cpf: parsedInput.responsibleCpf,
+            cep: parsedInput.cep,
             address: parsedInput.address,
+            house_number: parsedInput.houseNumber,
+            city: parsedInput.city,
+            state: parsedInput.state,
+            neighborhood: parsedInput.neighborhood,
             notes: parsedInput.notes,
-            tenant_id: ctx.user.tenantId, // <-- snake_case para o banco!
-            updated_at: new Date(), // <-- snake_case para o banco!
-          },
-        });
+            tenant_id: ctx.user.tenantId,
+          });
+        }
 
-      revalidatePath("/patients");
-      if (parsedInput.id) {
-        revalidatePath(`/patients/${parsedInput.id}`);
+        revalidatePath("/patients");
+        if (parsedInput.id) {
+          revalidatePath(`/patients/${parsedInput.id}`);
+        }
+
+        return { success: true };
+      } catch (error) {
+        console.error("Erro na action upsertPatient:", error);
+        throw new Error(
+          `Falha ao salvar paciente: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
+        );
       }
-
-      return { success: true };
     },
   );
 

@@ -658,3 +658,53 @@
     display: none !important;
   }
 }
+
+/* Melhorias nos campos de formulário - Maior contraste */
+.form-input-enhanced {
+  background-color: oklch(0.95 0.005 240) !important;
+  border: 1.5px solid oklch(0.8 0.02 240) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-input-enhanced:focus {
+  background-color: oklch(0.98 0.005 240) !important;
+  border-color: oklch(0.55 0.15 240) !important;
+  box-shadow: 0 0 0 3px oklch(0.55 0.15 240 / 0.15) !important;
+}
+
+.form-input-enhanced:hover:not(:focus) {
+  background-color: oklch(0.94 0.01 240) !important;
+  border-color: oklch(0.7 0.05 240) !important;
+}
+
+/* Para inputs desabilitados */
+.form-input-enhanced:disabled {
+  background-color: oklch(0.9 0.01 240) !important;
+  border-color: oklch(0.85 0.01 240) !important;
+  opacity: 0.6;
+}
+
+/* Para selects */
+.form-select-enhanced {
+  background-color: oklch(0.95 0.005 240) !important;
+  border: 1.5px solid oklch(0.8 0.02 240) !important;
+}
+
+.form-select-enhanced:focus {
+  background-color: oklch(0.98 0.005 240) !important;
+  border-color: oklch(0.55 0.15 240) !important;
+  box-shadow: 0 0 0 3px oklch(0.55 0.15 240 / 0.15) !important;
+}
+
+/* Para textareas */
+.form-textarea-enhanced {
+  background-color: oklch(0.95 0.005 240) !important;
+  border: 1.5px solid oklch(0.8 0.02 240) !important;
+  resize: vertical;
+}
+
+.form-textarea-enhanced:focus {
+  background-color: oklch(0.98 0.005 240) !important;
+  border-color: oklch(0.55 0.15 240) !important;
+  box-shadow: 0 0 0 3px oklch(0.55 0.15 240 / 0.15) !important;
+}

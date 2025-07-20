@@ -1,0 +1,1 @@
+ALTER TABLE "patients" ADD COLUMN "house_number" varchar(20);

@@ -28,7 +28,14 @@ export function PatientForm({ onSuccess }: { onSuccess: () => void }) {
       phone: "",
       birthDate: "",
       gender: "",
+      cpf: "",
+      responsibleCpf: "",
+      cep: "",
       address: "",
+      houseNumber: "",
+      city: "",
+      state: "",
+      neighborhood: "",
       notes: "",
       status: "active",
     },
@@ -37,6 +44,7 @@ export function PatientForm({ onSuccess }: { onSuccess: () => void }) {
   const { execute, isExecuting } = useAction(upsertPatient, {
     onSuccess,
     onError: (err) => {
+      console.error("Erro detalhado:", err);
       setError(
         err?.error?.serverError ||
           err?.error?.validationErrors?._errors?.[0] ||
@@ -47,35 +55,38 @@ export function PatientForm({ onSuccess }: { onSuccess: () => void }) {
 
   async function onSubmit(data: PatientFormValues) {
     setError(null);
+    console.log("Dados sendo enviados:", data);
     execute(data);
   }
 
   return (
-    <div className="bg-card border-border rounded-xl border shadow-xl backdrop-blur-sm transition-all duration-300">
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-6 p-8">
+          <div className="space-y-1 p-3">
             {error && (
-              <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
+              <div className="rounded-md border border-red-200 bg-red-50 p-3 text-xs text-red-800">
                 {error}
               </div>
             )}
             <PatientFields control={form.control} />
-          </div>
-          <div className="border-border flex justify-end gap-4 border-t p-8 pt-8">
-            <Button variant="outline" asChild className="min-w-[120px]">
-              <Link href="/patients" className="flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                Voltar
-              </Link>
-            </Button>
-            <Button
-              type="submit"
-              disabled={isExecuting}
-              className="min-w-[150px]"
-            >
-              {isExecuting ? "Salvando..." : "Salvar Paciente"}
-            </Button>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <Button variant="outline" asChild className="min-w-[100px]">
+                <Link href="/patients" className="flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  Voltar
+                </Link>
+              </Button>
+              <Button
+                type="submit"
+                variant="outline"
+                disabled={isExecuting}
+                className="min-w-[130px]"
+              >
+                {isExecuting ? "Salvando..." : "Salvar Paciente"}
+              </Button>
+            </div>
           </div>
         </form>
       </Form>
