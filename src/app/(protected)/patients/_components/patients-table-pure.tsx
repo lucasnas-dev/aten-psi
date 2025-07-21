@@ -103,7 +103,7 @@ interface ControlesPaginacaoProps {
   irParaPagina: (pagina: number) => void;
   proximaPagina: () => void;
   paginaAnterior: () => void;
-  alterarItensPorPagina: () => void;
+  alterarItensPorPagina: (qtd: number) => void;
 }
 
 interface PatientsTablePureProps {

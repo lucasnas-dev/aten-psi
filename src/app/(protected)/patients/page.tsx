@@ -25,8 +25,8 @@ export default function PatientsPage() {
   const [filtroStatus, setFiltroStatus] = useState<
     "all" | "active" | "inactive"
   >("all");
+  const [itensPorPagina, setItensPorPagina] = useState(10);
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const itensPorPagina = 10;
 
   // Usar useAction para buscar pacientes
   const {
@@ -106,7 +106,8 @@ export default function PatientsPage() {
         setPaginaAtual(paginacaoData.currentPage - 1);
       }
     },
-    alterarItensPorPagina: () => {
+    alterarItensPorPagina: (qtd: number) => {
+      setItensPorPagina(qtd);
       setPaginaAtual(1);
     },
   };
