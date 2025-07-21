@@ -304,16 +304,13 @@ export function PatientsTablePure({
                 </TableRow>
               ))}
               {/* Linha em branco fixa removida */}
-              {/* Linha de paginação */}
-              <TableRow className="bg-card border-b">
-                <TableCell className="px-6 py-2" colSpan={7}>
-                  <Pagination paginacao={paginacao} controles={controles} />
-                </TableCell>
-              </TableRow>
+              {/* Paginação fora da tabela */}
             </>
           )}
         </TableBody>
       </Table>
-    </div>
+    {/* Paginação fora da tabela */}
+    <Pagination paginacao={paginacao} controles={controles} />
+  </div>
   );
 }
