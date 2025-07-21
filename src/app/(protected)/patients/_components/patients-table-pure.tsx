@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import {
   Archive,
   ArchiveRestore,
@@ -12,6 +14,7 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -28,8 +31,8 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDate } from "@/lib/utils";
 
-import { Patient } from "./types";
 import { Pagination } from "./pagination";
+import { Patient } from "./types";
 
 // Função para calcular idade
 const calculateAge = (birthDate: string) => {
@@ -85,13 +88,32 @@ const ActionButton = ({
   </Tooltip>
 );
 
+interface PaginacaoProps {
+  totalItens: number;
+  totalPaginas: number;
+  paginaAtual: number;
+  inicio: number;
+  fim: number;
+  temProxima: boolean;
+  temAnterior: boolean;
+  itensPorPagina: number;
+}
+
+interface ControlesPaginacaoProps {
+  irParaPagina: (pagina: number) => void;
+  proximaPagina: () => void;
+  paginaAnterior: () => void;
+  alterarItensPorPagina: () => void;
+}
+
 interface PatientsTablePureProps {
   pacientes: Patient[];
   onArquivar: (paciente: Patient) => void;
   termoBusca: string;
   filtroStatus: string;
-  paginacao: any;
-  controles: any;
+  paginacao: PaginacaoProps;
+  controles: ControlesPaginacaoProps;
+  isLoading: boolean;
 }
 
 export function PatientsTablePure({
@@ -101,6 +123,7 @@ export function PatientsTablePure({
   filtroStatus,
   paginacao,
   controles,
+  isLoading,
 }: PatientsTablePureProps) {
   return (
     <div className="bg-card rounded-md">
@@ -131,11 +154,42 @@ export function PatientsTablePure({
           </TableRow>
         </TableHeader>
         <TableBody className="bg-card">
-          {pacientes.length === 0 ? (
+          {isLoading ? (
+            // Skeleton loader
+            Array.from({ length: 5 }).map((_, index) => (
+              <TableRow key={index} className="h-16 border-b">
+                <TableCell className="px-6">
+                  <Skeleton className="h-5 w-32" />
+                </TableCell>
+                <TableCell className="px-4">
+                  <Skeleton className="h-5 w-16" />
+                </TableCell>
+                <TableCell className="px-4">
+                  <Skeleton className="h-5 w-40" />
+                </TableCell>
+                <TableCell className="px-4">
+                  <Skeleton className="h-5 w-24" />
+                </TableCell>
+                <TableCell className="px-4">
+                  <Skeleton className="h-5 w-20" />
+                </TableCell>
+                <TableCell className="px-4">
+                  <Skeleton className="h-6 w-20 rounded-full" />
+                </TableCell>
+                <TableCell className="px-4">
+                  <div className="flex items-center justify-center gap-2">
+                    <Skeleton className="h-8 w-8" />
+                    <Skeleton className="h-8 w-8" />
+                    <Skeleton className="h-8 w-8" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : pacientes.length === 0 ? (
             <TableRow className="bg-card">
               <TableCell colSpan={7} className="bg-card py-12 text-center">
                 <div className="flex flex-col items-center gap-4">
-                  {termoBusca || filtroStatus !== "todos" ? (
+                  {termoBusca || filtroStatus !== "all" ? (
                     <div className="text-muted-foreground">
                       <Search className="mx-auto mb-4 h-12 w-12 opacity-50" />
                       <p className="text-lg font-medium">

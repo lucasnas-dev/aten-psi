@@ -3,7 +3,7 @@
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { useAction } from "next-safe-action/hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { getPatients } from "@/actions/get-patients";
 import { Button } from "@/components/ui/button";
@@ -16,12 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Pagination } from "./_components/pagination";
 import { PatientsTablePure } from "./_components/patients-table-pure";
-import { Patient } from "./_components/types";
+import { Patient } from "./_components/types"; // FIX: Importação do tipo Patient
 
 export default function PatientsPage() {
   const [termoBusca, setTermoBusca] = useState("");
+  const [debouncedTermoBusca, setDebouncedTermoBusca] = useState(""); // OPTIMIZATION: Estado para o termo de busca com debounce
   const [filtroStatus, setFiltroStatus] = useState<
     "all" | "active" | "inactive"
   >("all");
@@ -35,18 +35,34 @@ export default function PatientsPage() {
     isExecuting,
   } = useAction(getPatients);
 
-  // Buscar pacientes quando os filtros mudarem
+  // OPTIMIZATION: Aplicar debounce ao termo de busca para evitar chamadas excessivas à API
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedTermoBusca(termoBusca);
+      setPaginaAtual(1); // UX: Resetar página ao buscar
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [termoBusca]);
+
+  // UX: Resetar a página ao mudar o filtro de status
+  const handleFiltroStatusChange = (value: "all" | "active" | "inactive") => {
+    setFiltroStatus(value);
+    setPaginaAtual(1);
+  };
+
+  // Buscar pacientes quando os filtros ou a página mudarem
   useEffect(() => {
     buscarPacientes({
-      search: termoBusca || undefined,
+      search: debouncedTermoBusca || undefined,
       status: filtroStatus,
       page: paginaAtual,
       limit: itensPorPagina,
     });
-  }, [termoBusca, filtroStatus, paginaAtual, buscarPacientes]);
+  }, [debouncedTermoBusca, filtroStatus, paginaAtual, buscarPacientes]);
 
-  // Dados dos pacientes e paginação vindos da action
-  const pacientesData = result?.data?.patients || [];
   const paginacaoData = result?.data?.pagination || {
     currentPage: 1,
     totalPages: 1,
@@ -56,23 +72,26 @@ export default function PatientsPage() {
     limit: itensPorPagina,
   };
 
-  // Mapear dados para o formato esperado pela tabela
-  const pacientes: Patient[] = pacientesData.map((p) => ({
-    id: p.id,
-    name: p.name,
-    email: p.email || "",
-    phone: p.phone || "",
-    birthDate: p.birth_date,
-    gender: p.gender || "",
-    address: [p.address, p.house_number, p.neighborhood, p.city, p.state]
-      .filter(Boolean)
-      .join(", "),
-    notes: p.notes || "",
-    status: p.status as "active" | "inactive",
-    lastConsultation: "", // TODO: Implementar quando houver consultas
-    createdAt: p.created_at?.toISOString() || "",
-    updatedAt: p.updated_at?.toISOString() || "",
-  }));
+  // OPTIMIZATION: Mapear dados usando useMemo para evitar recálculos desnecessários
+  const pacientes: Patient[] = useMemo(() => {
+    const pacientesData = result?.data?.patients || [];
+    return pacientesData.map((p) => ({
+      id: p.id,
+      name: p.name,
+      email: p.email || "",
+      phone: p.phone || "",
+      birthDate: p.birth_date,
+      gender: p.gender || "",
+      address: [p.address, p.house_number, p.neighborhood, p.city, p.state]
+        .filter(Boolean)
+        .join(", "),
+      notes: p.notes || "",
+      status: p.status as "active" | "inactive",
+      lastConsultation: "", // TODO: Implementar quando houver consultas
+      createdAt: p.created_at?.toISOString() || "",
+      updatedAt: p.updated_at?.toISOString() || "",
+    }));
+  }, [result?.data?.patients]);
 
   // Controles de paginação
   const controles = {
@@ -113,7 +132,7 @@ export default function PatientsPage() {
   };
 
   // Estado de loading
-  if (isExecuting) {
+  if (isExecuting && !result.data) {
     return (
       <div className="space-y-8 p-6">
         <div className="flex items-center justify-center py-20">
@@ -135,7 +154,7 @@ export default function PatientsPage() {
           <Button
             onClick={() =>
               buscarPacientes({
-                search: termoBusca || undefined,
+                search: debouncedTermoBusca || undefined,
                 status: filtroStatus,
                 page: paginaAtual,
                 limit: itensPorPagina,
@@ -163,12 +182,7 @@ export default function PatientsPage() {
             className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 py-3 pl-12 text-base font-medium shadow-sm backdrop-blur-sm transition-all duration-300"
           />
         </div>
-        <Select
-          value={filtroStatus}
-          onValueChange={(value: "all" | "active" | "inactive") =>
-            setFiltroStatus(value)
-          }
-        >
+        <Select value={filtroStatus} onValueChange={handleFiltroStatusChange}>
           <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 w-full py-3 text-base font-medium shadow-sm backdrop-blur-sm sm:w-[220px]">
             <SelectValue placeholder="Filtrar por status" />
           </SelectTrigger>
@@ -206,14 +220,12 @@ export default function PatientsPage() {
       <PatientsTablePure
         pacientes={pacientes}
         onArquivar={handleArquivar}
-        termoBusca={termoBusca}
+        termoBusca={debouncedTermoBusca}
         filtroStatus={filtroStatus}
+        paginacao={paginacao}
+        controles={controles}
+        isLoading={isExecuting}
       />
-
-      {/* Paginação com espaçamento */}
-      <div className="flex justify-center pt-4">
-        <Pagination paginacao={paginacao} controles={controles} />
-      </div>
     </div>
   );
 }
