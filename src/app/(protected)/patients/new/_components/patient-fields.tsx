@@ -50,6 +50,28 @@ export function PatientFields({
     return numbers.replace(/(\d{5})(\d{3})/, "$1-$2");
   };
 
+  const formatName = (value: string) => {
+    // Lista de preposições e artigos que devem ficar em minúsculas
+    const preposicoes = ['de', 'da', 'do', 'das', 'dos', 'e', 'o', 'a', 'os', 'as'];
+    
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map((palavra, index) => {
+        // Primeira palavra sempre maiúscula
+        if (index === 0) {
+          return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+        }
+        // Preposições ficam em minúsculas, exceto se forem a primeira palavra
+        if (preposicoes.includes(palavra)) {
+          return palavra;
+        }
+        // Outras palavras com primeira letra maiúscula
+        return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+      })
+      .join(' ');
+  };
+
   const handleCpfChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     onChange: (value: string) => void,
@@ -57,6 +79,15 @@ export function PatientFields({
     const numbers = e.target.value.replace(/\D/g, "");
     e.target.value = formatCPF(numbers);
     onChange(numbers); // Salva apenas números
+  };
+
+  const handleNameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string) => void,
+  ) => {
+    const formattedName = formatName(e.target.value);
+    e.target.value = formattedName;
+    onChange(formattedName);
   };
 
   const handlePhoneChange = (
@@ -104,13 +135,13 @@ export function PatientFields({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {/* Seção: Informações Pessoais */}
       <div className="space-y-1">
         <h3 className="text-foreground border-b pb-1 text-base font-semibold">
           Informações Pessoais
         </h3>
-        <div className="grid grid-cols-1 gap-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-2 lg:grid-cols-3">
           <FormField
             control={control}
             name="name"
@@ -122,6 +153,7 @@ export function PatientFields({
                     placeholder="Nome do paciente"
                     className="form-input-enhanced"
                     {...field}
+                    onChange={(e) => handleNameChange(e, field.onChange)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -268,7 +300,7 @@ export function PatientFields({
         <h3 className="text-foreground border-b pb-1 text-base font-semibold">
           Endereço
         </h3>
-        <div className="grid grid-cols-1 gap-1 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-4">
           <FormField
             control={control}
             name="cep"
@@ -324,7 +356,7 @@ export function PatientFields({
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-1 md:grid-cols-4 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-4 lg:grid-cols-4">
           <FormField
             control={control}
             name="address"

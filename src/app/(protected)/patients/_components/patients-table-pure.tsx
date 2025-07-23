@@ -127,7 +127,7 @@ export function PatientsTablePure({
 }: PatientsTablePureProps) {
   return (
     <div className="bg-card rounded-md">
-      <Table className="bg-card">
+      <Table className="bg-card border-collapse">
         <TableHeader className="sticky top-0 z-10">
           <TableRow className="from-primary/15 to-secondary/15 border-border hover:from-primary/20 hover:to-secondary/20 h-14 bg-gradient-to-r transition-all duration-300">
             <TableHead className="w-[250px] px-6 text-base font-extrabold text-slate-700 dark:text-slate-300">
@@ -157,7 +157,7 @@ export function PatientsTablePure({
           {isLoading ? (
             // Skeleton loader
             Array.from({ length: 5 }).map((_, index) => (
-              <TableRow key={index} className="h-16 border-b">
+              <TableRow key={index} className="h-13.5 border-b">
                 <TableCell className="px-6">
                   <Skeleton className="h-5 w-32" />
                 </TableCell>
@@ -218,39 +218,39 @@ export function PatientsTablePure({
               {pacientes.map((paciente) => (
                 <TableRow
                   key={paciente.id}
-                  className="group border-border/50 hover:from-primary/8 hover:to-secondary/8 hover:border-primary/30 bg-card h-16 border-b transition-all duration-300 hover:bg-gradient-to-r"
+                  className="group border-border/50 hover:from-primary/8 hover:to-secondary/8 hover:border-primary/30 bg-card h-13.5 border-b transition-all duration-300 hover:bg-gradient-to-r"
                 >
-                  <TableCell className="px-6 py-4">
+                  <TableCell className="px-6 py-2">
                     <div className="text-foreground group-hover:text-primary text-base font-semibold transition-colors">
                       {paciente.name}
                     </div>
                   </TableCell>
 
-                  <TableCell className="px-4 py-4">
-                    <span className="text-muted-foreground text-sm font-medium">
+                  <TableCell className="px-4 py-2">
+                    <span className="text-muted-foreground text-base font-medium">
                       {calculateAge(paciente.birthDate)} anos
                     </span>
                   </TableCell>
 
-                  <TableCell className="px-4 py-4">
-                    <div className="text-muted-foreground max-w-[180px] truncate text-sm font-medium">
+                  <TableCell className="px-4 py-2">
+                    <div className="text-muted-foreground max-w-[180px] truncate text-base font-medium">
                       {paciente.email || "—"}
                     </div>
                   </TableCell>
 
-                  <TableCell className="px-4 py-4">
-                    <div className="text-muted-foreground text-sm font-medium">
+                  <TableCell className="px-4 py-2">
+                    <div className="text-muted-foreground text-base font-medium">
                       {paciente.phone || "—"}
                     </div>
                   </TableCell>
 
-                  <TableCell className="px-4 py-4">
-                    <div className="text-muted-foreground text-sm font-medium">
+                  <TableCell className="px-4 py-2">
+                    <div className="text-muted-foreground text-base font-medium">
                       {formatDateString(paciente.createdAt)}
                     </div>
                   </TableCell>
 
-                  <TableCell className="px-4 py-4">
+                  <TableCell className="px-4 py-2">
                     <Badge
                       variant={
                         paciente.status === "active" ? "default" : "secondary"
@@ -267,7 +267,7 @@ export function PatientsTablePure({
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="px-4 py-4">
+                  <TableCell className="px-4 py-2">
                     <TooltipProvider>
                       <div className="flex items-center justify-center gap-2">
                         <ActionButton asChild tooltip="Ver detalhes">
@@ -309,8 +309,10 @@ export function PatientsTablePure({
           )}
         </TableBody>
       </Table>
-    {/* Paginação fora da tabela */}
-    <Pagination paginacao={paginacao} controles={controles} />
+      {/* Linha separadora consistente */}
+      <div className="border-t border-border/30 mt-0 mb-4"></div>
+      {/* Paginação fora da tabela */}
+      <Pagination paginacao={paginacao} controles={controles} />
   </div>
   );
 }

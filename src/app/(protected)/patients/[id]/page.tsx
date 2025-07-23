@@ -1,7 +1,6 @@
-"use client";
-
 import {
   Archive,
+  ArrowLeft,
   Calendar,
   Edit,
   FileText,
@@ -11,79 +10,74 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
+import { auth } from "@/lib/auth";
+import { db } from "@/db";
+import { patients, users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { BackButton } from "./_components/back-button";
 
-// Tipagem do paciente
+// Tipagem do paciente baseada no schema do banco
 type Patient = {
-  id: number;
+  id: string;
   name: string;
-  email?: string;
-  phone?: string;
-  birthDate: string;
-  gender?: string;
-  address?: string;
-  status: "active" | "inactive";
-  notes?: string;
-  createdAt: string;
-  lastConsultation?: string;
+  email?: string | null;
+  phone?: string | null;
+  birth_date: string;
+  gender?: string | null;
+  address?: string | null;
+  house_number?: string | null;
+  city?: string | null;
+  state?: string | null;
+  neighborhood?: string | null;
+  cep?: string | null;
+  cpf?: string | null;
+  responsible_cpf?: string | null;
+  status: string;
+  notes?: string | null;
+  created_at?: Date | null;
+  updated_at?: Date | null;
+  tenant_id: string;
 };
 
-export default function PatientDetailsPage() {
-  const params = useParams();
-  const patientId = params.id as string;
+export default async function PatientDetailsPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  
+  if (!session?.user?.id) {
+    notFound();
+  }
 
-  const [patient, setPatient] = useState<Patient | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Buscar o usuário no banco para obter o tenant_id
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, session.user.id),
+  });
 
-  useEffect(() => {
-    // Dados mockados - substituir pela chamada da API
-    const mockPatient: Patient = {
-      id: Number(patientId),
-      name: "Maria Silva",
-      email: "maria@email.com",
-      phone: "(92) 99999-9999",
-      birthDate: "1985-03-15",
-      gender: "female",
-      address: "Rua das Flores, 123 - São Paulo, SP",
-      status: "active",
-      notes:
-        "Paciente com histórico de ansiedade. Responde bem ao tratamento cognitivo-comportamental.",
-      createdAt: "2024-01-15",
-      lastConsultation: "2025-01-10",
-    };
+  if (!user?.tenant_id) {
+    notFound();
+  }
 
-    // Simular carregamento
-    const loadPatient = async () => {
-      try {
-        setIsLoading(true);
-        // Aqui você faria a chamada real para a API
-        // const response = await fetch(`/api/patients/${patientId}`);
-        // const data = await response.json();
+  // Buscar o paciente diretamente no banco
+  const patient = await db
+    .select()
+    .from(patients)
+    .where(eq(patients.id, params.id))
+    .then(rows => rows[0]);
 
-        // Simulando delay da API
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setPatient(mockPatient);
-      } catch (err) {
-        console.error("Erro ao carregar paciente:", err);
-        setError("Erro ao carregar dados do paciente");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadPatient();
-  }, [patientId]);
-
-  const handleArchivePatient = async () => {
-    // Implementar lógica de arquivar/ativar paciente
-    console.log("Archive patient:", patient);
-  };
+  // Se o paciente não existe ou não pertence ao tenant do usuário
+  if (!patient || patient.tenant_id !== user.tenant_id) {
+    notFound();
+  }
 
   const calculateAge = (birthDate: string) => {
     const today = new Date();
@@ -101,7 +95,7 @@ export default function PatientDetailsPage() {
     return age;
   };
 
-  const formatGender = (gender?: string) => {
+  const formatGender = (gender?: string | null) => {
     const genderMap = {
       male: "Masculino",
       female: "Feminino",
@@ -113,52 +107,39 @@ export default function PatientDetailsPage() {
       : "Não informado";
   };
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6 p-6">
-        <div className="flex h-[400px] items-center justify-center">
-          <div className="text-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-            <p className="text-muted-foreground mt-2 text-sm">
-              Carregando dados do paciente...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !patient) {
-    return (
-      <div className="space-y-6 p-6">
-        <div className="flex h-[400px] items-center justify-center">
-          <div className="text-center">
-            <p className="text-muted-foreground">
-              {error || "Paciente não encontrado"}
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const formatAddress = (patient: Patient) => {
+    const parts = [
+      patient.address,
+      patient.house_number,
+      patient.neighborhood,
+      patient.city,
+      patient.state
+    ].filter(Boolean);
+    return parts.join(", ") || null;
+  };
 
   return (
     <div className="space-y-6 p-6">
       {/* Header com navegação */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
-          <p className="text-muted-foreground">
-            Cadastrado em{" "}
-            {new Date(patient.createdAt).toLocaleDateString("pt-BR")}
-          </p>
+        <div className="flex items-start gap-3">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
+              <Badge
+                variant={patient.status === "active" ? "default" : "secondary"}
+              >
+                {patient.status === "active" ? "Ativo" : "Inativo"}
+              </Badge>
+            </div>
+            <p className="text-muted-foreground">
+              Cadastrado em{" "}
+              {new Date(patient.created_at || new Date()).toLocaleDateString("pt-BR")}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
-          <Badge
-            variant={patient.status === "active" ? "default" : "secondary"}
-          >
-            {patient.status === "active" ? "Ativo" : "Inativo"}
-          </Badge>
+          <BackButton />
           <Button variant="outline" size="sm" asChild>
             <Link href={`/patients/${patient.id}/edit`}>
               <Edit className="mr-2 h-4 w-4" />
@@ -171,10 +152,11 @@ export default function PatientDetailsPage() {
               Prontuário
             </Link>
           </Button>
-          <Button variant="outline" size="sm" onClick={handleArchivePatient}>
+          {/* Botão de arquivar comentado - precisa ser implementado como server action ou componente cliente */}
+          {/* <Button variant="outline" size="sm" onClick={handleArchivePatient}>
             <Archive className="mr-2 h-4 w-4" />
             {patient.status === "active" ? "Arquivar" : "Ativar"}
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -193,8 +175,8 @@ export default function PatientDetailsPage() {
                   <div>
                     <p className="text-sm font-medium">Data de Nascimento</p>
                     <p className="text-muted-foreground text-sm">
-                      {new Date(patient.birthDate).toLocaleDateString("pt-BR")}{" "}
-                      ({calculateAge(patient.birthDate)} anos)
+                      {new Date(patient.birth_date).toLocaleDateString("pt-BR")}{" "}
+                      ({calculateAge(patient.birth_date)} anos)
                     </p>
                   </div>
                 </div>
@@ -244,7 +226,7 @@ export default function PatientDetailsPage() {
             </div>
 
             {/* Endereço - Largura completa */}
-            {patient.address && (
+            {formatAddress(patient) && (
               <>
                 <Separator />
                 <div className="flex items-center gap-3">
@@ -252,7 +234,7 @@ export default function PatientDetailsPage() {
                   <div>
                     <p className="text-sm font-medium">Endereço</p>
                     <p className="text-muted-foreground text-sm">
-                      {patient.address}
+                      {formatAddress(patient)}
                     </p>
                   </div>
                 </div>
@@ -277,38 +259,17 @@ export default function PatientDetailsPage() {
           </div>
         </div>
 
-        {/* Informações de Atendimento */}
-        <div>
-          <h2 className="mb-3 text-xl font-semibold">
-            Histórico de Atendimento
-          </h2>
-          <div className="space-y-2">
-            {patient.lastConsultation ? (
-              <div>
-                <p className="text-sm font-medium">Última Consulta</p>
-                <p className="text-muted-foreground text-sm">
-                  {new Date(patient.lastConsultation).toLocaleDateString(
-                    "pt-BR",
-                  )}
-                </p>
-              </div>
-            ) : (
-              <p className="text-muted-foreground text-sm">
-                Nenhuma consulta registrada ainda.
-              </p>
-            )}
-
-            <Separator />
-
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                Ver Consultas
-              </Button>
-              <Button variant="outline" size="sm">
-                Nova Consulta
-              </Button>
-            </div>
+        {/* TODO: Implementar histórico de consultas */}
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-red-500" />
+            <p className="text-red-700 font-medium text-sm">
+              🚨 IMPLEMENTAR HISTÓRICO DE CONSULTAS!!!!!!
+            </p>
           </div>
+          <p className="text-red-600 text-xs mt-2">
+            Lembrete: Criar tabela de consultas no banco e implementar funcionalidade de histórico
+          </p>
         </div>
       </div>
     </div>
