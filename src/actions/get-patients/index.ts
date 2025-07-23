@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, desc, asc, eq, ilike, or, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { patients } from "@/db/schema";
@@ -25,7 +25,7 @@ export const getPatients = tenantActionClient
       ctx: TenantCtx;
     }) => {
       try {
-        const { search, status, page, limit } = parsedInput;
+        const { search, status, page, limit, orderBy, orderDirection } = parsedInput;
 
         // Construir condições de busca
         const searchConditions = search
@@ -50,12 +50,29 @@ export const getPatients = tenantActionClient
           statusCondition,
         ].filter(Boolean);
 
+        // Configurar ordenação
+        const getOrderColumn = () => {
+          switch (orderBy) {
+            case "name":
+              // Usar LOWER() para ordenação case-insensitive
+              return sql`LOWER(${patients.name})`;
+            case "updated_at":
+              return patients.updated_at;
+            case "created_at":
+            default:
+              return patients.created_at;
+          }
+        };
+
+        const orderColumn = getOrderColumn();
+        const orderFunction = orderDirection === "asc" ? asc : desc;
+
         // Buscar pacientes com paginação
         const patientsData = await db
           .select()
           .from(patients)
           .where(and(...conditions))
-          .orderBy(desc(patients.created_at))
+          .orderBy(orderFunction(orderColumn))
           .limit(limit)
           .offset((page - 1) * limit);
 

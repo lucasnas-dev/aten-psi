@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BackButton } from "./_components/back-button";
+import { ArchiveButton } from "./_components/archive-button";
 
 // Tipagem do paciente baseada no schema do banco
 type Patient = {
@@ -152,11 +153,10 @@ export default async function PatientDetailsPage({
               Prontuário
             </Link>
           </Button>
-          {/* Botão de arquivar comentado - precisa ser implementado como server action ou componente cliente */}
-          {/* <Button variant="outline" size="sm" onClick={handleArchivePatient}>
-            <Archive className="mr-2 h-4 w-4" />
-            {patient.status === "active" ? "Arquivar" : "Ativar"}
-          </Button> */}
+          <ArchiveButton 
+            patientId={patient.id} 
+            currentStatus={patient.status} 
+          />
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
 import { getPatients } from "@/actions/get-patients";
+import { archivePatient } from "@/actions/archive-patient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,6 +28,13 @@ export default function PatientsPage() {
   >("all");
   const [itensPorPagina, setItensPorPagina] = useState(8);
   const [paginaAtual, setPaginaAtual] = useState(1);
+  const [ordenacao, setOrdenacao] = useState<{
+    orderBy: "name" | "created_at" | "updated_at";
+    orderDirection: "asc" | "desc";
+  }>({
+    orderBy: "created_at",
+    orderDirection: "desc",
+  });
 
   // Usar useAction para buscar pacientes
   const {
@@ -34,6 +42,13 @@ export default function PatientsPage() {
     result,
     isExecuting,
   } = useAction(getPatients);
+
+  // Usar useAction para arquivar pacientes
+  const {
+    execute: arquivarPaciente,
+    result: resultArquivar,
+    isExecuting: isArchiving,
+  } = useAction(archivePatient);
 
   // OPTIMIZATION: Aplicar debounce ao termo de busca para evitar chamadas excessivas à API
   useEffect(() => {
@@ -60,8 +75,10 @@ export default function PatientsPage() {
       status: filtroStatus,
       page: paginaAtual,
       limit: itensPorPagina,
+      orderBy: ordenacao.orderBy,
+      orderDirection: ordenacao.orderDirection,
     });
-  }, [debouncedTermoBusca, filtroStatus, paginaAtual, itensPorPagina, buscarPacientes]);
+  }, [debouncedTermoBusca, filtroStatus, paginaAtual, itensPorPagina, ordenacao, buscarPacientes]);
 
   const paginacaoData = result?.data?.pagination || {
     currentPage: 1,
@@ -127,9 +144,27 @@ export default function PatientsPage() {
     itensPorPagina: paginacaoData.limit,
   };
 
-  const handleArquivar = (paciente: Patient) => {
-    console.log("Arquivar/Reativar paciente:", paciente);
-    // TODO: Implementar lógica de arquivar/reativar usando Server Actions
+  const handleArquivar = async (paciente: Patient) => {
+    const novoStatus = paciente.status === "active" ? "inactive" : "active";
+    
+    try {
+      await arquivarPaciente({
+        id: paciente.id,
+        status: novoStatus,
+      });
+
+      // Recarregar a lista de pacientes após arquivar/desarquivar
+      buscarPacientes({
+        search: debouncedTermoBusca || undefined,
+        status: filtroStatus,
+        page: paginaAtual,
+        limit: itensPorPagina,
+        orderBy: ordenacao.orderBy,
+        orderDirection: ordenacao.orderDirection,
+      });
+    } catch (error) {
+      console.error("Erro ao arquivar paciente:", error);
+    }
   };
 
   // Estado de loading
@@ -159,6 +194,8 @@ export default function PatientsPage() {
                 status: filtroStatus,
                 page: paginaAtual,
                 limit: itensPorPagina,
+                orderBy: ordenacao.orderBy,
+                orderDirection: ordenacao.orderDirection,
               })
             }
             variant="outline"
@@ -205,6 +242,35 @@ export default function PatientsPage() {
             </SelectItem>
           </SelectContent>
         </Select>
+        <Select 
+          value={`${ordenacao.orderBy}-${ordenacao.orderDirection}`} 
+          onValueChange={(value) => {
+            const [orderBy, orderDirection] = value.split('-') as ["name" | "created_at" | "updated_at", "asc" | "desc"];
+            setOrdenacao({ orderBy, orderDirection });
+            setPaginaAtual(1);
+          }}
+        >
+          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 w-full py-3 text-base font-medium shadow-sm backdrop-blur-sm sm:w-[180px]">
+            <SelectValue placeholder="Ordenar por" />
+          </SelectTrigger>
+          <SelectContent className="border-border bg-card shadow-lg">
+            <SelectItem value="created_at-desc" className="py-3 text-base font-medium">
+              🕒 Mais recentes
+            </SelectItem>
+            <SelectItem value="created_at-asc" className="py-3 text-base font-medium">
+              🕒 Mais antigos
+            </SelectItem>
+            <SelectItem value="name-asc" className="py-3 text-base font-medium">
+              🔤 Nome A-Z
+            </SelectItem>
+            <SelectItem value="name-desc" className="py-3 text-base font-medium">
+              🔤 Nome Z-A
+            </SelectItem>
+            <SelectItem value="updated_at-desc" className="py-3 text-base font-medium">
+              📝 Atualizados recentemente
+            </SelectItem>
+          </SelectContent>
+        </Select>
         <Button
           asChild
           variant="outline"
@@ -226,6 +292,7 @@ export default function PatientsPage() {
         paginacao={paginacao}
         controles={controles}
         isLoading={isExecuting}
+        isArchiving={isArchiving}
       />
     </div>
   );

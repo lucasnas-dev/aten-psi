@@ -59,12 +59,14 @@ const ActionButton = ({
   asChild,
   onClick,
   tooltip,
+  disabled,
   ...props
 }: {
   children: React.ReactNode;
   asChild?: boolean;
   onClick?: () => void;
   tooltip: string;
+  disabled?: boolean;
 }) => (
   <Tooltip>
     <TooltipTrigger asChild>
@@ -73,7 +75,8 @@ const ActionButton = ({
         size="sm"
         asChild={asChild}
         onClick={onClick}
-        className="h-8 w-8 p-0 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+        disabled={disabled}
+        className="h-8 w-8 p-0 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
         {...props}
       >
         {children}
@@ -114,6 +117,7 @@ interface PatientsTablePureProps {
   paginacao: PaginacaoProps;
   controles: ControlesPaginacaoProps;
   isLoading: boolean;
+  isArchiving?: boolean;
 }
 
 export function PatientsTablePure({
@@ -124,6 +128,7 @@ export function PatientsTablePure({
   paginacao,
   controles,
   isLoading,
+  isArchiving = false,
 }: PatientsTablePureProps) {
   return (
     <div className="bg-card rounded-md">
@@ -286,13 +291,17 @@ export function PatientsTablePure({
 
                         <ActionButton
                           onClick={() => onArquivar(paciente)}
+                          disabled={isArchiving}
                           tooltip={
+                            isArchiving ? "Processando..." :
                             paciente.status === "active"
                               ? "Arquivar"
                               : "Reativar"
                           }
                         >
-                          {paciente.status === "active" ? (
+                          {isArchiving ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+                          ) : paciente.status === "active" ? (
                             <Archive className="h-4 w-4" />
                           ) : (
                             <ArchiveRestore className="h-4 w-4" />
