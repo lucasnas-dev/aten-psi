@@ -74,8 +74,7 @@ export function Filters({
           <SelectContent>
             <SelectItem value="all">Todos os Tipos</SelectItem>
             <SelectItem value="avaliacao_inicial">🔍 Avaliação Inicial</SelectItem>
-            <SelectItem value="psicoterapia">💭 Psicoterapia</SelectItem>
-            <SelectItem value="retorno">🔄 Retorno</SelectItem>
+            <SelectItem value="atendimento">Ψ Atendimento</SelectItem>
             <SelectItem value="online">💻 Online</SelectItem>
             <SelectItem value="presencial">🏢 Presencial</SelectItem>
           </SelectContent>

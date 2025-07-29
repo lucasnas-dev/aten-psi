@@ -174,8 +174,7 @@ export function CalendarView({
                       </div>
                       <div className="opacity-75 truncate">
                         {event.tipo === "avaliacao_inicial" && "Avaliação"}
-                        {event.tipo === "psicoterapia" && "Psicoterapia"}
-                        {event.tipo === "retorno" && "Retorno"}
+                        {event.tipo === "atendimento" && "Atendimento"}
                       </div>
                     </div>
                   ))}

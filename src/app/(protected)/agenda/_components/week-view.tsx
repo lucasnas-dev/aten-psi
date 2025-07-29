@@ -134,7 +134,7 @@ export function WeekView({
                   {dayEvents.map((event) => (
                     <li key={event.id} className="flex items-center justify-between border rounded px-2 py-1 bg-card cursor-pointer hover:bg-muted/70 transition-colors" onClick={() => onEventClick(event)}>
                       <span className="font-medium">{event.pacienteNome}</span>
-                      <span className="text-xs text-muted-foreground">{event.tipo === "avaliacao_inicial" ? "Avaliação" : event.tipo === "psicoterapia" ? "Psicoterapia" : "Retorno"}</span>
+                      <span className="text-xs text-muted-foreground">{event.tipo === "avaliacao_inicial" ? "Avaliação" : event.tipo === "atendimento" ? "Atendimento" : "Retorno"}</span>
                       <Badge className={cn("text-xs", getStatusColor(event.status))}>{event.status}</Badge>
                     </li>
                   ))}

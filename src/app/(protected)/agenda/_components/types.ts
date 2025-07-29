@@ -7,8 +7,7 @@ export type StatusConsulta =
 
 export type TipoConsulta = 
   | "avaliacao_inicial"
-  | "psicoterapia"
-  | "retorno"
+  | "atendimento"
   | "online"
   | "presencial";
 
