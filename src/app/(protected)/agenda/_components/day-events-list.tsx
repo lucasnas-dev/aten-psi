@@ -69,10 +69,9 @@ export function DayEventsList({
     }
   };
 
+
   const handleNewAppointment = () => {
-    const appointmentDate = new Date(selectedDate);
-    appointmentDate.setHours(9, 0, 0, 0); // Define para 9:00 AM
-    onTimeSlotClick(appointmentDate);
+    window.location.href = "/patients";
   };
 
   return (
@@ -104,51 +103,23 @@ export function DayEventsList({
             </div>
           </div>
         ) : (
-          dayEvents
-            .sort((a, b) => a.start.getTime() - b.start.getTime())
-            .map((event) => (
-              <div
-                key={event.id}
-                onClick={() => onEventClick(event)}
-                className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors"
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">
-                      {format(event.start, "HH:mm")} - {format(event.end, "HH:mm")}
-                    </span>
-                  </div>
-                  <Badge className={cn("text-xs", getStatusColor(event.status))}>
-                    {getStatusLabel(event.status)}
-                  </Badge>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">{event.pacienteNome}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      {event.modalidade === "presencial" ? "Presencial" : "Online"}
-                    </span>
-                    <span className="text-sm text-muted-foreground">•</span>
-                    <span className="text-sm text-muted-foreground">
-                      {getTipoLabel(event.tipo)}
-                    </span>
-                  </div>
-
-                  {event.observacoes && (
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {event.observacoes}
-                    </p>
-                  )}
-                </div>
+          dayEvents.map((event) => (
+            <div
+              key={event.id}
+              onClick={() => onEventClick(event)}
+              className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">{event.pacienteNome}</span>
+                <span className="text-sm text-muted-foreground">• {getTipoLabel(event.tipo)}</span>
+                <span className="text-sm text-muted-foreground">• {event.modalidade === "presencial" ? "Presencial" : "Online"}</span>
               </div>
-            ))
+              <Badge className={cn("text-xs", getStatusColor(event.status))}>
+                {getStatusLabel(event.status)}
+              </Badge>
+            </div>
+          ))
         )}
       </CardContent>
     </Card>

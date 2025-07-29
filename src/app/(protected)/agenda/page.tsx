@@ -103,9 +103,7 @@ export default function AgendaPage() {
 
   const handleDayClick = (date: Date) => {
     setSelectedDate(date);
-    if (viewMode !== "day") {
-      setViewMode("day");
-    }
+    // Não muda o modo de visualização, apenas seleciona o dia
   };
 
   const handleTimeSlotClick = (date: Date) => {

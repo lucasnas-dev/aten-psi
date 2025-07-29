@@ -118,99 +118,34 @@ export function WeekView({
         </div>
       </div>
 
-      {/* Grid da Semana */}
-      <div className="overflow-x-auto">
-        <div className="min-w-[800px]">
-          {/* Cabeçalho dos Dias */}
-          <div className="border-b bg-gray-50/50">
-            <div className="grid grid-cols-8">
-              <div className="p-4 text-center text-sm font-medium text-muted-foreground">
-                Hora
-              </div>
-              {daysInWeek.map((day) => (
-                <div
-                  key={day.toISOString()}
-                  className={cn(
-                    "p-4 text-center",
-                    isToday(day) ? "bg-primary/10" : ""
-                  )}
-                >
-                  <div className="text-sm font-medium">
-                    {format(day, "EEE", { locale: ptBR })}
-                  </div>
-                  <div className={cn(
-                    "text-2xl font-bold mt-1",
-                    isToday(day) ? "text-primary" : "text-foreground"
-                  )}>
-                    {format(day, "d")}
-                  </div>
+      {/* Lista única de eventos da semana */}
+      <div className="p-6">
+        <ul className="space-y-2">
+          {daysInWeek.map((day) => {
+            const dayEvents = events.filter(event => isSameDay(event.start, day));
+            if (dayEvents.length === 0) return null;
+            return (
+              <li key={day.toISOString()}>
+                <div className="mb-1 flex items-center gap-2">
+                  <span className={cn("font-bold", isToday(day) ? "text-primary" : "text-foreground")}>{format(day, "EEE, d MMM", { locale: ptBR })}</span>
+                  <Badge variant="secondary" className="text-xs">{dayEvents.length} consulta{dayEvents.length === 1 ? '' : 's'}</Badge>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Grid de Horários */}
-          <div className="max-h-[600px] overflow-y-auto">
-            {timeSlots.map((timeSlot) => (
-              <div key={timeSlot} className="border-b border-gray-100 last:border-b-0">
-                <div className="grid grid-cols-8 min-h-[60px]">
-                  {/* Coluna do Horário */}
-                  <div className="border-r p-3 text-center text-sm font-medium text-muted-foreground">
-                    {timeSlot}
-                  </div>
-
-                  {/* Colunas dos Dias */}
-                  {daysInWeek.map((day) => {
-                    const dayEvents = getEventsForDayAndTime(day, timeSlot);
-                    const hasEvents = dayEvents.length > 0;
-
-                    return (
-                      <div
-                        key={`${day.toISOString()}-${timeSlot}`}
-                        className="border-r last:border-r-0 p-1 relative"
-                      >
-                        {hasEvents ? (
-                          <div className="space-y-1">
-                            {dayEvents.map((event) => (
-                              <div
-                                key={event.id}
-                                className={cn(
-                                  "cursor-pointer rounded px-2 py-1 text-xs text-white transition-all duration-200 hover:scale-105",
-                                  getStatusColor(event.status)
-                                )}
-                                onClick={() => onEventClick(event)}
-                                title={`${event.pacienteNome} - ${event.tipo}`}
-                              >
-                                <div className="font-medium truncate">
-                                  {event.pacienteNome}
-                                </div>
-                                <div className="opacity-90 truncate">
-                                  {event.tipo === "avaliacao_inicial" && "Avaliação"}
-                                  {event.tipo === "psicoterapia" && "Psicoterapia"}
-                                  {event.tipo === "retorno" && "Retorno"}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <button
-                            className="hover:bg-gray-50 h-full w-full rounded transition-colors"
-                            onClick={() => {
-                              const [hour, minute] = timeSlot.split(':').map(Number);
-                              const slotDate = addHours(startOfDay(day), hour + minute / 60);
-                              onTimeSlotClick(slotDate);
-                            }}
-                            title="Clique para agendar"
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                <ul className="ml-4 space-y-1">
+                  {dayEvents.map((event) => (
+                    <li key={event.id} className="flex items-center justify-between border rounded px-2 py-1 bg-card cursor-pointer hover:bg-muted/70 transition-colors" onClick={() => onEventClick(event)}>
+                      <span className="font-medium">{event.pacienteNome}</span>
+                      <span className="text-xs text-muted-foreground">{event.tipo === "avaliacao_inicial" ? "Avaliação" : event.tipo === "psicoterapia" ? "Psicoterapia" : "Retorno"}</span>
+                      <Badge className={cn("text-xs", getStatusColor(event.status))}>{event.status}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ul>
+        {daysInWeek.every(day => events.filter(event => isSameDay(event.start, day)).length === 0) && (
+          <div className="text-muted-foreground text-sm mt-4">Nenhum evento na semana</div>
+        )}
       </div>
     </div>
   );
