@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import {
   Archive,
   ArchiveRestore,
@@ -33,9 +31,10 @@ import { formatDate } from "@/lib/utils";
 
 import { Pagination } from "./pagination";
 import { Patient } from "./types";
+import { NewPatientConsultation } from "./new-patient-consultation";
 
 // Função para calcular idade
-const calculateAge = (birthDate: string) => {
+function calculateAge(birthDate: string) {
   const today = new Date();
   const birth = new Date(birthDate);
   let age = today.getFullYear() - birth.getFullYear();
@@ -46,7 +45,7 @@ const calculateAge = (birthDate: string) => {
   }
 
   return age;
-};
+}
 
 // Função para formatar data
 const formatDateString = (dateString: string) => {
@@ -307,6 +306,9 @@ export function PatientsTablePure({
                             <ArchiveRestore className="h-4 w-4" />
                           )}
                         </ActionButton>
+
+                        {/* Botão Nova Consulta */}
+                        <NewPatientConsultation patient={paciente} />
                       </div>
                     </TooltipProvider>
                   </TableCell>

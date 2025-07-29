@@ -1,9 +1,7 @@
 "use client";
 
-import { Calendar, Clock, Filter, Plus } from "lucide-react";
-import { useState } from "react";
+import { Calendar, Clock, Filter } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -14,25 +12,23 @@ import {
 
 import { ViewMode, StatusConsulta, TipoConsulta } from "./types";
 
-interface AgendaFiltersProps {
+interface FiltersProps {
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
   statusFilter: StatusConsulta | "all";
   onStatusFilterChange: (status: StatusConsulta | "all") => void;
   tipoFilter: TipoConsulta | "all";
   onTipoFilterChange: (tipo: TipoConsulta | "all") => void;
-  onNovaConsulta: () => void;
 }
 
-export function AgendaFilters({
+export function Filters({
   viewMode,
   onViewModeChange,
   statusFilter,
   onStatusFilterChange,
   tipoFilter,
   onTipoFilterChange,
-  onNovaConsulta,
-}: AgendaFiltersProps) {
+}: FiltersProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -85,15 +81,6 @@ export function AgendaFilters({
           </SelectContent>
         </Select>
       </div>
-
-      {/* Botão Nova Consulta */}
-      <Button
-        onClick={onNovaConsulta}
-        className="flex items-center gap-2 px-6 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-      >
-        <Plus className="h-5 w-5" />
-        Nova Consulta
-      </Button>
     </div>
   );
 }

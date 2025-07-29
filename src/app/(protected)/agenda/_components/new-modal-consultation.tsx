@@ -38,54 +38,57 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-const novaConsultaSchema = z.object({
-  patient_id: z.string().min(1, "Selecione um paciente"),
-  data: z.date({
+
+const newConsultationSchema = z.object({
+  patientId: z.string().min(1, "Selecione um paciente"),
+  date: z.date({
     required_error: "Selecione uma data",
   }),
-  horario: z.string().min(1, "Informe o horário"),
-  duracao: z.number().min(15, "Duração mínima de 15 minutos"),
-  tipo: z.enum(["avaliacao_inicial", "psicoterapia", "retorno"]),
-  modalidade: z.enum(["presencial", "online"]),
-  observacoes: z.string().optional(),
-  valor: z.number().optional(),
+  time: z.string().min(1, "Informe o horário"),
+  duration: z.number().min(15, "Duração mínima de 15 minutos"),
+  type: z.enum(["initial_assessment", "psychotherapy", "follow_up"]),
+  modality: z.enum(["in_person", "online"]),
+  notes: z.string().optional(),
+  value: z.number().optional(),
 });
 
-type NovaConsultaFormData = z.infer<typeof novaConsultaSchema>;
+type NewConsultationFormData = z.infer<typeof newConsultationSchema>;
 
-interface NovaConsultaModalProps {
+interface NewConsultationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   preselectedDate?: Date;
   preselectedTime?: string;
+  patient: import("@/app/(protected)/patients/_components/types").Patient;
 }
 
-export function NovaConsultaModal({
+export function NewConsultationModal({
   isOpen,
   onClose,
   onSuccess,
   preselectedDate,
   preselectedTime,
-}: NovaConsultaModalProps) {
+  patient
+}: NewConsultationModalProps) {
   // Removido uso de upsertConsulta para frontend only
   // const { execute, status } = useAction(upsertConsulta);
 
-  const form = useForm<NovaConsultaFormData>({
-    resolver: zodResolver(novaConsultaSchema),
+  const form = useForm<NewConsultationFormData>({
+    resolver: zodResolver(newConsultationSchema),
     defaultValues: {
-      patient_id: "",
-      data: preselectedDate || new Date(),
-      horario: preselectedTime || "09:00",
-      duracao: 50,
-      tipo: "psicoterapia",
-      modalidade: "presencial",
-      observacoes: "",
-      valor: 0,
+      patientId: "",
+      date: preselectedDate || new Date(),
+      time: preselectedTime || "09:00",
+      duration: 50,
+      type: "psychotherapy",
+      modality: "in_person",
+      notes: "",
+      value: 0,
     },
   });
 
-  const onSubmit = async (data: NovaConsultaFormData) => {
+  const onSubmit = async (data: NewConsultationFormData) => {
     try {
       // Simulação frontend: sucesso sempre
       setTimeout(() => {
@@ -111,7 +114,7 @@ export function NovaConsultaModal({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="patient_id"
+              name="patientId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Paciente</FormLabel>
@@ -134,7 +137,7 @@ export function NovaConsultaModal({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="data"
+                name="date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Data</FormLabel>
@@ -171,7 +174,7 @@ export function NovaConsultaModal({
 
               <FormField
                 control={form.control}
-                name="horario"
+                name="time"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Horário</FormLabel>
@@ -190,7 +193,7 @@ export function NovaConsultaModal({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="duracao"
+                name="duration"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Duração (min)</FormLabel>
@@ -210,7 +213,7 @@ export function NovaConsultaModal({
 
               <FormField
                 control={form.control}
-                name="valor"
+                name="value"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Valor (R$)</FormLabel>
@@ -233,7 +236,7 @@ export function NovaConsultaModal({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="tipo"
+                name="type"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tipo</FormLabel>
@@ -244,9 +247,9 @@ export function NovaConsultaModal({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="avaliacao_inicial">Avaliação Inicial</SelectItem>
-                        <SelectItem value="psicoterapia">Psicoterapia</SelectItem>
-                        <SelectItem value="retorno">Retorno</SelectItem>
+                        <SelectItem value="initial_assessment">Avaliação Inicial</SelectItem>
+                        <SelectItem value="psychotherapy">Psicoterapia</SelectItem>
+                        <SelectItem value="follow_up">Retorno</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -256,7 +259,7 @@ export function NovaConsultaModal({
 
               <FormField
                 control={form.control}
-                name="modalidade"
+                name="modality"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Modalidade</FormLabel>
@@ -267,7 +270,7 @@ export function NovaConsultaModal({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="presencial">Presencial</SelectItem>
+                        <SelectItem value="in_person">Presencial</SelectItem>
                         <SelectItem value="online">Online</SelectItem>
                       </SelectContent>
                     </Select>
@@ -279,7 +282,7 @@ export function NovaConsultaModal({
 
             <FormField
               control={form.control}
-              name="observacoes"
+              name="notes"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Observações</FormLabel>

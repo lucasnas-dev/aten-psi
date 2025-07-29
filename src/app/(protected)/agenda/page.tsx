@@ -1,25 +1,21 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useAction } from "next-safe-action/hooks";
-import { addDays, addHours, startOfDay, format } from "date-fns";
+import { format } from "date-fns";
 
 import {
-  AgendaFilters,
+  Filters,
   CalendarView,
   WeekView,
   DayView,
   ListView,
   EventDetailModal,
-  NovaConsultaModal,
+  DayEventsList,
   ViewMode,
   StatusConsulta,
   TipoConsulta,
   CalendarEvent,
 } from "./_components";
-
-import { getConsultas } from "@/actions/get-consultas";
-import { deleteConsulta } from "@/actions/delete-consulta";
 
 export default function AgendaPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
@@ -54,7 +50,7 @@ export default function AgendaPage() {
         title: "Avaliação - Maria Souza",
         start: new Date(new Date().setHours(15, 0)),
         end: new Date(new Date().setHours(16, 0)),
-        status: "pendente",
+        status: "confirmada",
         tipo: "avaliacao_inicial",
         modalidade: "online",
         pacienteNome: "Maria Souza",
@@ -133,13 +129,30 @@ export default function AgendaPage() {
     switch (viewMode) {
       case "month":
         return (
-          <CalendarView
-            currentDate={currentDate}
-            onDateChange={setCurrentDate}
-            events={filteredEvents}
-            onEventClick={handleEventClick}
-            onDayClick={handleDayClick}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Calendário menor */}
+            <div className="lg:col-span-1">
+              <CalendarView
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                events={filteredEvents}
+                onEventClick={handleEventClick}
+                onDayClick={handleDayClick}
+                compact={true}
+                selectedDate={selectedDate}
+              />
+            </div>
+            
+            {/* Lista do dia selecionado */}
+            <div className="lg:col-span-2">
+              <DayEventsList
+                selectedDate={selectedDate}
+                events={filteredEvents}
+                onEventClick={handleEventClick}
+                onTimeSlotClick={handleTimeSlotClick}
+              />
+            </div>
+          </div>
         );
       case "week":
         return (
@@ -184,14 +197,13 @@ export default function AgendaPage() {
   return (
     <div className="space-y-6 p-6">
       {/* Filtros */}
-      <AgendaFilters
+      <Filters
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
         tipoFilter={tipoFilter}
         onTipoFilterChange={setTipoFilter}
-        onNovaConsulta={handleNovaConsulta}
       />
 
       {/* Visualização Principal */}
@@ -205,15 +217,7 @@ export default function AgendaPage() {
         onEdit={handleEventEdit}
         onDelete={handleEventDelete}
       />
-
-      {/* Modal de Nova Consulta */}
-      <NovaConsultaModal
-        isOpen={isNovaConsultaModalOpen}
-        onClose={() => setIsNovaConsultaModalOpen(false)}
-        onSuccess={handleNovaConsultaSuccess}
-        preselectedDate={preselectedDate}
-        preselectedTime={preselectedTime}
-      />
+      {/* Modal de Nova Consulta removido */}
     </div>
   );
 }

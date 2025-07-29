@@ -16,6 +16,8 @@ interface CalendarViewProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   onDayClick: (date: Date) => void;
+  compact?: boolean;
+  selectedDate?: Date;
 }
 
 export function CalendarView({
@@ -24,6 +26,8 @@ export function CalendarView({
   events,
   onEventClick,
   onDayClick,
+  compact = false,
+  selectedDate,
 }: CalendarViewProps) {
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -63,10 +67,10 @@ export function CalendarView({
   };
 
   return (
-    <div className="bg-card rounded-lg border p-6 shadow-sm">
+    <div className={cn("bg-card rounded-lg border shadow-sm", compact ? "p-4" : "p-6")}>
       {/* Header do Calendário */}
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">
+      <div className={cn("flex items-center justify-between", compact ? "mb-4" : "mb-6")}>
+        <h2 className={cn("font-bold", compact ? "text-lg" : "text-2xl")}>
           {format(currentDate, "MMMM yyyy", { locale: ptBR })}
         </h2>
         <div className="flex items-center gap-2">
@@ -78,13 +82,15 @@ export function CalendarView({
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onDateChange(new Date())}
-          >
-            Hoje
-          </Button>
+          {!compact && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onDateChange(new Date())}
+            >
+              Hoje
+            </Button>
+          )}
           <Button
             variant="outline"
             size="sm"
@@ -97,79 +103,89 @@ export function CalendarView({
       </div>
 
       {/* Cabeçalho dos Dias da Semana */}
-      <div className="mb-2 grid grid-cols-7 gap-2">
+      <div className="mb-2 grid grid-cols-7 gap-1">
         {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"].map((day) => (
           <div
             key={day}
-            className="text-muted-foreground text-center text-sm font-medium py-2"
+            className={cn(
+              "text-muted-foreground text-center font-medium py-2",
+              compact ? "text-xs" : "text-sm"
+            )}
           >
-            {day}
+            {compact ? day.charAt(0) : day}
           </div>
         ))}
       </div>
 
       {/* Grid do Calendário */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className={cn("grid grid-cols-7", compact ? "gap-1" : "gap-2")}>
         {daysInMonth.map((date) => {
           const dayEvents = getEventsForDay(date);
           const isCurrentDay = isToday(date);
+          const isSelected = selectedDate && isSameDay(date, selectedDate);
 
           return (
             <div
               key={date.toISOString()}
               className={cn(
-                "min-h-[120px] rounded-lg border p-2 cursor-pointer transition-all duration-200 hover:shadow-md",
+                "rounded-lg border p-2 cursor-pointer transition-all duration-200 hover:shadow-md",
+                compact ? "min-h-[60px]" : "min-h-[120px]",
                 isCurrentDay 
                   ? "border-primary bg-primary/5" 
+                  : isSelected
+                  ? "border-primary bg-primary/10"
                   : "border-border hover:border-primary/50"
               )}
               onClick={() => onDayClick(date)}
             >
-              <div className="mb-2 flex items-center justify-between">
+              <div className="mb-1 flex items-center justify-between">
                 <span
                   className={cn(
-                    "text-sm font-medium",
+                    "font-medium",
+                    compact ? "text-xs" : "text-sm",
                     isCurrentDay ? "text-primary font-bold" : "text-foreground"
                   )}
                 >
                   {format(date, "d")}
                 </span>
                 {dayEvents.length > 0 && (
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className={cn("text-xs", compact && "h-4 w-4 p-0 text-[10px]")}>
                     {dayEvents.length}
                   </Badge>
                 )}
               </div>
 
-              <div className="space-y-1">
-                {dayEvents.slice(0, 3).map((event) => (
-                  <div
-                    key={event.id}
-                    className={cn(
-                      "rounded px-2 py-1 text-xs cursor-pointer transition-all duration-200 hover:scale-105",
-                      getStatusColor(event.status)
-                    )}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEventClick(event);
-                    }}
-                  >
-                    <div className="font-medium truncate">
-                      {format(event.start, "HH:mm")} - {event.pacienteNome}
+              {!compact && (
+                <div className="space-y-1">
+                  {dayEvents.slice(0, 3).map((event) => (
+                    <div
+                      key={event.id}
+                      className={cn(
+                        "rounded px-2 py-1 text-xs cursor-pointer transition-all duration-200 hover:scale-105",
+                        getStatusColor(event.status)
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEventClick(event);
+                      }}
+                    >
+                      <div className="font-medium truncate">
+                        {format(event.start, "HH:mm")} - {event.pacienteNome}
+                      </div>
+                      <div className="opacity-75 truncate">
+                        {event.tipo === "avaliacao_inicial" && "Avaliação"}
+                        {event.tipo === "psicoterapia" && "Psicoterapia"}
+                        {event.tipo === "retorno" && "Retorno"}
+                      </div>
                     </div>
-                    <div className="opacity-75 truncate">
-                      {event.tipo === "avaliacao_inicial" && "Avaliação"}
-                      {event.tipo === "psicoterapia" && "Psicoterapia"}
-                      {event.tipo === "retorno" && "Retorno"}
+                  ))}
+                  {dayEvents.length > 3 && (
+                    <div className="text-muted-foreground text-xs text-center py-1">
+                      +{dayEvents.length - 3} mais
                     </div>
-                  </div>
-                ))}
-                {dayEvents.length > 3 && (
-                  <div className="text-muted-foreground text-xs text-center py-1">
-                    +{dayEvents.length - 3} mais
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
