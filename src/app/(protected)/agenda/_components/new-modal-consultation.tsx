@@ -40,13 +40,13 @@ import { z } from "zod";
 
 
 const newConsultationSchema = z.object({
-  patientId: z.string().min(1, "Selecione um paciente"),
+  patientId: z.string().min(1, "Select a patient"),
   date: z.date({
-    required_error: "Selecione uma data",
+    required_error: "Select a date",
   }),
-  time: z.string().min(1, "Informe o horário"),
-  duration: z.number().min(15, "Duração mínima de 15 minutos"),
-  type: z.enum(["initial_assessment", "psychotherapy", "follow_up"]),
+  time: z.string().min(1, "Enter the time"),
+  duration: z.number().min(15, "Minimum duration is 15 minutes"),
+  type: z.enum(["triage", "initial_assessment", "appointment", "psychological_evaluation", "feedback"]),
   modality: z.enum(["in_person", "online"]),
   notes: z.string().optional(),
   value: z.number().optional(),
@@ -77,11 +77,11 @@ export function NewConsultationModal({
   const form = useForm<NewConsultationFormData>({
     resolver: zodResolver(newConsultationSchema),
     defaultValues: {
-      patientId: "",
+      patientId: patient?.id ?? "",
       date: preselectedDate || new Date(),
       time: preselectedTime || "09:00",
       duration: 50,
-      type: "psychotherapy",
+      type: "triage",
       modality: "in_person",
       notes: "",
       value: 0,
@@ -118,17 +118,10 @@ export function NewConsultationModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Paciente</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione um paciente" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {/* TODO: Carregar lista de pacientes */}
-                      <SelectItem value="demo">Paciente Demo</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    value={patient?.name ?? ""}
+                    disabled
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -247,9 +240,11 @@ export function NewConsultationModal({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="initial_assessment">Avaliação Inicial</SelectItem>
-                        <SelectItem value="psychotherapy">Psicoterapia</SelectItem>
-                        <SelectItem value="follow_up">Retorno</SelectItem>
+                    <SelectItem value="triage">Triagem</SelectItem>
+                    <SelectItem value="initial_assessment">Avaliação Inicial</SelectItem>
+                    <SelectItem value="appointment">Atendimento</SelectItem>
+                    <SelectItem value="psychological_evaluation">Avaliação Psicológica</SelectItem>
+                    <SelectItem value="feedback">Devolutiva</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -285,7 +280,7 @@ export function NewConsultationModal({
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Observações</FormLabel>
+                    <FormLabel>Observações</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Observações sobre a consulta..."

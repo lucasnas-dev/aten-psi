@@ -73,10 +73,13 @@ export function Filters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos os Tipos</SelectItem>
-            <SelectItem value="avaliacao_inicial">🔍 Avaliação Inicial</SelectItem>
-            <SelectItem value="atendimento">Ψ Atendimento</SelectItem>
+            <SelectItem value="triage">🩺 Triagem</SelectItem>
+            <SelectItem value="initial_assessment">🔍 Avaliação Inicial</SelectItem>
+            <SelectItem value="appointment">Ψ Atendimento</SelectItem>
+            <SelectItem value="psychological_evaluation">📝 Avaliação Psicológica</SelectItem>
+            <SelectItem value="feedback">💬 Devolutiva</SelectItem>
+            <SelectItem value="in_person">🏢 Presencial</SelectItem>
             <SelectItem value="online">💻 Online</SelectItem>
-            <SelectItem value="presencial">🏢 Presencial</SelectItem>
           </SelectContent>
         </Select>
       </div>
