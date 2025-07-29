@@ -40,7 +40,7 @@ export default function AgendaPage() {
         start: new Date(),
         end: new Date(new Date().getTime() + 60 * 60000),
         status: "confirmada",
-        tipo: "psicoterapia",
+        tipo: "atendimento",
         modalidade: "presencial",
         pacienteNome: "João Silva",
         observacoes: "Primeira sessão",
