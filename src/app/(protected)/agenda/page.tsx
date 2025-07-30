@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { format } from "date-fns";
+import { useAction } from "next-safe-action/hooks";
 
 import {
   Filters,
@@ -17,6 +18,8 @@ import {
   CalendarEvent,
 } from "./_components";
 
+import { getConsultations } from "@/actions/get-consultations";
+
 export default function AgendaPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -29,36 +32,23 @@ export default function AgendaPage() {
   const [preselectedDate, setPreselectedDate] = useState<Date | undefined>();
   const [preselectedTime, setPreselectedTime] = useState<string | undefined>();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Dados mockados para testes de frontend
+  const { execute: loadConsultations } = useAction(getConsultations, {
+    onSuccess: (result) => {
+      setEvents(result.data as CalendarEvent[]);
+      setIsLoading(false);
+    },
+    onError: (error) => {
+      console.error("Erro ao carregar consultas:", error);
+      setIsLoading(false);
+    },
+  });
+
+  // Carregar consultas do banco de dados
   useEffect(() => {
-    // Exemplo de eventos mockados
-    const mockEvents: CalendarEvent[] = [
-      {
-        id: "1",
-        title: "Psicoterapia - João Silva",
-        start: new Date(),
-        end: new Date(new Date().getTime() + 60 * 60000),
-        status: "confirmada",
-        tipo: "atendimento",
-        modalidade: "presencial",
-        pacienteNome: "João Silva",
-        observacoes: "Primeira sessão",
-      },
-      {
-        id: "2",
-        title: "Avaliação - Maria Souza",
-        start: new Date(new Date().setHours(15, 0)),
-        end: new Date(new Date().setHours(16, 0)),
-        status: "confirmada",
-        tipo: "avaliacao_inicial",
-        modalidade: "online",
-        pacienteNome: "Maria Souza",
-        observacoes: "Avaliação inicial",
-      },
-    ];
-    setEvents(mockEvents);
-  }, []);
+    loadConsultations({});
+  }, [loadConsultations]);
 
   const getTipoLabel = (tipo: string) => {
     switch (tipo) {
@@ -119,8 +109,8 @@ export default function AgendaPage() {
   };
 
   const handleNovaConsultaSuccess = () => {
-    // Apenas frontend: simula atualização
-    alert("Nova consulta criada!");
+    // Recarregar consultas após criar uma nova
+    loadConsultations({});
   };
 
   const renderCurrentView = () => {
@@ -204,8 +194,16 @@ export default function AgendaPage() {
         onTipoFilterChange={setTipoFilter}
       />
 
-      {/* Visualização Principal */}
-      {renderCurrentView()}
+      {/* Loading State */}
+      {isLoading ? (
+        <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando consultas...</p>
+        </div>
+      ) : (
+        /* Visualização Principal */
+        renderCurrentView()
+      )}
 
       {/* Modal de Detalhes do Evento */}
       <EventDetailModal
