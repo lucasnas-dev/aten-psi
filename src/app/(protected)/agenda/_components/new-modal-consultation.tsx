@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { createConsultation } from "@/actions/create-consultation";
+import { createConsultation } from "@/actions/manage-consultation";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -147,7 +147,10 @@ export function NewConsultationModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Paciente</FormLabel>
-                  <Input value={patient?.name ?? ""} disabled />
+                  <FormControl>
+                    <Input value={patient?.name ?? ""} disabled />
+                    <input type="hidden" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

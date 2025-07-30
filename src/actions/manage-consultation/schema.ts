@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const createConsultationSchema = z.object({
+// Base schema for consultation data
+const consultationDataSchema = z.object({
   patient_id: z.string().min(1, "Paciente é obrigatório"),
   date: z
     .string()
@@ -42,4 +43,27 @@ export const createConsultationSchema = z.object({
     .default("agendada"),
 });
 
+// Schema for creating a new consultation
+export const createConsultationSchema = consultationDataSchema;
+
+// Schema for updating an existing consultation
+export const updateConsultationSchema = z.object({
+  id: z.string().min(1, "ID da consulta é obrigatório"),
+  data: consultationDataSchema.partial(), // All fields are optional for updates
+});
+
+// Schema for deleting a consultation
+export const deleteConsultationSchema = z.object({
+  id: z.string().min(1, "ID da consulta é obrigatório"),
+});
+
+// Schema for getting a specific consultation
+export const getConsultationSchema = z.object({
+  id: z.string().min(1, "ID da consulta é obrigatório"),
+});
+
+// Type exports
 export type CreateConsultationInput = z.infer<typeof createConsultationSchema>;
+export type UpdateConsultationInput = z.infer<typeof updateConsultationSchema>;
+export type DeleteConsultationInput = z.infer<typeof deleteConsultationSchema>;
+export type GetConsultationInput = z.infer<typeof getConsultationSchema>;
