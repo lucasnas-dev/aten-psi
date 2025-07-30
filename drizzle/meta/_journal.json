@@ -64,6 +64,13 @@
       "when": 1752974473860,
       "tag": "0008_fearless_nightshade",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1753835697304,
+      "tag": "0009_broad_tinkerer",
+      "breakpoints": true
     }
   ]
 }

@@ -106,10 +106,34 @@ export const patients = pgTable("patients", {
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
+// ===== CONSULTATIONS TABLE =====
+export const consultations = pgTable("consultations", {
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  patient_id: varchar("patient_id", { length: 255 })
+    .notNull()
+    .references(() => patients.id, { onDelete: "cascade" }),
+  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD
+  time: varchar("time", { length: 5 }).notNull(), // HH:MM
+  duration: varchar("duration", { length: 5 }).notNull(), // minutes
+  type: varchar("type", { length: 40 }).notNull(),
+  modality: varchar("modality", { length: 20 }).notNull(),
+  notes: text("notes"),
+  value: varchar("value", { length: 20 }),
+  status: varchar("status", { length: 20 }).notNull().default("agendada"),
+  tenant_id: varchar("tenant_id", { length: 255 })
+    .notNull()
+    .references(() => tenants.id, { onDelete: "cascade" }),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
 // ===== RELATIONS =====
 export const tenantsRelations = relations(tenants, ({ many }) => ({
   users: many(users),
   patients: many(patients),
+  consultations: many(consultations),
 }));
 
 export const usersRelations = relations(users, ({ many, one }) => ({
@@ -135,9 +159,21 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
-export const patientsRelations = relations(patients, ({ one }) => ({
+export const patientsRelations = relations(patients, ({ one, many }) => ({
   tenant: one(tenants, {
     fields: [patients.tenant_id],
+    references: [tenants.id],
+  }),
+  consultations: many(consultations),
+}));
+
+export const consultationsRelations = relations(consultations, ({ one }) => ({
+  patient: one(patients, {
+    fields: [consultations.patient_id],
+    references: [patients.id],
+  }),
+  tenant: one(tenants, {
+    fields: [consultations.tenant_id],
     references: [tenants.id],
   }),
 }));

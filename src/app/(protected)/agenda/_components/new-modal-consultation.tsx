@@ -33,23 +33,29 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 
-// import { upsertConsulta } from "@/actions/upsert-consulta";
+import { createConsultation } from "@/actions/create-consultation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 
 const newConsultationSchema = z.object({
-  patientId: z.string().min(1, "Select a patient"),
+  patient_id: z.string().min(1, "Selecione um paciente"),
   date: z.date({
-    required_error: "Select a date",
+    required_error: "Selecione uma data",
   }),
-  time: z.string().min(1, "Enter the time"),
-  duration: z.number().min(15, "Minimum duration is 15 minutes"),
-  type: z.enum(["triage", "initial_assessment", "appointment", "psychological_evaluation", "feedback"]),
-  modality: z.enum(["in_person", "online"]),
+  time: z.string().min(1, "Informe o horário"),
+  duration: z.string().min(1, "Duração é obrigatória"),
+  type: z.enum([
+    "triagem",
+    "avaliacao_inicial", 
+    "atendimento",
+    "avaliacao_psicologica",
+    "devolutiva"
+  ]),
+  modality: z.enum(["presencial", "online"]),
   notes: z.string().optional(),
-  value: z.number().optional(),
+  value: z.string().optional(),
 });
 
 type NewConsultationFormData = z.infer<typeof newConsultationSchema>;
@@ -71,33 +77,42 @@ export function NewConsultationModal({
   preselectedTime,
   patient
 }: NewConsultationModalProps) {
-  // Removido uso de upsertConsulta para frontend only
-  // const { execute, status } = useAction(upsertConsulta);
+  const { execute, status } = useAction(createConsultation, {
+    onSuccess: () => {
+      onSuccess?.();
+      onClose();
+      form.reset();
+    },
+    onError: (err) => {
+      console.error("Erro ao criar consulta:", err);
+    },
+  });
 
   const form = useForm<NewConsultationFormData>({
     resolver: zodResolver(newConsultationSchema),
     defaultValues: {
-      patientId: patient?.id ?? "",
+      patient_id: patient?.id ?? "",
       date: preselectedDate || new Date(),
       time: preselectedTime || "09:00",
-      duration: 50,
-      type: "triage",
-      modality: "in_person",
+      duration: "50",
+      type: "triagem",
+      modality: "presencial",
       notes: "",
-      value: 0,
+      value: "",
     },
   });
 
   const onSubmit = async (data: NewConsultationFormData) => {
-    try {
-      // Simulação frontend: sucesso sempre
-      setTimeout(() => {
-        onSuccess?.();
-        onClose();
-      }, 500);
-    } catch (error) {
-      console.error("Erro ao criar consulta:", error);
-    }
+    execute({
+      patient_id: data.patient_id,
+      date: format(data.date, "yyyy-MM-dd"),
+      time: data.time,
+      duration: data.duration,
+      type: data.type,
+      modality: data.modality,
+      notes: data.notes,
+      value: data.value,
+    });
   };
 
   return (
@@ -114,7 +129,7 @@ export function NewConsultationModal({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="patientId"
+              name="patient_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Paciente</FormLabel>
@@ -196,7 +211,6 @@ export function NewConsultationModal({
                         min="15"
                         step="5"
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -212,12 +226,9 @@ export function NewConsultationModal({
                     <FormLabel>Valor (R$)</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        min="0"
-                        step="0.01"
+                        type="text"
                         placeholder="0,00"
-                        value={field.value ?? 0}
-                        onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : 0)}
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -240,11 +251,11 @@ export function NewConsultationModal({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                    <SelectItem value="triage">Triagem</SelectItem>
-                    <SelectItem value="initial_assessment">Avaliação Inicial</SelectItem>
-                    <SelectItem value="appointment">Atendimento</SelectItem>
-                    <SelectItem value="psychological_evaluation">Avaliação Psicológica</SelectItem>
-                    <SelectItem value="feedback">Devolutiva</SelectItem>
+                    <SelectItem value="triagem">Triagem</SelectItem>
+                    <SelectItem value="avaliacao_inicial">Avaliação Inicial</SelectItem>
+                    <SelectItem value="atendimento">Atendimento</SelectItem>
+                    <SelectItem value="avaliacao_psicologica">Avaliação Psicológica</SelectItem>
+                    <SelectItem value="devolutiva">Devolutiva</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -265,7 +276,7 @@ export function NewConsultationModal({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="in_person">Presencial</SelectItem>
+                        <SelectItem value="presencial">Presencial</SelectItem>
                         <SelectItem value="online">Online</SelectItem>
                       </SelectContent>
                     </Select>
@@ -299,9 +310,9 @@ export function NewConsultationModal({
               </Button>
               <Button 
                 type="submit" 
-                // Apenas frontend, nunca desabilita
+                disabled={status === "executing"}
               >
-                {"Agendar Consulta"}
+                {status === "executing" ? "Agendando..." : "Agendar Consulta"}
               </Button>
             </DialogFooter>
           </form>
