@@ -13,7 +13,10 @@ interface ArchiveButtonProps {
   currentStatus: string;
 }
 
-export function ArchiveButton({ patientId, currentStatus }: ArchiveButtonProps) {
+export function ArchiveButton({
+  patientId,
+  currentStatus,
+}: ArchiveButtonProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +32,7 @@ export function ArchiveButton({ patientId, currentStatus }: ArchiveButtonProps) 
   const handleArchive = async () => {
     setError(null);
     const novoStatus = currentStatus === "active" ? "inactive" : "active";
-    
+
     await arquivarPaciente({
       id: patientId,
       status: novoStatus,
@@ -55,12 +58,10 @@ export function ArchiveButton({ patientId, currentStatus }: ArchiveButtonProps) 
         {isExecuting
           ? "Processando..."
           : currentStatus === "active"
-          ? "Arquivar"
-          : "Ativar"}
+            ? "Arquivar"
+            : "Ativar"}
       </Button>
-      {error && (
-        <p className="text-red-600 text-sm mt-1">{error}</p>
-      )}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

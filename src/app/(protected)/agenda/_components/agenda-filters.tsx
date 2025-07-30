@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ViewMode, StatusConsulta, TipoConsulta } from "./types";
+import { StatusConsulta, TipoConsulta, ViewMode } from "./types";
 
 interface FiltersProps {
   viewMode: ViewMode;
@@ -74,9 +74,13 @@ export function Filters({
           <SelectContent>
             <SelectItem value="all">Todos os Tipos</SelectItem>
             <SelectItem value="triage">🩺 Triagem</SelectItem>
-            <SelectItem value="initial_assessment">🔍 Avaliação Inicial</SelectItem>
+            <SelectItem value="initial_assessment">
+              🔍 Avaliação Inicial
+            </SelectItem>
             <SelectItem value="appointment">Ψ Atendimento</SelectItem>
-            <SelectItem value="psychological_evaluation">📝 Avaliação Psicológica</SelectItem>
+            <SelectItem value="psychological_evaluation">
+              📝 Avaliação Psicológica
+            </SelectItem>
             <SelectItem value="feedback">💬 Devolutiva</SelectItem>
             <SelectItem value="in_person">🏢 Presencial</SelectItem>
             <SelectItem value="online">💻 Online</SelectItem>

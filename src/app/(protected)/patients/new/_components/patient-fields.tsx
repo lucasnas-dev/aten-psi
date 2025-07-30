@@ -52,11 +52,22 @@ export function PatientFields({
 
   const formatName = (value: string) => {
     // Lista de preposições e artigos que devem ficar em minúsculas
-    const preposicoes = ['de', 'da', 'do', 'das', 'dos', 'e', 'o', 'a', 'os', 'as'];
-    
+    const preposicoes = [
+      "de",
+      "da",
+      "do",
+      "das",
+      "dos",
+      "e",
+      "o",
+      "a",
+      "os",
+      "as",
+    ];
+
     return value
       .toLowerCase()
-      .split(' ')
+      .split(" ")
       .map((palavra, index) => {
         // Primeira palavra sempre maiúscula
         if (index === 0) {
@@ -69,12 +80,12 @@ export function PatientFields({
         // Outras palavras com primeira letra maiúscula
         return palavra.charAt(0).toUpperCase() + palavra.slice(1);
       })
-      .join(' ');
+      .join(" ");
   };
 
   const handleCpfChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
+    onChange: (value: string) => void
   ) => {
     const numbers = e.target.value.replace(/\D/g, "");
     e.target.value = formatCPF(numbers);
@@ -83,7 +94,7 @@ export function PatientFields({
 
   const handleNameChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
+    onChange: (value: string) => void
   ) => {
     const formattedName = formatName(e.target.value);
     e.target.value = formattedName;
@@ -92,7 +103,7 @@ export function PatientFields({
 
   const handlePhoneChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
+    onChange: (value: string) => void
   ) => {
     const numbers = e.target.value.replace(/\D/g, "");
     e.target.value = formatPhone(numbers);
@@ -101,7 +112,7 @@ export function PatientFields({
 
   const handleCepChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
+    onChange: (value: string) => void
   ) => {
     const numbers = e.target.value.replace(/\D/g, "");
     e.target.value = formatCEP(numbers);
@@ -117,7 +128,7 @@ export function PatientFields({
     setIsLoadingCep(true);
     try {
       const response = await fetch(
-        `https://viacep.com.br/ws/${cleanCep}/json/`,
+        `https://viacep.com.br/ws/${cleanCep}/json/`
       );
       const data = await response.json();
 

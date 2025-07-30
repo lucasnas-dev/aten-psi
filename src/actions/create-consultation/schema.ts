@@ -12,31 +12,34 @@ export const createConsultationSchema = z.object({
     .string()
     .min(1, "Duração é obrigatória")
     .regex(/^\d+$/, "Duração deve ser um número"),
-  type: z.enum([
-    "triagem",
-    "avaliacao_inicial", 
-    "atendimento",
-    "avaliacao_psicologica",
-    "devolutiva"
-  ], {
-    errorMap: () => ({ message: "Tipo de consulta inválido" })
-  }),
-  modality: z.enum([
-    "presencial",
-    "online"
-  ], {
-    errorMap: () => ({ message: "Modalidade inválida" })
+  type: z.enum(
+    [
+      "triagem",
+      "avaliacao_inicial",
+      "atendimento",
+      "avaliacao_psicologica",
+      "devolutiva",
+    ],
+    {
+      errorMap: () => ({ message: "Tipo de consulta inválido" }),
+    }
+  ),
+  modality: z.enum(["presencial", "online"], {
+    errorMap: () => ({ message: "Modalidade inválida" }),
   }),
   notes: z.string().optional(),
   value: z.string().optional(),
-  status: z.enum([
-    "agendada",
-    "confirmada", 
-    "em_andamento",
-    "concluida",
-    "cancelada",
-    "faltou"
-  ]).optional().default("agendada"),
+  status: z
+    .enum([
+      "agendada",
+      "confirmada",
+      "em_andamento",
+      "concluida",
+      "cancelada",
+      "faltou",
+    ])
+    .optional()
+    .default("agendada"),
 });
 
 export type CreateConsultationInput = z.infer<typeof createConsultationSchema>;

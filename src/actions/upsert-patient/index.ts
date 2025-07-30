@@ -81,10 +81,10 @@ export const upsertPatient = tenantActionClient
       } catch (error) {
         console.error("Erro na action upsertPatient:", error);
         throw new Error(
-          `Falha ao salvar paciente: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
+          `Falha ao salvar paciente: ${error instanceof Error ? error.message : "Erro desconhecido"}`
         );
       }
-    },
+    }
   );
 
 export type { UpsertPatientInput } from "./schema";

@@ -1,8 +1,15 @@
-import { useState } from "react";
-import { useAction } from "next-safe-action/hooks";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { CalendarIcon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import { createConsultation } from "@/actions/create-consultation";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +26,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -26,18 +39,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-
-import { createConsultation } from "@/actions/create-consultation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
 
 const newConsultationSchema = z.object({
   patient_id: z.string().min(1, "Selecione um paciente"),
@@ -48,10 +50,10 @@ const newConsultationSchema = z.object({
   duration: z.string().min(1, "Duração é obrigatória"),
   type: z.enum([
     "triagem",
-    "avaliacao_inicial", 
+    "avaliacao_inicial",
     "atendimento",
     "avaliacao_psicologica",
-    "devolutiva"
+    "devolutiva",
   ]),
   modality: z.enum(["presencial", "online"]),
   notes: z.string().optional(),
@@ -75,7 +77,7 @@ export function NewConsultationModal({
   onSuccess,
   preselectedDate,
   preselectedTime,
-  patient
+  patient,
 }: NewConsultationModalProps) {
   const [openCalendar, setOpenCalendar] = useState<boolean>(false);
   const { execute, status } = useAction(createConsultation, {
@@ -94,7 +96,10 @@ export function NewConsultationModal({
     const cleaned = value.replace(/\D/g, "");
     if (!cleaned) return "";
     const number = parseFloat(cleaned) / 100;
-    return number.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    return number.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
   };
 
   const form = useForm<NewConsultationFormData>({
@@ -142,10 +147,7 @@ export function NewConsultationModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Paciente</FormLabel>
-                  <Input
-                    value={patient?.name ?? ""}
-                    disabled
-                  />
+                  <Input value={patient?.name ?? ""} disabled />
                   <FormMessage />
                 </FormItem>
               )}
@@ -177,17 +179,17 @@ export function NewConsultationModal({
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={date => {
-                              field.onChange(date);
-                              setOpenCalendar(false);
-                            }}
-                            disabled={date => date < new Date()}
-                            initialFocus
-                            locale={ptBR}
-                          />
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={(date) => {
+                            field.onChange(date);
+                            setOpenCalendar(false);
+                          }}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                          locale={ptBR}
+                        />
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
@@ -202,10 +204,7 @@ export function NewConsultationModal({
                   <FormItem>
                     <FormLabel>Horário</FormLabel>
                     <FormControl>
-                      <Input
-                        type="time"
-                        {...field}
-                      />
+                      <Input type="time" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -221,12 +220,7 @@ export function NewConsultationModal({
                   <FormItem>
                     <FormLabel>Duração (min)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min="15"
-                        step="5"
-                        {...field}
-                      />
+                      <Input type="number" min="15" step="5" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -244,7 +238,7 @@ export function NewConsultationModal({
                         type="text"
                         placeholder="0,00"
                         value={field.value ? formatBRL(field.value) : ""}
-                        onChange={e => {
+                        onChange={(e) => {
                           // Mantém apenas números e atualiza o valor
                           const raw = e.target.value.replace(/\D/g, "");
                           field.onChange(raw);
@@ -266,18 +260,25 @@ export function NewConsultationModal({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tipo</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                    <SelectItem value="triagem">Triagem</SelectItem>
-                    <SelectItem value="avaliacao_inicial">Avaliação Inicial</SelectItem>
-                    <SelectItem value="atendimento">Atendimento</SelectItem>
-                    <SelectItem value="avaliacao_psicologica">Avaliação Psicológica</SelectItem>
-                    <SelectItem value="devolutiva">Devolutiva</SelectItem>
+                        <SelectItem value="triagem">Triagem</SelectItem>
+                        <SelectItem value="avaliacao_inicial">
+                          Avaliação Inicial
+                        </SelectItem>
+                        <SelectItem value="atendimento">Atendimento</SelectItem>
+                        <SelectItem value="avaliacao_psicologica">
+                          Avaliação Psicológica
+                        </SelectItem>
+                        <SelectItem value="devolutiva">Devolutiva</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -291,7 +292,10 @@ export function NewConsultationModal({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Modalidade</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
@@ -313,7 +317,7 @@ export function NewConsultationModal({
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                    <FormLabel>Observações</FormLabel>
+                  <FormLabel>Observações</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Observações sobre a consulta..."
@@ -330,10 +334,7 @@ export function NewConsultationModal({
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancelar
               </Button>
-              <Button 
-                type="submit" 
-                disabled={status === "executing"}
-              >
+              <Button type="submit" disabled={status === "executing"}>
                 {status === "executing" ? "Agendando..." : "Agendar Consulta"}
               </Button>
             </DialogFooter>

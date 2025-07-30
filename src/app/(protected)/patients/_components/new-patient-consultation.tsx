@@ -26,4 +26,3 @@ export function NewPatientConsultation({ patient }: { patient: Patient }) {
   );
 }
 export { NewConsultationModal };
-

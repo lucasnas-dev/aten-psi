@@ -78,7 +78,14 @@ export default function PatientsPage() {
       orderBy: ordenacao.orderBy,
       orderDirection: ordenacao.orderDirection,
     });
-  }, [debouncedTermoBusca, filtroStatus, paginaAtual, itensPorPagina, ordenacao, buscarPacientes]);
+  }, [
+    debouncedTermoBusca,
+    filtroStatus,
+    paginaAtual,
+    itensPorPagina,
+    ordenacao,
+    buscarPacientes,
+  ]);
 
   const paginacaoData = result?.data?.pagination || {
     currentPage: 1,
@@ -137,7 +144,7 @@ export default function PatientsPage() {
     inicio: (paginacaoData.currentPage - 1) * paginacaoData.limit + 1,
     fim: Math.min(
       paginacaoData.currentPage * paginacaoData.limit,
-      paginacaoData.totalCount,
+      paginacaoData.totalCount
     ),
     temProxima: paginacaoData.hasNext,
     temAnterior: paginacaoData.hasPrev,
@@ -146,7 +153,7 @@ export default function PatientsPage() {
 
   const handleArquivar = async (paciente: Patient) => {
     const novoStatus = paciente.status === "active" ? "inactive" : "active";
-    
+
     try {
       await arquivarPaciente({
         id: paciente.id,
@@ -242,10 +249,13 @@ export default function PatientsPage() {
             </SelectItem>
           </SelectContent>
         </Select>
-        <Select 
-          value={`${ordenacao.orderBy}-${ordenacao.orderDirection}`} 
+        <Select
+          value={`${ordenacao.orderBy}-${ordenacao.orderDirection}`}
           onValueChange={(value) => {
-            const [orderBy, orderDirection] = value.split('-') as ["name" | "created_at" | "updated_at", "asc" | "desc"];
+            const [orderBy, orderDirection] = value.split("-") as [
+              "name" | "created_at" | "updated_at",
+              "asc" | "desc",
+            ];
             setOrdenacao({ orderBy, orderDirection });
             setPaginaAtual(1);
           }}
@@ -254,19 +264,31 @@ export default function PatientsPage() {
             <SelectValue placeholder="Ordenar por" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card shadow-lg">
-            <SelectItem value="created_at-desc" className="py-3 text-base font-medium">
+            <SelectItem
+              value="created_at-desc"
+              className="py-3 text-base font-medium"
+            >
               🕒 Mais recentes
             </SelectItem>
-            <SelectItem value="created_at-asc" className="py-3 text-base font-medium">
+            <SelectItem
+              value="created_at-asc"
+              className="py-3 text-base font-medium"
+            >
               🕒 Mais antigos
             </SelectItem>
             <SelectItem value="name-asc" className="py-3 text-base font-medium">
               🔤 Nome A-Z
             </SelectItem>
-            <SelectItem value="name-desc" className="py-3 text-base font-medium">
+            <SelectItem
+              value="name-desc"
+              className="py-3 text-base font-medium"
+            >
               🔤 Nome Z-A
             </SelectItem>
-            <SelectItem value="updated_at-desc" className="py-3 text-base font-medium">
+            <SelectItem
+              value="updated_at-desc"
+              className="py-3 text-base font-medium"
+            >
               📝 Atualizados recentemente
             </SelectItem>
           </SelectContent>

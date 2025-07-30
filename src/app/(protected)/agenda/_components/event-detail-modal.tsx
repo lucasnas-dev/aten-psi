@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { 
+import {
   Calendar,
-  Clock, 
-  User, 
-  MapPin, 
-  Video,
+  Clock,
   Edit,
+  MapPin,
   Trash2,
-  X
+  User,
+  Video,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -107,7 +105,9 @@ export function EventDetailModal({
         <div className="space-y-6">
           {/* Status Badge */}
           <div className="flex justify-center">
-            <Badge className={`text-sm px-4 py-2 ${getStatusColor(event.status)}`}>
+            <Badge
+              className={`px-4 py-2 text-sm ${getStatusColor(event.status)}`}
+            >
               {getStatusText(event.status)}
             </Badge>
           </div>
@@ -129,7 +129,7 @@ export function EventDetailModal({
 
           {/* Data e Hora */}
           <div className="space-y-3">
-            <h4 className="font-medium flex items-center gap-2">
+            <h4 className="flex items-center gap-2 font-medium">
               <Clock className="h-4 w-4" />
               Data e Horário
             </h4>
@@ -163,11 +163,13 @@ export function EventDetailModal({
                 <p className="text-muted-foreground">Modalidade</p>
                 <div className="flex items-center gap-2">
                   {event.modalidade === "online" ? (
-                    <Video className="text-blue-600 h-4 w-4" />
+                    <Video className="h-4 w-4 text-blue-600" />
                   ) : (
-                    <MapPin className="text-green-600 h-4 w-4" />
+                    <MapPin className="h-4 w-4 text-green-600" />
                   )}
-                  <span className="font-medium capitalize">{event.modalidade}</span>
+                  <span className="font-medium capitalize">
+                    {event.modalidade}
+                  </span>
                 </div>
               </div>
             </div>
@@ -179,7 +181,7 @@ export function EventDetailModal({
               <Separator />
               <div className="space-y-2">
                 <h4 className="font-medium">Observações</h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   {event.observacoes}
                 </p>
               </div>

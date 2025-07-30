@@ -22,7 +22,7 @@ export const protectedActionClient = createSafeActionClient().use(
     }
 
     return next({ ctx: { user: session.user } });
-  },
+  }
 );
 
 // Cliente com autenticação + validação de tenant
@@ -71,7 +71,7 @@ export const protectedWithTenantActionClient = protectedActionClient.use(
         },
       },
     });
-  },
+  }
 );
 
 // Alias para facilitar o uso

@@ -1,11 +1,11 @@
-export type StatusConsulta = 
-  | "agendada" 
-  | "confirmada" 
-  | "realizada" 
-  | "cancelada" 
+export type StatusConsulta =
+  | "agendada"
+  | "confirmada"
+  | "realizada"
+  | "cancelada"
   | "faltou";
 
-export type TipoConsulta = 
+export type TipoConsulta =
   | "avaliacao_inicial"
   | "atendimento"
   | "online"

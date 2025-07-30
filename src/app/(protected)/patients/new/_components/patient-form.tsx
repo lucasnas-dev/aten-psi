@@ -48,7 +48,7 @@ export function PatientForm({ onSuccess }: { onSuccess: () => void }) {
       setError(
         err?.error?.serverError ||
           err?.error?.validationErrors?._errors?.[0] ||
-          "Erro ao cadastrar paciente",
+          "Erro ao cadastrar paciente"
       );
     },
   });

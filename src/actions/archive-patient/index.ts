@@ -52,7 +52,10 @@ export const archivePatient = tenantActionClient
 
         return {
           patient: updatedPatient[0],
-          message: status === "active" ? "Paciente reativado com sucesso!" : "Paciente arquivado com sucesso!",
+          message:
+            status === "active"
+              ? "Paciente reativado com sucesso!"
+              : "Paciente arquivado com sucesso!",
         };
       } catch (error) {
         console.error("Erro ao arquivar/desarquivar paciente:", error);

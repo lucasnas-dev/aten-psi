@@ -29,9 +29,9 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDate } from "@/lib/utils";
 
+import { NewPatientConsultation } from "./new-patient-consultation";
 import { Pagination } from "./pagination";
 import { Patient } from "./types";
-import { NewPatientConsultation } from "./new-patient-consultation";
 
 // Função para calcular idade
 function calculateAge(birthDate: string) {
@@ -75,7 +75,7 @@ const ActionButton = ({
         asChild={asChild}
         onClick={onClick}
         disabled={disabled}
-        className="h-8 w-8 p-0 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        className="h-8 w-8 p-0 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
         {...props}
       >
         {children}
@@ -292,10 +292,11 @@ export function PatientsTablePure({
                           onClick={() => onArquivar(paciente)}
                           disabled={isArchiving}
                           tooltip={
-                            isArchiving ? "Processando..." :
-                            paciente.status === "active"
-                              ? "Arquivar"
-                              : "Reativar"
+                            isArchiving
+                              ? "Processando..."
+                              : paciente.status === "active"
+                                ? "Arquivar"
+                                : "Reativar"
                           }
                         >
                           {isArchiving ? (
@@ -321,9 +322,9 @@ export function PatientsTablePure({
         </TableBody>
       </Table>
       {/* Linha separadora consistente */}
-      <div className="border-t border-border/30 mt-0 mb-4"></div>
+      <div className="border-border/30 mt-0 mb-4 border-t"></div>
       {/* Paginação fora da tabela */}
       <Pagination paginacao={paginacao} controles={controles} />
-  </div>
+    </div>
   );
 }

@@ -32,12 +32,18 @@ export default function AgendaLoading() {
         <div className="space-y-2">
           <div className="mb-2 grid grid-cols-7 gap-2">
             {Array.from({ length: 7 }).map((_, i) => (
-              <div key={i} className="bg-muted h-6 animate-pulse rounded-md"></div>
+              <div
+                key={i}
+                className="bg-muted h-6 animate-pulse rounded-md"
+              ></div>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-2">
             {Array.from({ length: 35 }).map((_, i) => (
-              <div key={i} className="bg-muted h-32 animate-pulse rounded-lg"></div>
+              <div
+                key={i}
+                className="bg-muted h-32 animate-pulse rounded-lg"
+              ></div>
             ))}
           </div>
         </div>

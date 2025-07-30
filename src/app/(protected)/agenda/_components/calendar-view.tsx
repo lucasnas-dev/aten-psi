@@ -1,14 +1,21 @@
 "use client";
 
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from "date-fns";
+import {
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  isSameDay,
+  isToday,
+  startOfMonth,
+} from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { Consulta, CalendarEvent } from "./types";
+import { CalendarEvent, Consulta } from "./types";
 
 interface CalendarViewProps {
   currentDate: Date;
@@ -46,7 +53,7 @@ export function CalendarView({
   };
 
   const getEventsForDay = (date: Date) => {
-    return events.filter(event => isSameDay(event.start, date));
+    return events.filter((event) => isSameDay(event.start, date));
   };
 
   const getStatusColor = (status: string) => {
@@ -67,9 +74,19 @@ export function CalendarView({
   };
 
   return (
-    <div className={cn("bg-card rounded-lg border shadow-sm", compact ? "p-4" : "p-6")}>
+    <div
+      className={cn(
+        "bg-card rounded-lg border shadow-sm",
+        compact ? "p-4" : "p-6"
+      )}
+    >
       {/* Header do Calendário */}
-      <div className={cn("flex items-center justify-between", compact ? "mb-4" : "mb-6")}>
+      <div
+        className={cn(
+          "flex items-center justify-between",
+          compact ? "mb-4" : "mb-6"
+        )}
+      >
         <h2 className={cn("font-bold", compact ? "text-lg" : "text-2xl")}>
           {format(currentDate, "MMMM yyyy", { locale: ptBR })}
         </h2>
@@ -108,7 +125,7 @@ export function CalendarView({
           <div
             key={day}
             className={cn(
-              "text-muted-foreground text-center font-medium py-2",
+              "text-muted-foreground py-2 text-center font-medium",
               compact ? "text-xs" : "text-sm"
             )}
           >
@@ -128,13 +145,13 @@ export function CalendarView({
             <div
               key={date.toISOString()}
               className={cn(
-                "rounded-lg border p-2 cursor-pointer transition-all duration-200 hover:shadow-md",
+                "cursor-pointer rounded-lg border p-2 transition-all duration-200 hover:shadow-md",
                 compact ? "min-h-[60px]" : "min-h-[120px]",
-                isCurrentDay 
-                  ? "border-primary bg-primary/5" 
+                isCurrentDay
+                  ? "border-primary bg-primary/5"
                   : isSelected
-                  ? "border-primary bg-primary/10"
-                  : "border-border hover:border-primary/50"
+                    ? "border-primary bg-primary/10"
+                    : "border-border hover:border-primary/50"
               )}
               onClick={() => onDayClick(date)}
             >
@@ -149,7 +166,13 @@ export function CalendarView({
                   {format(date, "d")}
                 </span>
                 {dayEvents.length > 0 && (
-                  <Badge variant="secondary" className={cn("text-xs", compact && "h-4 w-4 p-0 text-[10px]")}>
+                  <Badge
+                    variant="secondary"
+                    className={cn(
+                      "text-xs",
+                      compact && "h-4 w-4 p-0 text-[10px]"
+                    )}
+                  >
                     {dayEvents.length}
                   </Badge>
                 )}
@@ -161,7 +184,7 @@ export function CalendarView({
                     <div
                       key={event.id}
                       className={cn(
-                        "rounded px-2 py-1 text-xs cursor-pointer transition-all duration-200 hover:scale-105",
+                        "cursor-pointer rounded px-2 py-1 text-xs transition-all duration-200 hover:scale-105",
                         getStatusColor(event.status)
                       )}
                       onClick={(e) => {
@@ -169,17 +192,17 @@ export function CalendarView({
                         onEventClick(event);
                       }}
                     >
-                      <div className="font-medium truncate">
+                      <div className="truncate font-medium">
                         {format(event.start, "HH:mm")} - {event.pacienteNome}
                       </div>
-                      <div className="opacity-75 truncate">
+                      <div className="truncate opacity-75">
                         {event.tipo === "avaliacao_inicial" && "Avaliação"}
                         {event.tipo === "atendimento" && "Atendimento"}
                       </div>
                     </div>
                   ))}
                   {dayEvents.length > 3 && (
-                    <div className="text-muted-foreground text-xs text-center py-1">
+                    <div className="text-muted-foreground py-1 text-center text-xs">
                       +{dayEvents.length - 3} mais
                     </div>
                   )}

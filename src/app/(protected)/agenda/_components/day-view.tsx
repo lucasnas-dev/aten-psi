@@ -1,6 +1,6 @@
 "use client";
 
-import { format, addHours, startOfDay } from "date-fns";
+import { addHours, format, startOfDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Clock, MapPin, User, Video } from "lucide-react";
 
@@ -31,9 +31,10 @@ export function DayView({
   });
 
   const getEventsForTimeSlot = (time: Date) => {
-    return events.filter(event => 
-      format(event.start, "HH:mm") === format(time, "HH:mm") &&
-      format(event.start, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+    return events.filter(
+      (event) =>
+        format(event.start, "HH:mm") === format(time, "HH:mm") &&
+        format(event.start, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
     );
   };
 
@@ -93,10 +94,13 @@ export function DayView({
       {/* Header */}
       <div className="border-b p-6">
         <h2 className="text-2xl font-bold">
-          {format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
+          {format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", {
+            locale: ptBR,
+          })}
         </h2>
         <p className="text-muted-foreground mt-1">
-          {events.length} consulta{events.length !== 1 ? 's' : ''} agendada{events.length !== 1 ? 's' : ''}
+          {events.length} consulta{events.length !== 1 ? "s" : ""} agendada
+          {events.length !== 1 ? "s" : ""}
         </p>
       </div>
 
@@ -118,7 +122,7 @@ export function DayView({
                   </div>
 
                   {/* Event Area */}
-                  <div className="flex-1 min-h-[60px]">
+                  <div className="min-h-[60px] flex-1">
                     {isEmpty ? (
                       <Button
                         variant="ghost"
@@ -142,20 +146,25 @@ export function DayView({
                           >
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
+                                <div className="mb-2 flex items-center gap-2">
                                   <User className="h-4 w-4" />
                                   <span className="font-medium">
                                     {event.pacienteNome}
                                   </span>
-                                  <Badge className={getStatusBadgeColor(event.status)}>
+                                  <Badge
+                                    className={getStatusBadgeColor(
+                                      event.status
+                                    )}
+                                  >
                                     {getStatusText(event.status)}
                                   </Badge>
                                 </div>
-                                
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+
+                                <div className="text-muted-foreground flex items-center gap-4 text-sm">
                                   <div className="flex items-center gap-1">
                                     <Clock className="h-3 w-3" />
-                                    {format(event.start, "HH:mm")} - {format(event.end, "HH:mm")}
+                                    {format(event.start, "HH:mm")} -{" "}
+                                    {format(event.end, "HH:mm")}
                                   </div>
                                   <div className="flex items-center gap-1">
                                     {event.modalidade === "online" ? (
@@ -163,7 +172,9 @@ export function DayView({
                                     ) : (
                                       <MapPin className="h-3 w-3" />
                                     )}
-                                    {event.modalidade === "online" ? "Online" : "Presencial"}
+                                    {event.modalidade === "online"
+                                      ? "Online"
+                                      : "Presencial"}
                                   </div>
                                 </div>
 

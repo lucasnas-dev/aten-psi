@@ -2,16 +2,16 @@
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { 
+import {
   Calendar,
-  Clock, 
-  User, 
-  MapPin, 
-  Video,
-  Phone,
-  Mail,
+  Clock,
   Edit,
-  Trash2
+  Mail,
+  MapPin,
+  Phone,
+  Trash2,
+  User,
+  Video,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -93,15 +93,17 @@ export function ListView({
   };
 
   // Ordenar eventos por data/hora
-  const sortedEvents = [...events].sort((a, b) => 
-    new Date(a.start).getTime() - new Date(b.start).getTime()
+  const sortedEvents = [...events].sort(
+    (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
   );
 
   if (events.length === 0) {
     return (
       <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
-        <Calendar className="text-muted-foreground mx-auto h-12 w-12 mb-4" />
-        <h3 className="text-lg font-medium mb-2">Nenhuma consulta encontrada</h3>
+        <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+        <h3 className="mb-2 text-lg font-medium">
+          Nenhuma consulta encontrada
+        </h3>
         <p className="text-muted-foreground mb-6">
           Não há consultas agendadas para os filtros selecionados.
         </p>
@@ -115,7 +117,8 @@ export function ListView({
       <div className="border-b p-6">
         <h2 className="text-2xl font-bold">Lista de Consultas</h2>
         <p className="text-muted-foreground mt-1">
-          {events.length} consulta{events.length !== 1 ? 's' : ''} encontrada{events.length !== 1 ? 's' : ''}
+          {events.length} consulta{events.length !== 1 ? "s" : ""} encontrada
+          {events.length !== 1 ? "s" : ""}
         </p>
       </div>
 
@@ -136,7 +139,7 @@ export function ListView({
             {sortedEvents.map((event) => (
               <TableRow
                 key={event.id}
-                className="cursor-pointer hover:bg-gray-50 transition-colors"
+                className="cursor-pointer transition-colors hover:bg-gray-50"
                 onClick={() => onEventClick(event)}
               >
                 <TableCell>
@@ -152,7 +155,7 @@ export function ListView({
                     </div>
                   </div>
                 </TableCell>
-                
+
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Calendar className="text-muted-foreground h-4 w-4" />
@@ -160,26 +163,25 @@ export function ListView({
                       <div className="font-medium">
                         {format(event.start, "dd/MM/yyyy", { locale: ptBR })}
                       </div>
-                      <div className="text-muted-foreground text-sm flex items-center gap-1">
+                      <div className="text-muted-foreground flex items-center gap-1 text-sm">
                         <Clock className="h-3 w-3" />
-                        {format(event.start, "HH:mm")} - {format(event.end, "HH:mm")}
+                        {format(event.start, "HH:mm")} -{" "}
+                        {format(event.end, "HH:mm")}
                       </div>
                     </div>
                   </div>
                 </TableCell>
 
                 <TableCell>
-                  <Badge variant="outline">
-                    {getTipoText(event.tipo)}
-                  </Badge>
+                  <Badge variant="outline">{getTipoText(event.tipo)}</Badge>
                 </TableCell>
 
                 <TableCell>
                   <div className="flex items-center gap-2">
                     {event.modalidade === "online" ? (
-                      <Video className="text-blue-600 h-4 w-4" />
+                      <Video className="h-4 w-4 text-blue-600" />
                     ) : (
-                      <MapPin className="text-green-600 h-4 w-4" />
+                      <MapPin className="h-4 w-4 text-green-600" />
                     )}
                     <span className="capitalize">{event.modalidade}</span>
                   </div>
@@ -193,7 +195,9 @@ export function ListView({
 
                 <TableCell className="max-w-xs">
                   {event.observacoes ? (
-                    <span className="text-sm truncate">{event.observacoes}</span>
+                    <span className="truncate text-sm">
+                      {event.observacoes}
+                    </span>
                   ) : (
                     <span className="text-muted-foreground text-sm">—</span>
                   )}

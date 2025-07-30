@@ -34,11 +34,11 @@ export function Sidebar() {
     try {
       await signOut();
       // O middleware irá detectar a ausência da sessão e redirecionar automaticamente
-      window.location.href = '/authentication/login';
+      window.location.href = "/authentication/login";
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
       // Em caso de erro, forçar redirecionamento
-      window.location.href = '/authentication/login';
+      window.location.href = "/authentication/login";
     }
   };
 
@@ -75,7 +75,7 @@ export function Sidebar() {
                   "group flex items-center rounded-xl px-3 py-2 text-base font-medium transition-all duration-300 ease-in-out",
                   isActive
                     ? "from-primary to-secondary text-primary-foreground scale-[1.02] transform bg-gradient-to-r shadow-lg"
-                    : "text-sidebar-foreground/80 hover:from-primary/10 hover:to-secondary/10 hover:text-sidebar-foreground hover:scale-[1.01] hover:transform hover:bg-gradient-to-r hover:shadow-md",
+                    : "text-sidebar-foreground/80 hover:from-primary/10 hover:to-secondary/10 hover:text-sidebar-foreground hover:scale-[1.01] hover:transform hover:bg-gradient-to-r hover:shadow-md"
                 )}
               >
                 <Icon
@@ -83,7 +83,7 @@ export function Sidebar() {
                     "mr-2 h-5 w-5 flex-shrink-0 transition-all duration-300",
                     isActive
                       ? "text-primary-foreground"
-                      : "text-sidebar-foreground/60 group-hover:text-primary",
+                      : "text-sidebar-foreground/60 group-hover:text-primary"
                   )}
                 />
                 <span className="transition-all duration-300">{item.name}</span>
@@ -102,14 +102,14 @@ export function Sidebar() {
               Psi. {userName}
             </span>
           </div>
-          
+
           {/* Email do Usuário */}
           <div className="text-center">
             <span className="text-sidebar-foreground/60 text-xs">
               {userEmail}
             </span>
           </div>
-          
+
           {/* Botão Sair */}
           <Button
             variant="outline"

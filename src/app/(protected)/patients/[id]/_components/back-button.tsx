@@ -18,12 +18,7 @@ export function BackButton() {
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={handleBack}
-      className="gap-2"
-    >
+    <Button variant="outline" size="sm" onClick={handleBack} className="gap-2">
       <ArrowLeft className="h-4 w-4" />
       Voltar
     </Button>

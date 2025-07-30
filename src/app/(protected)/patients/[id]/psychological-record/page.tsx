@@ -792,7 +792,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                   {editMode ? (
                     <Textarea
                       defaultValue={paciente.planoTerapeutico.objetivos.join(
-                        "\n",
+                        "\n"
                       )}
                       placeholder="Digite cada objetivo em uma linha..."
                       rows={6}
@@ -808,7 +808,7 @@ export default function ProntuarioPage({ params }: { params: { id: string } }) {
                             <span className="text-primary">•</span>
                             {objetivo}
                           </li>
-                        ),
+                        )
                       )}
                     </ul>
                   )}

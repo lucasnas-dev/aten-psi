@@ -1,36 +1,40 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
 import { format } from "date-fns";
 import { useAction } from "next-safe-action/hooks";
-
-import {
-  Filters,
-  CalendarView,
-  WeekView,
-  DayView,
-  ListView,
-  EventDetailModal,
-  DayEventsList,
-  ViewMode,
-  StatusConsulta,
-  TipoConsulta,
-  CalendarEvent,
-} from "./_components";
+import { useEffect, useMemo, useState } from "react";
 
 import { getConsultations } from "@/actions/get-consultations";
+
+import {
+  CalendarEvent,
+  CalendarView,
+  DayEventsList,
+  DayView,
+  EventDetailModal,
+  Filters,
+  ListView,
+  StatusConsulta,
+  TipoConsulta,
+  ViewMode,
+  WeekView,
+} from "./_components";
 
 export default function AgendaPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [statusFilter, setStatusFilter] = useState<StatusConsulta | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<StatusConsulta | "all">(
+    "all"
+  );
   const [tipoFilter, setTipoFilter] = useState<TipoConsulta | "all">("all");
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
-  const [isNovaConsultaModalOpen, setIsNovaConsultaModalOpen] = useState(false);
-  const [preselectedDate, setPreselectedDate] = useState<Date | undefined>();
-  const [preselectedTime, setPreselectedTime] = useState<string | undefined>();
+  const [, setIsNovaConsultaModalOpen] = useState(false);
+  const [, setPreselectedDate] = useState<Date | undefined>();
+  const [, setPreselectedTime] = useState<string | undefined>();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -50,23 +54,11 @@ export default function AgendaPage() {
     loadConsultations({});
   }, [loadConsultations]);
 
-  const getTipoLabel = (tipo: string) => {
-    switch (tipo) {
-      case "avaliacao_inicial":
-        return "Avaliação";
-      case "psicoterapia":
-        return "Psicoterapia";
-      case "retorno":
-        return "Retorno";
-      default:
-        return "Consulta";
-    }
-  };
-
   // Filtrar eventos baseado nos filtros selecionados
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
-      const matchesStatus = statusFilter === "all" || event.status === statusFilter;
+      const matchesStatus =
+        statusFilter === "all" || event.status === statusFilter;
       const matchesTipo = tipoFilter === "all" || event.tipo === tipoFilter;
       return matchesStatus && matchesTipo;
     });
@@ -102,22 +94,11 @@ export default function AgendaPage() {
     setIsNovaConsultaModalOpen(true);
   };
 
-  const handleNovaConsulta = () => {
-    setPreselectedDate(undefined);
-    setPreselectedTime(undefined);
-    setIsNovaConsultaModalOpen(true);
-  };
-
-  const handleNovaConsultaSuccess = () => {
-    // Recarregar consultas após criar uma nova
-    loadConsultations({});
-  };
-
   const renderCurrentView = () => {
     switch (viewMode) {
       case "month":
         return (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Calendário menor */}
             <div className="lg:col-span-1">
               <CalendarView
@@ -130,7 +111,7 @@ export default function AgendaPage() {
                 selectedDate={selectedDate}
               />
             </div>
-            
+
             {/* Lista do dia selecionado */}
             <div className="lg:col-span-2">
               <DayEventsList
@@ -173,7 +154,9 @@ export default function AgendaPage() {
       default:
         return (
           <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
-            <h3 className="text-lg font-medium mb-2">Visualização em desenvolvimento</h3>
+            <h3 className="mb-2 text-lg font-medium">
+              Visualização em desenvolvimento
+            </h3>
             <p className="text-muted-foreground">
               A visualização "{viewMode}" será implementada em breve.
             </p>
@@ -197,7 +180,7 @@ export default function AgendaPage() {
       {/* Loading State */}
       {isLoading ? (
         <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"></div>
           <p className="text-muted-foreground">Carregando consultas...</p>
         </div>
       ) : (

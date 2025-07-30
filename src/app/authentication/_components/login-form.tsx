@@ -54,7 +54,7 @@ export function LoginForm() {
         }
         setIsLoading(false);
       },
-    },
+    }
   );
 
   const form = useForm<LoginFormValues>({

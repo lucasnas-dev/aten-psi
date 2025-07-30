@@ -2,11 +2,11 @@
 
 import { format, isSameDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Clock, MapPin, User, Plus } from "lucide-react";
+import { Clock, Plus, User } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 import { CalendarEvent } from "./types";
@@ -22,9 +22,10 @@ export function DayEventsList({
   selectedDate,
   events,
   onEventClick,
-  onTimeSlotClick,
 }: DayEventsListProps) {
-  const dayEvents = events.filter(event => isSameDay(event.start, selectedDate));
+  const dayEvents = events.filter((event) =>
+    isSameDay(event.start, selectedDate)
+  );
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -69,7 +70,6 @@ export function DayEventsList({
     }
   };
 
-
   const handleNewAppointment = () => {
     window.location.href = "/patients";
   };
@@ -79,7 +79,8 @@ export function DayEventsList({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">
-            Agenda do dia {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
+            Agenda do dia{" "}
+            {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
           </CardTitle>
           <Button
             onClick={handleNewAppointment}
@@ -93,12 +94,15 @@ export function DayEventsList({
       </CardHeader>
       <CardContent className="space-y-3">
         {dayEvents.length === 0 ? (
-          <div className="text-center py-8">
+          <div className="py-8 text-center">
             <div className="text-muted-foreground mb-4">
               <Clock className="mx-auto h-12 w-12 opacity-50" />
-              <p className="text-lg font-medium mt-2">Nenhuma consulta agendada</p>
+              <p className="mt-2 text-lg font-medium">
+                Nenhuma consulta agendada
+              </p>
               <p className="text-sm">
-                Clique em "Nova Consulta" para agendar uma consulta para este dia
+                Clique em {'"'}Nova Consulta{'"'} para agendar uma consulta para
+                este dia
               </p>
             </div>
           </div>
@@ -107,13 +111,18 @@ export function DayEventsList({
             <div
               key={event.id}
               onClick={() => onEventClick(event)}
-              className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors flex items-center justify-between"
+              className="hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <User className="h-4 w-4 text-muted-foreground" />
+                <User className="text-muted-foreground h-4 w-4" />
                 <span className="font-medium">{event.pacienteNome}</span>
-                <span className="text-sm text-muted-foreground">• {getTipoLabel(event.tipo)}</span>
-                <span className="text-sm text-muted-foreground">• {event.modalidade === "presencial" ? "Presencial" : "Online"}</span>
+                <span className="text-muted-foreground text-sm">
+                  • {getTipoLabel(event.tipo)}
+                </span>
+                <span className="text-muted-foreground text-sm">
+                  •{" "}
+                  {event.modalidade === "presencial" ? "Presencial" : "Online"}
+                </span>
               </div>
               <Badge className={cn("text-xs", getStatusColor(event.status))}>
                 {getStatusLabel(event.status)}

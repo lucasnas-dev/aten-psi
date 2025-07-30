@@ -17,13 +17,7 @@ type TenantCtx = {
 export const getConsultations = tenantActionClient
   .inputSchema(getConsultationsSchema)
   .action(
-    async ({
-      parsedInput,
-      ctx,
-    }: {
-      parsedInput: GetConsultationsInput;
-      ctx: TenantCtx;
-    }) => {
+    async ({ ctx }: { parsedInput: GetConsultationsInput; ctx: TenantCtx }) => {
       try {
         // Buscar consultas com informações do paciente
         const result = await db
@@ -45,12 +39,14 @@ export const getConsultations = tenantActionClient
 
         // Transformar os dados para o formato esperado pelo componente
         const formattedConsultations = result.map((consultation) => {
-          const [hours, minutes] = consultation.time.split(':').map(Number);
+          const [hours, minutes] = consultation.time.split(":").map(Number);
           const startDate = new Date(consultation.date);
           startDate.setHours(hours, minutes, 0, 0);
-          
+
           const endDate = new Date(startDate);
-          endDate.setMinutes(endDate.getMinutes() + parseInt(consultation.duration));
+          endDate.setMinutes(
+            endDate.getMinutes() + parseInt(consultation.duration)
+          );
 
           // Gerar título baseado no tipo e nome do paciente
           const typeLabels = {
@@ -61,7 +57,9 @@ export const getConsultations = tenantActionClient
             devolutiva: "Devolutiva",
           };
 
-          const typeLabel = typeLabels[consultation.type as keyof typeof typeLabels] || "Consulta";
+          const typeLabel =
+            typeLabels[consultation.type as keyof typeof typeLabels] ||
+            "Consulta";
           const title = `${typeLabel} - ${consultation.patientName}`;
 
           return {
@@ -83,5 +81,5 @@ export const getConsultations = tenantActionClient
         console.error("Erro ao buscar consultas:", error);
         throw new Error("Falha ao carregar consultas");
       }
-    },
+    }
   );

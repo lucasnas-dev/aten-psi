@@ -5,7 +5,7 @@ const logger = createLogger({
   level: process.env.NODE_ENV === "production" ? "error" : "debug",
   format: format.combine(
     format.timestamp(),
-    format.json(), // Logs em formato JSON
+    format.json() // Logs em formato JSON
   ),
   transports: [
     new transports.Console(),

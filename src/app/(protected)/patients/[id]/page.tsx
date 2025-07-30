@@ -54,7 +54,7 @@ export default async function PatientDetailsPage({
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  
+
   if (!session?.user?.id) {
     notFound();
   }
@@ -73,7 +73,7 @@ export default async function PatientDetailsPage({
     .select()
     .from(patients)
     .where(eq(patients.id, params.id))
-    .then(rows => rows[0]);
+    .then((rows) => rows[0]);
 
   // Se o paciente não existe ou não pertence ao tenant do usuário
   if (!patient || patient.tenant_id !== user.tenant_id) {
@@ -114,7 +114,7 @@ export default async function PatientDetailsPage({
       patient.house_number,
       patient.neighborhood,
       patient.city,
-      patient.state
+      patient.state,
     ].filter(Boolean);
     return parts.join(", ") || null;
   };
@@ -125,8 +125,10 @@ export default async function PatientDetailsPage({
       <div className="flex items-center justify-between">
         <div className="flex items-start gap-3">
           <div>
-            <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
+            <div className="mb-1 flex items-center gap-3">
+              <h1 className="text-3xl font-bold tracking-tight">
+                {patient.name}
+              </h1>
               <Badge
                 variant={patient.status === "active" ? "default" : "secondary"}
               >
@@ -135,7 +137,9 @@ export default async function PatientDetailsPage({
             </div>
             <p className="text-muted-foreground">
               Cadastrado em{" "}
-              {new Date(patient.created_at || new Date()).toLocaleDateString("pt-BR")}
+              {new Date(patient.created_at || new Date()).toLocaleDateString(
+                "pt-BR"
+              )}
             </p>
           </div>
         </div>
@@ -153,9 +157,9 @@ export default async function PatientDetailsPage({
               Prontuário
             </Link>
           </Button>
-          <ArchiveButton 
-            patientId={patient.id} 
-            currentStatus={patient.status} 
+          <ArchiveButton
+            patientId={patient.id}
+            currentStatus={patient.status}
           />
         </div>
       </div>
@@ -263,12 +267,13 @@ export default async function PatientDetailsPage({
         <div className="rounded-lg border border-red-200 bg-red-50 p-4">
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-red-500" />
-            <p className="text-red-700 font-medium text-sm">
+            <p className="text-sm font-medium text-red-700">
               🚨 IMPLEMENTAR HISTÓRICO DE CONSULTAS!!!!!!
             </p>
           </div>
-          <p className="text-red-600 text-xs mt-2">
-            Lembrete: Criar tabela de consultas no banco e implementar funcionalidade de histórico
+          <p className="mt-2 text-xs text-red-600">
+            Lembrete: Criar tabela de consultas no banco e implementar
+            funcionalidade de histórico
           </p>
         </div>
       </div>

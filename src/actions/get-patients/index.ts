@@ -25,14 +25,15 @@ export const getPatients = tenantActionClient
       ctx: TenantCtx;
     }) => {
       try {
-        const { search, status, page, limit, orderBy, orderDirection } = parsedInput;
+        const { search, status, page, limit, orderBy, orderDirection } =
+          parsedInput;
 
         // Construir condições de busca
         const searchConditions = search
           ? or(
               ilike(patients.name, `%${search}%`),
               ilike(patients.email, `%${search}%`),
-              ilike(patients.phone, `%${search}%`),
+              ilike(patients.phone, `%${search}%`)
             )
           : undefined;
 
@@ -100,5 +101,5 @@ export const getPatients = tenantActionClient
         console.error("Erro ao buscar pacientes:", error);
         throw new Error("Falha ao buscar pacientes");
       }
-    },
+    }
   );

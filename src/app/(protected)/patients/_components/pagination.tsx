@@ -40,8 +40,6 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
     totalItens,
     totalPaginas,
     paginaAtual,
-    inicio,
-    fim,
     temProxima,
     temAnterior,
     itensPorPagina,
@@ -56,31 +54,49 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
   }
 
   return (
-    <div className="bg-card flex items-center justify-between rounded-xl px-3 py-1.5 shadow-md backdrop-blur-sm transition-all duration-300 text-sm gap-2">
+    <div className="bg-card flex items-center justify-between gap-2 rounded-xl px-3 py-1.5 text-sm shadow-md backdrop-blur-sm transition-all duration-300">
       {/* ✅ INFORMAÇÕES DA PAGINAÇÃO */}
       <div className="text-muted-foreground flex items-center gap-4 text-xs">
-        <div className="font-semibold text-xs">
-          Total de <span className="text-primary font-medium text-xs align-middle">{totalItens}</span> paciente(s)
+        <div className="text-xs font-semibold">
+          Total de{" "}
+          <span className="text-primary align-middle text-xs font-medium">
+            {totalItens}
+          </span>{" "}
+          paciente(s)
         </div>
 
         {/* ✅ SELETOR DE ITENS POR PÁGINA */}
         <div className="flex items-center gap-2">
-          <span className="font-medium text-xs">Itens por página:</span>
+          <span className="text-xs font-medium">Itens por página:</span>
           <Select
             value={itensPorPagina.toString()}
             onValueChange={(value) => alterarItensPorPagina(Number(value))}
           >
-            <SelectTrigger className="border-border hover:bg-primary/15 hover:border-primary hover:text-primary bg-card h-6 w-auto min-w-[45px] px-3 text-xs font-medium flex items-center justify-center transition-all duration-300 rounded-lg">
+            <SelectTrigger className="border-border hover:bg-primary/15 hover:border-primary hover:text-primary bg-card flex h-6 w-auto min-w-[45px] items-center justify-center rounded-lg px-3 text-xs font-medium transition-all duration-300">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="border-border bg-card shadow-md w-auto min-w-[45px] p-1">
-              <SelectItem value="5" className="text-xs py-1 px-2 rounded">5</SelectItem>
-              <SelectItem value="8" className="text-xs py-1 px-2 rounded">8</SelectItem>
-              <SelectItem value="10" className="text-xs py-1 px-2 rounded">10</SelectItem>
-              <SelectItem value="15" className="text-xs py-1 px-2 rounded">15</SelectItem>
-              <SelectItem value="20" className="text-xs py-1 px-2 rounded">20</SelectItem>
-              <SelectItem value="25" className="text-xs py-1 px-2 rounded">25</SelectItem>
-              <SelectItem value="50" className="text-xs py-1 px-2 rounded">50</SelectItem>
+            <SelectContent className="border-border bg-card w-auto min-w-[45px] p-1 shadow-md">
+              <SelectItem value="5" className="rounded px-2 py-1 text-xs">
+                5
+              </SelectItem>
+              <SelectItem value="8" className="rounded px-2 py-1 text-xs">
+                8
+              </SelectItem>
+              <SelectItem value="10" className="rounded px-2 py-1 text-xs">
+                10
+              </SelectItem>
+              <SelectItem value="15" className="rounded px-2 py-1 text-xs">
+                15
+              </SelectItem>
+              <SelectItem value="20" className="rounded px-2 py-1 text-xs">
+                20
+              </SelectItem>
+              <SelectItem value="25" className="rounded px-2 py-1 text-xs">
+                25
+              </SelectItem>
+              <SelectItem value="50" className="rounded px-2 py-1 text-xs">
+                50
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
