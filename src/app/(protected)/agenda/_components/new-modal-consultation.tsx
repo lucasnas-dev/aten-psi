@@ -77,6 +77,7 @@ export function NewConsultationModal({
   preselectedTime,
   patient
 }: NewConsultationModalProps) {
+  const [openCalendar, setOpenCalendar] = useState<boolean>(false);
   const { execute, status } = useAction(createConsultation, {
     onSuccess: () => {
       onSuccess?.();
@@ -87,6 +88,14 @@ export function NewConsultationModal({
       console.error("Erro ao criar consulta:", err);
     },
   });
+
+  // Função para formatar valor como moeda brasileira
+  const formatBRL = (value: string) => {
+    const cleaned = value.replace(/\D/g, "");
+    if (!cleaned) return "";
+    const number = parseFloat(cleaned) / 100;
+    return number.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  };
 
   const form = useForm<NewConsultationFormData>({
     resolver: zodResolver(newConsultationSchema),
@@ -149,12 +158,14 @@ export function NewConsultationModal({
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Data</FormLabel>
-                    <Popover>
+                    <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant="outline"
                             className="pl-3 text-left font-normal"
+                            type="button"
+                            onClick={() => setOpenCalendar(true)}
                           >
                             {field.value ? (
                               format(field.value, "PPP", { locale: ptBR })
@@ -166,13 +177,17 @@ export function NewConsultationModal({
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                        />
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={date => {
+                              field.onChange(date);
+                              setOpenCalendar(false);
+                            }}
+                            disabled={date => date < new Date()}
+                            initialFocus
+                            locale={ptBR}
+                          />
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
@@ -228,7 +243,14 @@ export function NewConsultationModal({
                       <Input
                         type="text"
                         placeholder="0,00"
-                        {...field}
+                        value={field.value ? formatBRL(field.value) : ""}
+                        onChange={e => {
+                          // Mantém apenas números e atualiza o valor
+                          const raw = e.target.value.replace(/\D/g, "");
+                          field.onChange(raw);
+                        }}
+                        inputMode="numeric"
+                        maxLength={12}
                       />
                     </FormControl>
                     <FormMessage />
