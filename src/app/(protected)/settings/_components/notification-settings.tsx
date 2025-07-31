@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Clock, Mail, MessageSquare } from "lucide-react";
+import { Bell, Mail, MessageSquare } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 
 import {
@@ -39,9 +39,6 @@ interface SettingsFormData {
   emailNotifications: boolean;
   smsNotifications: boolean;
   reminderTime: number;
-  weekStartsOn: "0" | "1";
-  timeFormat: "12" | "24";
-  timezone: string;
 }
 
 interface NotificationSettingsProps {
@@ -50,16 +47,16 @@ interface NotificationSettingsProps {
 
 export function NotificationSettings({ form }: NotificationSettingsProps) {
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5" />
-            Notificações
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Canais de Notificação */}
+      <Card className="border-0 bg-gradient-to-br from-purple-50 to-pink-50 shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Bell className="h-5 w-5 text-purple-600" />
+            Canais de Notificação
           </CardTitle>
-          <CardDescription>
-            Configure como e quando você quer receber notificações sobre sua
-            agenda.
+          <CardDescription className="text-sm">
+            Configure como você quer receber notificações
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -67,14 +64,16 @@ export function NotificationSettings({ form }: NotificationSettingsProps) {
             control={form.control}
             name="emailNotifications"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border border-purple-200 bg-white p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="flex items-center gap-2 text-base">
-                    <Mail className="h-4 w-4" />
-                    Notificações por Email
-                  </FormLabel>
-                  <FormDescription>
-                    Receba lembretes e atualizações por email.
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-purple-600" />
+                    <FormLabel className="text-sm font-medium">
+                      Notificações por E-mail
+                    </FormLabel>
+                  </div>
+                  <FormDescription className="text-xs">
+                    Receber lembretes e confirmações por e-mail
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -91,14 +90,16 @@ export function NotificationSettings({ form }: NotificationSettingsProps) {
             control={form.control}
             name="smsNotifications"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border border-purple-200 bg-white p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="flex items-center gap-2 text-base">
-                    <MessageSquare className="h-4 w-4" />
-                    Notificações por SMS
-                  </FormLabel>
-                  <FormDescription>
-                    Receba lembretes urgentes via SMS.
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4 text-purple-600" />
+                    <FormLabel className="text-sm font-medium">
+                      Notificações por SMS
+                    </FormLabel>
+                  </div>
+                  <FormDescription className="text-xs">
+                    Receber lembretes por mensagem de texto
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -113,14 +114,15 @@ export function NotificationSettings({ form }: NotificationSettingsProps) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Lembretes de Consulta
+      {/* Configurações de Lembrete */}
+      <Card className="border-0 bg-gradient-to-br from-orange-50 to-red-50 shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Bell className="h-5 w-5 text-orange-600" />
+            Tempo de Lembrete
           </CardTitle>
-          <CardDescription>
-            Configure quando enviar lembretes automáticos para pacientes.
+          <CardDescription className="text-sm">
+            Quando enviar lembretes antes das consultas
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -129,13 +131,15 @@ export function NotificationSettings({ form }: NotificationSettingsProps) {
             name="reminderTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Enviar lembrete antes da consulta</FormLabel>
+                <FormLabel className="text-sm font-medium">
+                  Lembrete antecipado (minutos)
+                </FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   defaultValue={field.value?.toString()}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white">
                       <SelectValue placeholder="Selecione o tempo" />
                     </SelectTrigger>
                   </FormControl>
@@ -147,48 +151,51 @@ export function NotificationSettings({ form }: NotificationSettingsProps) {
                     <SelectItem value="1440">1 dia antes</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormDescription>
-                  Tempo de antecedência para envio automático de lembretes.
+                <FormDescription className="text-xs">
+                  Tempo para enviar lembretes automáticos
                 </FormDescription>
               </FormItem>
             )}
           />
 
-          <div className="space-y-3">
-            <h4 className="text-sm font-medium">
-              Tipos de notificação para pacientes:
-            </h4>
-
-            {[
-              {
-                key: "confirmacao",
-                label: "Confirmação de agendamento",
-                defaultEnabled: true,
-              },
-              {
-                key: "lembrete",
-                label: "Lembrete de consulta",
-                defaultEnabled: true,
-              },
-              {
-                key: "cancelamento",
-                label: "Cancelamento de consulta",
-                defaultEnabled: true,
-              },
-              {
-                key: "reagendamento",
-                label: "Reagendamento de consulta",
-                defaultEnabled: true,
-              },
-            ].map((notification) => (
-              <div
-                key={notification.key}
-                className="bg-muted/20 flex items-center justify-between rounded-lg px-3 py-2"
-              >
-                <span className="text-sm">{notification.label}</span>
-                <Switch defaultChecked={notification.defaultEnabled} />
-              </div>
-            ))}
+          <div className="rounded-lg border border-orange-200 bg-orange-100 p-4">
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-orange-800">
+                Tipos de Notificação:
+              </h4>
+              {[
+                {
+                  key: "confirmacao",
+                  label: "Confirmação de agendamento",
+                  defaultEnabled: true,
+                },
+                {
+                  key: "lembrete",
+                  label: "Lembrete de consulta",
+                  defaultEnabled: true,
+                },
+                {
+                  key: "cancelamento",
+                  label: "Cancelamento de consulta",
+                  defaultEnabled: true,
+                },
+                {
+                  key: "reagendamento",
+                  label: "Reagendamento de consulta",
+                  defaultEnabled: true,
+                },
+              ].map((notification) => (
+                <div
+                  key={notification.key}
+                  className="flex items-center justify-between"
+                >
+                  <label className="text-sm text-orange-700">
+                    {notification.label}
+                  </label>
+                  <Switch defaultChecked={notification.defaultEnabled} />
+                </div>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>

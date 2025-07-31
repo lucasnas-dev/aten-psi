@@ -215,11 +215,6 @@ export const userSettings = pgTable("user_settings", {
   smsNotifications: boolean("sms_notifications").default(false),
   reminderTime: integer("reminder_time").default(60),
 
-  // Configurações de sistema
-  weekStartsOn: varchar("week_starts_on", { length: 1 }).default("1"),
-  timeFormat: varchar("time_format", { length: 2 }).default("24"),
-  timezone: text("timezone").default("America/Sao_Paulo"),
-
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
