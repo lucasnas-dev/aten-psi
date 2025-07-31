@@ -1,6 +1,8 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  integer,
+  json,
   pgTable,
   text,
   timestamp,
@@ -139,6 +141,11 @@ export const tenantsRelations = relations(tenants, ({ many }) => ({
 export const usersRelations = relations(users, ({ many, one }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
+  userSettings: one(userSettings, {
+    fields: [users.id],
+    references: [userSettings.userId],
+  }),
+  workingHours: many(workingHours),
   tenant: one(tenants, {
     fields: [users.tenant_id],
     references: [tenants.id],
@@ -174,6 +181,96 @@ export const consultationsRelations = relations(consultations, ({ one }) => ({
   }),
   tenant: one(tenants, {
     fields: [consultations.tenant_id],
+    references: [tenants.id],
+  }),
+}));
+
+// ===== USER SETTINGS TABLE =====
+export const userSettings = pgTable("user_settings", {
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  tenantId: varchar("tenant_id", { length: 255 })
+    .notNull()
+    .references(() => tenants.id),
+
+  // Configurações profissionais
+  name: text("name"),
+  email: text("email"),
+  phone: text("phone"),
+  crp: text("crp"),
+  specialization: text("specialization"),
+
+  // Configurações de consulta
+  defaultDuration: integer("default_duration").default(50),
+  bufferTime: integer("buffer_time").default(10),
+  maxAdvanceBooking: integer("max_advance_booking").default(30),
+  allowSameDayBooking: boolean("allow_same_day_booking").default(false),
+
+  // Configurações de notificação
+  emailNotifications: boolean("email_notifications").default(true),
+  smsNotifications: boolean("sms_notifications").default(false),
+  reminderTime: integer("reminder_time").default(60),
+
+  // Configurações de sistema
+  weekStartsOn: varchar("week_starts_on", { length: 1 }).default("1"),
+  timeFormat: varchar("time_format", { length: 2 }).default("24"),
+  timezone: text("timezone").default("America/Sao_Paulo"),
+
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+// ===== WORKING HOURS TABLE =====
+export const workingHours = pgTable("working_hours", {
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  tenantId: varchar("tenant_id", { length: 255 })
+    .notNull()
+    .references(() => tenants.id),
+
+  dayOfWeek: integer("day_of_week").notNull(), // 0 = domingo, 1 = segunda, etc.
+  enabled: boolean("enabled").default(true),
+  timeSlots: json("time_slots").default([]), // Array de {start: "08:00", end: "12:00"}
+
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+// ===== RELATIONS FOR NEW TABLES =====
+export const userSettingsRelations = relations(userSettings, ({ one }) => ({
+  user: one(users, {
+    fields: [userSettings.userId],
+    references: [users.id],
+  }),
+  tenant: one(tenants, {
+    fields: [userSettings.tenantId],
+    references: [tenants.id],
+  }),
+}));
+
+export const workingHoursRelations = relations(workingHours, ({ one }) => ({
+  user: one(users, {
+    fields: [workingHours.userId],
+    references: [users.id],
+  }),
+  tenant: one(tenants, {
+    fields: [workingHours.tenantId],
     references: [tenants.id],
   }),
 }));

@@ -10,11 +10,11 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { signOut, useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Painel", href: "/dashboard", icon: LayoutDashboard },
@@ -22,12 +22,11 @@ const navigation = [
   { name: "Agenda", href: "/agenda", icon: Calendar },
   { name: "Prontuários", href: "/prontuarios", icon: FileText },
   { name: "Relatórios", href: "/relatorios", icon: BarChart3 },
-  { name: "Configurações", href: "/configuracoes", icon: Settings },
+  { name: "Configurações", href: "/settings", icon: Settings },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { data: session } = useSession();
 
   const handleLogout = async () => {
