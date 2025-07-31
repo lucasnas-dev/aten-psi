@@ -109,44 +109,18 @@ export default function SettingsPage() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <TabsContent value="working-hours" className="mt-0 space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Horários de Trabalho</h3>
-                <p className="text-muted-foreground text-sm">
-                  Configure seus dias e horários disponíveis
-                </p>
-              </div>
               <WorkingHoursConfig />
             </TabsContent>
 
             <TabsContent value="appointments" className="mt-0 space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">
-                  Configurações de Consulta
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  Defina as regras para agendamentos
-                </p>
-              </div>
               <AppointmentSettings form={form} />
             </TabsContent>
 
             <TabsContent value="notifications" className="mt-0 space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Notificações</h3>
-                <p className="text-muted-foreground text-sm">
-                  Configure como receber lembretes
-                </p>
-              </div>
               <NotificationSettings form={form} />
             </TabsContent>
 
             <TabsContent value="profile" className="mt-0 space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Perfil Profissional</h3>
-                <p className="text-muted-foreground text-sm">
-                  Suas informações pessoais e credenciais
-                </p>
-              </div>
               <ProfileSettings form={form} />
             </TabsContent>
 

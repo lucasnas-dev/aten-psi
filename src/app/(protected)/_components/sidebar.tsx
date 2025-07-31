@@ -45,7 +45,7 @@ export function Sidebar() {
   const userEmail = session?.user?.email || "email@exemplo.com";
 
   return (
-    <div className="bg-sidebar flex h-full w-48 flex-col border-r shadow-lg">
+    <div className="bg-sidebar fixed top-0 left-0 z-40 flex h-screen w-48 flex-col border-r shadow-lg">
       {/* Header */}
       <div className="border-sidebar-border/50 from-primary/5 via-sidebar to-secondary/5 flex h-16 items-center justify-center border-b bg-gradient-to-r px-4">
         <div className="flex items-center gap-3">
@@ -59,7 +59,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <div className="custom-scrollbar flex-1 overflow-y-auto py-4">
+      <div className="flex-1 py-4">
         <nav className="space-y-1 px-2">
           {navigation.map((item) => {
             const Icon = item.icon;
