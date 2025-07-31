@@ -49,13 +49,13 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Configurações de Duração */}
-      <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Clock className="h-5 w-5 text-blue-600" />
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="h-5 w-5" />
             Tempo das Consultas
           </CardTitle>
-          <CardDescription className="text-sm">
+          <CardDescription>
             Configure a duração padrão e intervalos entre consultas
           </CardDescription>
         </CardHeader>
@@ -65,15 +65,13 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
             name="defaultDuration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium">
-                  Duração padrão (minutos)
-                </FormLabel>
+                <FormLabel>Duração padrão (minutos)</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   defaultValue={field.value?.toString()}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger>
                       <SelectValue placeholder="Selecione a duração" />
                     </SelectTrigger>
                   </FormControl>
@@ -85,7 +83,7 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
                     <SelectItem value="90">90 minutos</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormDescription className="text-xs">
+                <FormDescription>
                   Tempo padrão para novas consultas
                 </FormDescription>
               </FormItem>
@@ -97,15 +95,13 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
             name="bufferTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium">
-                  Intervalo entre consultas (minutos)
-                </FormLabel>
+                <FormLabel>Intervalo entre consultas (minutos)</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   defaultValue={field.value?.toString()}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger>
                       <SelectValue placeholder="Selecione o intervalo" />
                     </SelectTrigger>
                   </FormControl>
@@ -117,7 +113,7 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
                     <SelectItem value="20">20 minutos</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormDescription className="text-xs">
+                <FormDescription>
                   Tempo livre entre consultas consecutivas
                 </FormDescription>
               </FormItem>
@@ -127,13 +123,13 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
       </Card>
 
       {/* Regras de Agendamento */}
-      <Card className="border-0 bg-gradient-to-br from-green-50 to-emerald-50 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Calendar className="h-5 w-5 text-green-600" />
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
             Regras de Agendamento
           </CardTitle>
-          <CardDescription className="text-sm">
+          <CardDescription>
             Defina as políticas para novos agendamentos
           </CardDescription>
         </CardHeader>
@@ -143,15 +139,13 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
             name="maxAdvanceBooking"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium">
-                  Agendamento antecipado (dias)
-                </FormLabel>
+                <FormLabel>Agendamento antecipado (dias)</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   defaultValue={field.value?.toString()}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger>
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                   </FormControl>
@@ -163,7 +157,7 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
                     <SelectItem value="90">3 meses</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormDescription className="text-xs">
+                <FormDescription>
                   Quantos dias no futuro é possível agendar
                 </FormDescription>
               </FormItem>
@@ -174,12 +168,10 @@ export function AppointmentSettings({ form }: AppointmentSettingsProps) {
             control={form.control}
             name="allowSameDayBooking"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border border-green-200 bg-white p-4">
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-sm font-medium">
-                    Agendamento no mesmo dia
-                  </FormLabel>
-                  <FormDescription className="text-xs">
+                  <FormLabel>Agendamento no mesmo dia</FormLabel>
+                  <FormDescription>
                     Permitir agendar consultas para o dia atual
                   </FormDescription>
                 </div>

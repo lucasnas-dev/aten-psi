@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Bell, Calendar, Clock, Settings, User } from "lucide-react";
+import { Bell, Calendar, Clock, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -75,145 +75,92 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      <div className="container mx-auto max-w-7xl px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="mb-2 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
-              <Settings className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-3xl font-bold text-transparent">
-                Configurações
-              </h1>
-              <p className="text-muted-foreground">
-                Personalize suas preferências e horários de trabalho
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="space-y-8 p-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger
+            value="working-hours"
+            className="flex items-center gap-2"
+          >
+            <Clock className="h-4 w-4" />
+            <span className="hidden sm:inline">Horários</span>
+          </TabsTrigger>
+          <TabsTrigger value="appointments" className="flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            <span className="hidden sm:inline">Consultas</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="notifications"
+            className="flex items-center gap-2"
+          >
+            <Bell className="h-4 w-4" />
+            <span className="hidden sm:inline">Notificações</span>
+          </TabsTrigger>
+          <TabsTrigger value="profile" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            <span className="hidden sm:inline">Perfil</span>
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Tabs with enhanced design */}
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="space-y-8"
-        >
-          <div className="rounded-2xl border border-gray-100 bg-white p-2 shadow-lg">
-            <TabsList className="grid w-full grid-cols-4 rounded-xl bg-gray-50 p-1">
-              <TabsTrigger
-                value="working-hours"
-                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <Clock className="h-4 w-4" />
-                <span className="hidden sm:inline">Horários</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="appointments"
-                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <Calendar className="h-4 w-4" />
-                <span className="hidden sm:inline">Consultas</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="notifications"
-                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <Bell className="h-4 w-4" />
-                <span className="hidden sm:inline">Notificações</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="profile"
-                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">Perfil</span>
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="mx-auto max-w-6xl">
-                {/* Conteúdo principal */}
-                <div className="min-h-[600px] rounded-2xl border border-gray-100 bg-white shadow-lg">
-                  <TabsContent
-                    value="working-hours"
-                    className="m-0 space-y-6 p-6"
-                  >
-                    <div className="mb-6 border-b pb-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        Horários de Trabalho
-                      </h2>
-                      <p className="text-muted-foreground">
-                        Configure seus dias e horários disponíveis
-                      </p>
-                    </div>
-                    <WorkingHoursConfig />
-                  </TabsContent>
-
-                  <TabsContent
-                    value="appointments"
-                    className="m-0 space-y-6 p-6"
-                  >
-                    <div className="mb-6 border-b pb-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        Configurações de Consulta
-                      </h2>
-                      <p className="text-muted-foreground">
-                        Defina as regras para agendamentos
-                      </p>
-                    </div>
-                    <AppointmentSettings form={form} />
-                  </TabsContent>
-
-                  <TabsContent
-                    value="notifications"
-                    className="m-0 space-y-6 p-6"
-                  >
-                    <div className="mb-6 border-b pb-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        Notificações
-                      </h2>
-                      <p className="text-muted-foreground">
-                        Configure como receber lembretes
-                      </p>
-                    </div>
-                    <NotificationSettings form={form} />
-                  </TabsContent>
-
-                  <TabsContent value="profile" className="m-0 space-y-6 p-6">
-                    <div className="mb-6 border-b pb-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        Perfil Profissional
-                      </h2>
-                      <p className="text-muted-foreground">
-                        Suas informações pessoais e credenciais
-                      </p>
-                    </div>
-                    <ProfileSettings form={form} />
-                  </TabsContent>
-                </div>
-
-                {/* Seção de botões no final */}
-                <div className="mt-6 flex justify-end space-x-4">
-                  <Button type="button" variant="outline">
-                    Cancelar
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                  >
-                    {isLoading ? "Salvando..." : "Salvar Configurações"}
-                  </Button>
-                </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <TabsContent value="working-hours" className="mt-0 space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Horários de Trabalho</h3>
+                <p className="text-muted-foreground text-sm">
+                  Configure seus dias e horários disponíveis
+                </p>
               </div>
-            </form>
-          </Form>
-        </Tabs>
-      </div>
+              <WorkingHoursConfig />
+            </TabsContent>
+
+            <TabsContent value="appointments" className="mt-0 space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">
+                  Configurações de Consulta
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  Defina as regras para agendamentos
+                </p>
+              </div>
+              <AppointmentSettings form={form} />
+            </TabsContent>
+
+            <TabsContent value="notifications" className="mt-0 space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Notificações</h3>
+                <p className="text-muted-foreground text-sm">
+                  Configure como receber lembretes
+                </p>
+              </div>
+              <NotificationSettings form={form} />
+            </TabsContent>
+
+            <TabsContent value="profile" className="mt-0 space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Perfil Profissional</h3>
+                <p className="text-muted-foreground text-sm">
+                  Suas informações pessoais e credenciais
+                </p>
+              </div>
+              <ProfileSettings form={form} />
+            </TabsContent>
+
+            <div className="flex justify-end space-x-4">
+              <Button type="button" variant="outline">
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Salvando..." : "Salvar Configurações"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </Tabs>
     </div>
   );
 }
