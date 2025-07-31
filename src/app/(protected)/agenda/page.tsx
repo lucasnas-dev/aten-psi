@@ -5,20 +5,23 @@ import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
 import { getConsultations } from "@/actions/get-consultations";
+import { deleteConsultation } from "@/actions/manage-consultation";
 
 import {
   CalendarEvent,
   CalendarView,
   DayEventsList,
   DayView,
+  EditConsultationModal,
   EventDetailModal,
   Filters,
   ListView,
   StatusConsulta,
   TipoConsulta,
   ViewMode,
-  WeekView,
 } from "./_components";
+import { EnhancedWeekView } from "./_components/enhanced-week-view";
+import { MiniCalendar } from "./_components/mini-calendar";
 
 export default function AgendaPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
@@ -32,6 +35,7 @@ export default function AgendaPage() {
     null
   );
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [, setIsNovaConsultaModalOpen] = useState(false);
   const [, setPreselectedDate] = useState<Date | undefined>();
   const [, setPreselectedTime] = useState<string | undefined>();
@@ -46,6 +50,17 @@ export default function AgendaPage() {
     onError: (error) => {
       console.error("Erro ao carregar consultas:", error);
       setIsLoading(false);
+    },
+  });
+
+  const { execute: executeDelete } = useAction(deleteConsultation, {
+    onSuccess: () => {
+      console.log("Consulta excluída com sucesso, recarregando...");
+      // Recarregar as consultas após exclusão
+      loadConsultations({});
+    },
+    onError: (error) => {
+      console.error("Erro ao excluir consulta:", error);
     },
   });
 
@@ -70,17 +85,22 @@ export default function AgendaPage() {
   };
 
   const handleEventEdit = (event: CalendarEvent) => {
-    // Apenas frontend: simula edição
-    alert(`Editar evento: ${event.title}`);
+    setSelectedEvent(event);
     setIsEventModalOpen(false);
+    setIsEditModalOpen(true);
   };
 
   const handleEventDelete = (event: CalendarEvent) => {
     if (confirm("Tem certeza que deseja excluir esta consulta?")) {
-      // Apenas frontend: remove do array local
-      setEvents((prev) => prev.filter((e) => e.id !== event.id));
+      console.log("Excluindo consulta:", event.id);
+      executeDelete({ id: event.id });
       setIsEventModalOpen(false);
     }
+  };
+
+  const handleEditSuccess = () => {
+    // Recarregar as consultas após edição
+    loadConsultations({});
   };
 
   const handleDayClick = (date: Date) => {
@@ -125,13 +145,34 @@ export default function AgendaPage() {
         );
       case "week":
         return (
-          <WeekView
-            currentDate={currentDate}
-            onDateChange={setCurrentDate}
-            events={filteredEvents}
-            onEventClick={handleEventClick}
-            onTimeSlotClick={handleTimeSlotClick}
-          />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+            {/* Mini calendário lateral */}
+            <div className="lg:col-span-1">
+              <MiniCalendar
+                currentDate={currentDate}
+                selectedDate={selectedDate}
+                onDateSelect={setSelectedDate}
+                onMonthChange={setCurrentDate}
+                eventDates={filteredEvents.map((e) => e.start)}
+              />
+            </div>
+
+            {/* Visualização semanal melhorada */}
+            <div className="lg:col-span-3">
+              <EnhancedWeekView
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                events={filteredEvents}
+                onEventClick={handleEventClick}
+                onTimeSlotClick={(date, time) => {
+                  const [hours, minutes] = time.split(":").map(Number);
+                  const newDate = new Date(date);
+                  newDate.setHours(hours, minutes, 0, 0);
+                  handleTimeSlotClick(newDate);
+                }}
+              />
+            </div>
+          </div>
         );
       case "day":
         return (
@@ -158,7 +199,8 @@ export default function AgendaPage() {
               Visualização em desenvolvimento
             </h3>
             <p className="text-muted-foreground">
-              A visualização "{viewMode}" será implementada em breve.
+              A visualização &ldquo;{viewMode}&rdquo; será implementada em
+              breve.
             </p>
           </div>
         );
@@ -195,8 +237,16 @@ export default function AgendaPage() {
         onClose={() => setIsEventModalOpen(false)}
         onEdit={handleEventEdit}
         onDelete={handleEventDelete}
+        onSuccess={() => loadConsultations({})}
       />
-      {/* Modal de Nova Consulta removido */}
+
+      {/* Modal de Edição de Consulta */}
+      <EditConsultationModal
+        event={selectedEvent}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={handleEditSuccess}
+      />
     </div>
   );
 }

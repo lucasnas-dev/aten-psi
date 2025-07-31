@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 
+import { QuickActions } from "./quick-actions";
 import { CalendarEvent } from "./types";
 
 interface EventDetailModalProps {
@@ -30,6 +31,7 @@ interface EventDetailModalProps {
   onClose: () => void;
   onEdit: (event: CalendarEvent) => void;
   onDelete: (event: CalendarEvent) => void;
+  onSuccess?: () => void;
 }
 
 export function EventDetailModal({
@@ -38,6 +40,7 @@ export function EventDetailModal({
   onClose,
   onEdit,
   onDelete,
+  onSuccess,
 }: EventDetailModalProps) {
   if (!event) return null;
 
@@ -187,6 +190,20 @@ export function EventDetailModal({
               </div>
             </>
           )}
+
+          <Separator />
+
+          {/* Ações Rápidas */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium">Ações Rápidas</h4>
+            <QuickActions
+              event={event}
+              onSuccess={() => {
+                onSuccess?.();
+                onClose();
+              }}
+            />
+          </div>
 
           <Separator />
 

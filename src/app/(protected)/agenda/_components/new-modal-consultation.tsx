@@ -147,10 +147,10 @@ export function NewConsultationModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Paciente</FormLabel>
-                  <FormControl>
+                  <div>
                     <Input value={patient?.name ?? ""} disabled />
                     <input type="hidden" {...field} />
-                  </FormControl>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

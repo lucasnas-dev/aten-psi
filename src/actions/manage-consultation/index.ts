@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
@@ -82,15 +82,20 @@ export const updateConsultation = tenantActionClient
       ctx: TenantCtx;
     }) => {
       try {
+        console.log("Tentando atualizar consulta:", parsedInput.id);
         // First check if consultation exists and belongs to tenant
         const existingConsultation = await db
           .select()
           .from(consultations)
           .where(
-            eq(consultations.id, parsedInput.id) &&
+            and(
+              eq(consultations.id, parsedInput.id),
               eq(consultations.tenant_id, ctx.user.tenantId)
+            )
           )
           .limit(1);
+
+        console.log("Consulta encontrada:", existingConsultation.length > 0);
 
         if (existingConsultation.length === 0) {
           return {
@@ -124,8 +129,10 @@ export const updateConsultation = tenantActionClient
           .update(consultations)
           .set(updateData)
           .where(
-            eq(consultations.id, parsedInput.id) &&
+            and(
+              eq(consultations.id, parsedInput.id),
               eq(consultations.tenant_id, ctx.user.tenantId)
+            )
           )
           .returning();
 
@@ -164,8 +171,10 @@ export const deleteConsultation = tenantActionClient
           .select()
           .from(consultations)
           .where(
-            eq(consultations.id, parsedInput.id) &&
+            and(
+              eq(consultations.id, parsedInput.id),
               eq(consultations.tenant_id, ctx.user.tenantId)
+            )
           )
           .limit(1);
 
@@ -179,8 +188,10 @@ export const deleteConsultation = tenantActionClient
         const [deletedConsultation] = await db
           .delete(consultations)
           .where(
-            eq(consultations.id, parsedInput.id) &&
+            and(
+              eq(consultations.id, parsedInput.id),
               eq(consultations.tenant_id, ctx.user.tenantId)
+            )
           )
           .returning();
 
@@ -218,8 +229,10 @@ export const getConsultation = tenantActionClient
           .select()
           .from(consultations)
           .where(
-            eq(consultations.id, parsedInput.id) &&
+            and(
+              eq(consultations.id, parsedInput.id),
               eq(consultations.tenant_id, ctx.user.tenantId)
+            )
           )
           .limit(1);
 
