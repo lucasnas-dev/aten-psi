@@ -20,88 +20,85 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-interface EstatisticasArquivoProps {
-  prontuarios: Array<{
+interface ArchiveStatisticsProps {
+  records: Array<{
     id: string;
-    statusAtendimento: string;
-    setor: string;
-    dataInicioAtendimento: Date;
-    totalConsultas: number;
-    psicologo: string;
+    status: string;
+    sector: string;
+    startDate: Date;
+    totalConsultations: number;
+    psychologist: string;
   }>;
 }
 
-export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
-  // Calcular estatísticas
+export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
+  // Calculate statistics
   const stats = {
-    totalProntuarios: prontuarios.length,
-    ativos: prontuarios.filter((p) => p.statusAtendimento === "ativo").length,
-    concluidos: prontuarios.filter((p) => p.statusAtendimento === "concluido")
-      .length,
-    suspensos: prontuarios.filter((p) => p.statusAtendimento === "suspenso")
-      .length,
-    arquivados: prontuarios.filter((p) => p.statusAtendimento === "arquivado")
-      .length,
+    totalRecords: records.length,
+    activeRecords: records.filter((r) => r.status === "active").length,
+    completedRecords: records.filter((r) => r.status === "completed").length,
+    suspendedRecords: records.filter((r) => r.status === "suspended").length,
+    archivedRecords: records.filter((r) => r.status === "archived").length,
 
-    // Estatísticas por setor
-    porSetor: prontuarios.reduce(
-      (acc, p) => {
-        acc[p.setor] = (acc[p.setor] || 0) + 1;
+    // Statistics by sector
+    bySector: records.reduce(
+      (acc, r) => {
+        acc[r.sector] = (acc[r.sector] || 0) + 1;
         return acc;
       },
       {} as Record<string, number>
     ),
 
-    // Estatísticas por psicólogo
-    porPsicologo: prontuarios.reduce(
-      (acc, p) => {
-        acc[p.psicologo] = (acc[p.psicologo] || 0) + 1;
+    // Statistics by psychologist
+    byPsychologist: records.reduce(
+      (acc, r) => {
+        acc[r.psychologist] = (acc[r.psychologist] || 0) + 1;
         return acc;
       },
       {} as Record<string, number>
     ),
 
-    // Prontuários por mês (últimos 6 meses)
-    porMes: (() => {
-      const hoje = new Date();
-      const meses = [];
+    // Records by month (last 6 months)
+    byMonth: (() => {
+      const today = new Date();
+      const months = [];
 
       for (let i = 5; i >= 0; i--) {
-        const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
-        const prontuariosMes = prontuarios.filter((p) => {
-          const inicioMes = new Date(
-            p.dataInicioAtendimento.getFullYear(),
-            p.dataInicioAtendimento.getMonth()
+        const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const recordsInMonth = records.filter((r) => {
+          const startMonth = new Date(
+            r.startDate.getFullYear(),
+            r.startDate.getMonth()
           );
-          return inicioMes.getTime() === data.getTime();
+          return startMonth.getTime() === date.getTime();
         }).length;
 
-        meses.push({
-          mes: data.toLocaleString("pt-BR", {
+        months.push({
+          month: date.toLocaleString("pt-BR", {
             month: "short",
             year: "numeric",
           }),
-          quantidade: prontuariosMes,
+          count: recordsInMonth,
         });
       }
 
-      return meses;
+      return months;
     })(),
 
-    // Média de consultas por prontuário
-    mediaConsultas:
+    // Average consultations per record
+    averageConsultations:
       Math.round(
-        (prontuarios.reduce((sum, p) => sum + p.totalConsultas, 0) /
-          prontuarios.length) *
+        (records.reduce((sum, r) => sum + r.totalConsultations, 0) /
+          records.length) *
           10
       ) / 10,
 
-    // Taxa de ocupação por setor (simulada - em um sistema real viria do banco)
-    ocupacaoSetores: {
-      A: { ocupadas: 45, total: 60, percentual: 75 },
-      B: { ocupadas: 32, total: 50, percentual: 64 },
-      C: { ocupadas: 78, total: 100, percentual: 78 },
-      D: { ocupadas: 23, total: 40, percentual: 58 },
+    // Sector occupancy rates (simulated - in a real system this would come from the database)
+    sectorOccupancy: {
+      A: { occupied: 45, total: 60, percentage: 75 },
+      B: { occupied: 32, total: 50, percentage: 64 },
+      C: { occupied: 78, total: 100, percentage: 78 },
+      D: { occupied: 23, total: 40, percentage: 58 },
     },
   };
 
@@ -126,14 +123,12 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Resumo Geral */}
+          {/* General Summary */}
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <Card>
               <CardContent className="p-4 text-center">
                 <FileText className="mx-auto mb-2 h-8 w-8 text-blue-500" />
-                <div className="text-2xl font-bold">
-                  {stats.totalProntuarios}
-                </div>
+                <div className="text-2xl font-bold">{stats.totalRecords}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Total
                 </div>
@@ -143,7 +138,7 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
             <Card>
               <CardContent className="p-4 text-center">
                 <Users className="mx-auto mb-2 h-8 w-8 text-green-500" />
-                <div className="text-2xl font-bold">{stats.ativos}</div>
+                <div className="text-2xl font-bold">{stats.activeRecords}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Ativos
                 </div>
@@ -153,7 +148,9 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
             <Card>
               <CardContent className="p-4 text-center">
                 <TrendingUp className="mx-auto mb-2 h-8 w-8 text-purple-500" />
-                <div className="text-2xl font-bold">{stats.mediaConsultas}</div>
+                <div className="text-2xl font-bold">
+                  {stats.averageConsultations}
+                </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Média Consultas
                 </div>
@@ -164,7 +161,8 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
               <CardContent className="p-4 text-center">
                 <Calendar className="mx-auto mb-2 h-8 w-8 text-orange-500" />
                 <div className="text-2xl font-bold">
-                  {Math.round((stats.ativos / stats.totalProntuarios) * 100)}%
+                  {Math.round((stats.activeRecords / stats.totalRecords) * 100)}
+                  %
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Taxa Atividade
@@ -173,7 +171,7 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
             </Card>
           </div>
 
-          {/* Distribuição por Status */}
+          {/* Status Distribution */}
           <Card>
             <CardHeader>
               <CardTitle>Distribuição por Status</CardTitle>
@@ -183,18 +181,23 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Badge variant="default">Ativos</Badge>
-                    <span className="text-sm">{stats.ativos} prontuários</span>
+                    <span className="text-sm">
+                      {stats.activeRecords} prontuários
+                    </span>
                   </div>
                   <div className="mx-4 h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
                     <div
                       className="h-2 rounded-full bg-green-500"
                       style={{
-                        width: `${(stats.ativos / stats.totalProntuarios) * 100}%`,
+                        width: `${(stats.activeRecords / stats.totalRecords) * 100}%`,
                       }}
                     />
                   </div>
                   <span className="text-sm font-medium">
-                    {Math.round((stats.ativos / stats.totalProntuarios) * 100)}%
+                    {Math.round(
+                      (stats.activeRecords / stats.totalRecords) * 100
+                    )}
+                    %
                   </span>
                 </div>
 
@@ -202,44 +205,44 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary">Concluídos</Badge>
                     <span className="text-sm">
-                      {stats.concluidos} prontuários
+                      {stats.completedRecords} prontuários
                     </span>
                   </div>
                   <div className="mx-4 h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
                     <div
                       className="h-2 rounded-full bg-blue-500"
                       style={{
-                        width: `${(stats.concluidos / stats.totalProntuarios) * 100}%`,
+                        width: `${(stats.completedRecords / stats.totalRecords) * 100}%`,
                       }}
                     />
                   </div>
                   <span className="text-sm font-medium">
                     {Math.round(
-                      (stats.concluidos / stats.totalProntuarios) * 100
+                      (stats.completedRecords / stats.totalRecords) * 100
                     )}
                     %
                   </span>
                 </div>
 
-                {stats.suspensos > 0 && (
+                {stats.suspendedRecords > 0 && (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">Suspensos</Badge>
                       <span className="text-sm">
-                        {stats.suspensos} prontuários
+                        {stats.suspendedRecords} prontuários
                       </span>
                     </div>
                     <div className="mx-4 h-2 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
                       <div
                         className="h-2 rounded-full bg-yellow-500"
                         style={{
-                          width: `${(stats.suspensos / stats.totalProntuarios) * 100}%`,
+                          width: `${(stats.suspendedRecords / stats.totalRecords) * 100}%`,
                         }}
                       />
                     </div>
                     <span className="text-sm font-medium">
                       {Math.round(
-                        (stats.suspensos / stats.totalProntuarios) * 100
+                        (stats.suspendedRecords / stats.totalRecords) * 100
                       )}
                       %
                     </span>
@@ -249,7 +252,7 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
             </CardContent>
           </Card>
 
-          {/* Ocupação por Setor */}
+          {/* Sector Occupancy */}
           <Card>
             <CardHeader>
               <CardTitle>Ocupação por Setor</CardTitle>
@@ -259,41 +262,22 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {Object.entries(stats.ocupacaoSetores).map(([setor, info]) => (
-                  <div key={setor} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">Setor {setor}</span>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {info.ocupadas}/{info.total}
+                {Object.entries(stats.sectorOccupancy).map(([sector, info]) => (
+                  <div key={sector} className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="font-medium">Setor {sector}</span>
+                      <span className="text-sm text-gray-600">
+                        {info.occupied}/{info.total}
                       </span>
                     </div>
-                    <div className="h-3 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
+                    <div className="h-2 rounded-full bg-gray-200 dark:bg-gray-700">
                       <div
-                        className={`h-3 rounded-full ${
-                          info.percentual >= 80
-                            ? "bg-red-500"
-                            : info.percentual >= 60
-                              ? "bg-yellow-500"
-                              : "bg-green-500"
-                        }`}
-                        style={{ width: `${info.percentual}%` }}
+                        className="h-2 rounded-full bg-blue-500"
+                        style={{ width: `${info.percentage}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span
-                        className={
-                          info.percentual >= 80
-                            ? "text-red-600"
-                            : info.percentual >= 60
-                              ? "text-yellow-600"
-                              : "text-green-600"
-                        }
-                      >
-                        {info.percentual}% ocupado
-                      </span>
-                      <span className="text-gray-500">
-                        {info.total - info.ocupadas} disponíveis
-                      </span>
+                    <div className="text-sm text-gray-600">
+                      {info.percentage}% ocupado
                     </div>
                   </div>
                 ))}
@@ -301,57 +285,58 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
             </CardContent>
           </Card>
 
-          {/* Prontuários por Mês */}
+          {/* Records by Month */}
           <Card>
             <CardHeader>
               <CardTitle>Novos Prontuários (Últimos 6 Meses)</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {stats.porMes.map((mes, index) => (
+                {stats.byMonth.map((month, index) => (
                   <div key={index} className="flex items-center gap-4">
-                    <div className="w-16 text-sm font-medium">{mes.mes}</div>
-                    <div className="relative h-6 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
-                      <div
-                        className="flex h-6 items-center justify-end rounded-full bg-blue-500 pr-2"
-                        style={{
-                          width: `${Math.max((mes.quantidade / Math.max(...stats.porMes.map((m) => m.quantidade))) * 100, 10)}%`,
-                        }}
-                      >
-                        <span className="text-xs font-medium text-white">
-                          {mes.quantidade}
-                        </span>
+                    <div className="w-16 text-sm font-medium">
+                      {month.month}
+                    </div>
+                    <div className="flex-1">
+                      <div className="h-6 rounded bg-gray-200 dark:bg-gray-700">
+                        <div
+                          className="h-6 rounded bg-blue-500"
+                          style={{
+                            width: `${(month.count / Math.max(...stats.byMonth.map((m) => m.count))) * 100}%`,
+                          }}
+                        />
                       </div>
                     </div>
+                    <div className="w-8 text-sm font-medium">{month.count}</div>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Distribuição por Psicólogo */}
+          {/* Distribution by Psychologist */}
           <Card>
             <CardHeader>
               <CardTitle>Prontuários por Psicólogo</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {Object.entries(stats.porPsicologo)
+                {Object.entries(stats.byPsychologist)
                   .sort(([, a], [, b]) => b - a)
-                  .map(([psicologo, quantidade]) => (
+                  .map(([psychologist, count]) => (
                     <div
-                      key={psicologo}
+                      key={psychologist}
                       className="flex items-center justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-800"
                     >
-                      <span className="font-medium">{psicologo}</span>
-                      <Badge variant="outline">{quantidade} prontuários</Badge>
+                      <span className="font-medium">{psychologist}</span>
+                      <Badge variant="secondary">{count}</Badge>
                     </div>
                   ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Alertas e Recomendações */}
+          {/* Alerts and Recommendations */}
           <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20">
             <CardHeader>
               <CardTitle className="text-yellow-800 dark:text-yellow-200">
@@ -360,22 +345,22 @@ export function EstatisticasArquivo({ prontuarios }: EstatisticasArquivoProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-2 text-sm">
-                {stats.ocupacaoSetores.A.percentual >= 80 && (
+                {stats.sectorOccupancy.A.percentage >= 80 && (
                   <div className="text-yellow-700 dark:text-yellow-300">
-                    • Setor A está com {stats.ocupacaoSetores.A.percentual}% de
+                    • Setor A está com {stats.sectorOccupancy.A.percentage}% de
                     ocupação - considere expansão
                   </div>
                 )}
-                {stats.ocupacaoSetores.C.percentual >= 80 && (
+                {stats.sectorOccupancy.C.percentage >= 80 && (
                   <div className="text-yellow-700 dark:text-yellow-300">
                     • Setor C (concluídos) está com{" "}
-                    {stats.ocupacaoSetores.C.percentual}% de ocupação -
+                    {stats.sectorOccupancy.C.percentage}% de ocupação -
                     considere arquivamento
                   </div>
                 )}
-                {stats.suspensos > 0 && (
+                {stats.suspendedRecords > 0 && (
                   <div className="text-yellow-700 dark:text-yellow-300">
-                    • Existem {stats.suspensos} prontuários suspensos que
+                    • Existem {stats.suspendedRecords} prontuários suspensos que
                     precisam de acompanhamento
                   </div>
                 )}

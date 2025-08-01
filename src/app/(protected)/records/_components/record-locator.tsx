@@ -14,36 +14,34 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-interface LocalizadorProntuarioProps {
-  codigoArquivamento: string;
+interface RecordLocatorProps {
+  archivalCode: string;
 }
 
-export function LocalizadorProntuario({
-  codigoArquivamento,
-}: LocalizadorProntuarioProps) {
-  // Função para decodificar o código de arquivamento
-  const decodificarCodigo = (codigo: string) => {
-    const partes = codigo.split("-");
-    if (partes.length !== 6) return null;
+export function RecordLocator({ archivalCode }: RecordLocatorProps) {
+  // Function to decode the archival code
+  const decodeArchivalCode = (code: string) => {
+    const parts = code.split("-");
+    if (parts.length !== 6) return null;
 
-    const [prefixo, ano, numero, localizacao, prateleira, posicao] = partes;
-    const setor = localizacao.charAt(0);
-    const armario = localizacao.substring(1);
+    const [prefix, year, number, location, shelf, position] = parts;
+    const sector = location.charAt(0);
+    const cabinet = location.substring(1);
 
     return {
-      prefixo,
-      ano,
-      numero,
-      setor,
-      armario,
-      prateleira: prateleira.substring(1), // Remove o 'P'
-      posicao,
+      prefix,
+      year,
+      number,
+      sector,
+      cabinet,
+      shelf: shelf.substring(1), // Remove the 'P'
+      position,
     };
   };
 
-  const informacoes = decodificarCodigo(codigoArquivamento);
+  const codeInfo = decodeArchivalCode(archivalCode);
 
-  if (!informacoes) {
+  if (!codeInfo) {
     return (
       <Button variant="outline" size="sm" disabled>
         <MapPin className="mr-2 h-4 w-4" />
@@ -52,14 +50,14 @@ export function LocalizadorProntuario({
     );
   }
 
-  const getDescricaoSetor = (setor: string) => {
-    const setores = {
+  const getSectorDescription = (sector: string) => {
+    const sectors = {
       A: "Pacientes Ativos (A-M)",
       B: "Pacientes Ativos (N-Z)",
       C: "Prontuários Concluídos",
       D: "Arquivo Morto",
     };
-    return setores[setor as keyof typeof setores] || `Setor ${setor}`;
+    return sectors[sector as keyof typeof sectors] || `Setor ${sector}`;
   };
 
   return (
@@ -87,7 +85,7 @@ export function LocalizadorProntuario({
             <CardHeader>
               <CardTitle className="text-lg">Código de Arquivamento</CardTitle>
               <div className="rounded-lg bg-gray-50 p-3 text-center font-mono text-lg dark:bg-gray-800">
-                {codigoArquivamento}
+                {archivalCode}
               </div>
             </CardHeader>
             <CardContent>
@@ -97,7 +95,7 @@ export function LocalizadorProntuario({
                     variant="outline"
                     className="border-blue-200 bg-blue-50 text-blue-700"
                   >
-                    {informacoes.prefixo}
+                    {codeInfo.prefix}
                   </Badge>
                   <p className="mt-1 text-sm">Psicologia</p>
                 </div>
@@ -106,7 +104,7 @@ export function LocalizadorProntuario({
                     variant="outline"
                     className="border-green-200 bg-green-50 text-green-700"
                   >
-                    {informacoes.ano}
+                    {codeInfo.year}
                   </Badge>
                   <p className="mt-1 text-sm">Ano</p>
                 </div>
@@ -115,7 +113,7 @@ export function LocalizadorProntuario({
                     variant="outline"
                     className="border-purple-200 bg-purple-50 text-purple-700"
                   >
-                    {informacoes.numero}
+                    {codeInfo.number}
                   </Badge>
                   <p className="mt-1 text-sm">Número</p>
                 </div>
@@ -124,8 +122,8 @@ export function LocalizadorProntuario({
                     variant="outline"
                     className="border-orange-200 bg-orange-50 text-orange-700"
                   >
-                    {informacoes.setor}
-                    {informacoes.armario}
+                    {codeInfo.sector}
+                    {codeInfo.cabinet}
                   </Badge>
                   <p className="mt-1 text-sm">Setor/Armário</p>
                 </div>
@@ -134,7 +132,7 @@ export function LocalizadorProntuario({
                     variant="outline"
                     className="border-red-200 bg-red-50 text-red-700"
                   >
-                    P{informacoes.prateleira}
+                    P{codeInfo.shelf}
                   </Badge>
                   <p className="mt-1 text-sm">Prateleira</p>
                 </div>
@@ -143,7 +141,7 @@ export function LocalizadorProntuario({
                     variant="outline"
                     className="border-indigo-200 bg-indigo-50 text-indigo-700"
                   >
-                    {informacoes.posicao}
+                    {codeInfo.position}
                   </Badge>
                   <p className="mt-1 text-sm">Posição</p>
                 </div>
@@ -164,10 +162,10 @@ export function LocalizadorProntuario({
                   </div>
                   <div>
                     <h4 className="font-semibold">
-                      Dirija-se ao Setor {informacoes.setor}
+                      Dirija-se ao Setor {codeInfo.sector}
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {getDescricaoSetor(informacoes.setor)}
+                      {getSectorDescription(codeInfo.sector)}
                     </p>
                   </div>
                 </div>
@@ -178,7 +176,7 @@ export function LocalizadorProntuario({
                   </div>
                   <div>
                     <h4 className="font-semibold">
-                      Localize o Armário {informacoes.armario}
+                      Localize o Armário {codeInfo.cabinet}
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Os armários estão numerados e organizados sequencialmente
@@ -193,7 +191,7 @@ export function LocalizadorProntuario({
                   </div>
                   <div>
                     <h4 className="font-semibold">
-                      Encontre a Prateleira {informacoes.prateleira}
+                      Encontre a Prateleira {codeInfo.shelf}
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       As prateleiras são numeradas de cima para baixo (1 =
@@ -208,7 +206,7 @@ export function LocalizadorProntuario({
                   </div>
                   <div>
                     <h4 className="font-semibold">
-                      Busque a Posição {informacoes.posicao}
+                      Busque a Posição {codeInfo.position}
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Os prontuários estão organizados numericamente da esquerda
@@ -244,9 +242,8 @@ export function LocalizadorProntuario({
                 📍 Localização Resumida
               </h4>
               <p className="text-lg font-medium text-green-700 dark:text-green-300">
-                Setor {informacoes.setor} → Armário {informacoes.armario} →
-                Prateleira {informacoes.prateleira} → Posição{" "}
-                {informacoes.posicao}
+                Setor {codeInfo.sector} → Armário {codeInfo.cabinet} →
+                Prateleira {codeInfo.shelf} → Posição {codeInfo.position}
               </p>
             </CardContent>
           </Card>

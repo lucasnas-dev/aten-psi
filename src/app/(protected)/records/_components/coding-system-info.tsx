@@ -20,7 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export function SistemaCodigosInfo() {
+export function CodingSystemInfo() {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -159,20 +159,20 @@ export function SistemaCodigosInfo() {
                   <h4 className="mb-3 font-semibold">Setores</h4>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">Setor A</Badge>
-                      <span className="text-sm">Pacientes ativos (A-M)</span>
+                      <Badge variant="default">A-B</Badge>
+                      <span className="text-sm">Pacientes Ativos</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">Setor B</Badge>
-                      <span className="text-sm">Pacientes ativos (N-Z)</span>
+                      <Badge variant="secondary">C</Badge>
+                      <span className="text-sm">Prontuários Concluídos</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">Setor C</Badge>
-                      <span className="text-sm">Prontuários concluídos</span>
+                      <Badge variant="outline">D</Badge>
+                      <span className="text-sm">Arquivo Morto</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">Setor D</Badge>
-                      <span className="text-sm">Arquivo morto</span>
+                      <Badge variant="destructive">E-Z</Badge>
+                      <span className="text-sm">Expansão Futura</span>
                     </div>
                   </div>
                 </div>
@@ -180,23 +180,17 @@ export function SistemaCodigosInfo() {
                 <div>
                   <h4 className="mb-3 font-semibold">Estrutura por Armário</h4>
                   <div className="space-y-2 text-sm">
-                    <div>
-                      • <strong>Armários 1-3:</strong> Prontuários por ordem
-                      alfabética
+                    <div className="rounded bg-gray-50 p-2 dark:bg-gray-800">
+                      <strong>Prateleira 1:</strong> Casos recentes
                     </div>
-                    <div>
-                      • <strong>Armários 4-6:</strong> Prontuários por data de
-                      abertura
+                    <div className="rounded bg-gray-50 p-2 dark:bg-gray-800">
+                      <strong>Prateleira 2-3:</strong> Casos em andamento
                     </div>
-                    <div>
-                      • <strong>Prateleiras 1-2:</strong> Prontuários ativos
+                    <div className="rounded bg-gray-50 p-2 dark:bg-gray-800">
+                      <strong>Prateleira 4:</strong> Casos suspensos
                     </div>
-                    <div>
-                      • <strong>Prateleiras 3-4:</strong> Prontuários em
-                      atendimento
-                    </div>
-                    <div>
-                      • <strong>Prateleira 5:</strong> Documentos complementares
+                    <div className="rounded bg-gray-50 p-2 dark:bg-gray-800">
+                      <strong>Prateleira 5:</strong> Casos para arquivo
                     </div>
                   </div>
                 </div>
@@ -269,8 +263,8 @@ export function SistemaCodigosInfo() {
                     PSI-2025-001-A1-P1-001
                   </div>
                   <p className="text-sm">
-                    <strong>Localização:</strong> Primeiro prontuário de 2025,
-                    localizado no Setor A, Armário 1, Prateleira 1, Posição 001.
+                    🔸 Primeiro prontuário de 2025, localizado no Setor A,
+                    Armário 1, Prateleira 1, Posição 001.
                   </p>
                 </div>
 
@@ -279,9 +273,8 @@ export function SistemaCodigosInfo() {
                     PSI-2024-125-C2-P3-078
                   </div>
                   <p className="text-sm">
-                    <strong>Localização:</strong> Prontuário número 125 de 2024,
-                    arquivado no Setor C (concluídos), Armário 2, Prateleira 3,
-                    Posição 078.
+                    🔸 Prontuário número 125 de 2024, arquivado no Setor C
+                    (concluídos), Armário 2, Prateleira 3, Posição 078.
                   </p>
                 </div>
 
@@ -290,8 +283,8 @@ export function SistemaCodigosInfo() {
                     PSI-2023-456-D1-P5-234
                   </div>
                   <p className="text-sm">
-                    <strong>Localização:</strong> Prontuário de 2023 no arquivo
-                    morto (Setor D), Armário 1, Prateleira 5, Posição 234.
+                    🔸 Prontuário de 2023 no arquivo morto (Setor D), Armário 1,
+                    Prateleira 5, Posição 234.
                   </p>
                 </div>
               </div>
@@ -335,10 +328,11 @@ export function SistemaCodigosInfo() {
 
                 <div className="space-y-2">
                   <h4 className="font-semibold text-orange-600">
-                    🛡️ Segurança
+                    🛡️ Conformidade
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Conformidade com normas de segurança e privacidade.
+                    Atende normas profissionais e regulamentações de
+                    privacidade.
                   </p>
                 </div>
               </div>

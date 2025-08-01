@@ -20,7 +20,7 @@ const navigation = [
   { name: "Painel", href: "/dashboard", icon: LayoutDashboard },
   { name: "Pacientes", href: "/patients", icon: Users },
   { name: "Agenda", href: "/agenda", icon: Calendar },
-  { name: "Prontuários", href: "/prontuarios", icon: FileText },
+  { name: "Prontuários", href: "/records", icon: FileText },
   { name: "Relatórios", href: "/relatorios", icon: BarChart3 },
   { name: "Configurações", href: "/settings", icon: Settings },
 ];

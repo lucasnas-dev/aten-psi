@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 // Rotas que requerem autenticação
 const protectedRoutes = [
   "/dashboard",
   "/patients",
   "/agenda",
-  "/prontuarios",
+  "/records",
   "/relatorios",
   "/configuracoes",
 ];
