@@ -83,9 +83,9 @@ const statusDisplayMapping = {
 export default function PsychologicalRecordPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const patientId = params.id;
+  const [patientId, setPatientId] = useState<string>("");
   const [activeTab, setActiveTab] = useState("identification");
   const [editMode, setEditMode] = useState(false);
   const [showConfidentialInfo, setShowConfidentialInfo] = useState(false);
@@ -93,8 +93,20 @@ export default function PsychologicalRecordPage({
   const [error, setError] = useState<string | null>(null);
   const [patientData, setPatientData] = useState<PatientRecord | null>(null);
 
+  // Initialize patient ID from params
+  useEffect(() => {
+    const initializeParams = async () => {
+      const resolvedParams = await params;
+      setPatientId(resolvedParams.id);
+    };
+
+    initializeParams();
+  }, [params]);
+
   // Fetch patient record data
   const fetchPatientRecord = useCallback(async () => {
+    if (!patientId) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -123,8 +135,10 @@ export default function PsychologicalRecordPage({
   }, [patientId]);
 
   useEffect(() => {
-    fetchPatientRecord();
-  }, [fetchPatientRecord]);
+    if (patientId) {
+      fetchPatientRecord();
+    }
+  }, [fetchPatientRecord, patientId]);
 
   // Calculate patient age
   const calculateAge = (birthDate: string) => {
@@ -337,11 +351,11 @@ export default function PsychologicalRecordPage({
       >
         <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
           <TabsTrigger value="identification">Identificação</TabsTrigger>
-          <TabsTrigger value="sessions">Sessões</TabsTrigger>
-          <TabsTrigger value="clinical">Clínico</TabsTrigger>
+          <TabsTrigger value="therapeutic-plan">Plano Terapêutico</TabsTrigger>
+          <TabsTrigger value="evolution">Evolução</TabsTrigger>
+          <TabsTrigger value="sessions">Registro de Sessões</TabsTrigger>
+          <TabsTrigger value="referrals">Encaminhamentos</TabsTrigger>
           <TabsTrigger value="documents">Documentos</TabsTrigger>
-          <TabsTrigger value="notes">Observações</TabsTrigger>
-          <TabsTrigger value="history">Histórico</TabsTrigger>
         </TabsList>
 
         {/* Identification Tab */}
@@ -515,7 +529,161 @@ export default function PsychologicalRecordPage({
           </Card>
         </TabsContent>
 
-        {/* Sessions Tab */}
+        {/* Therapeutic Plan Tab */}
+        <TabsContent value="therapeutic-plan">
+          <Card>
+            <CardHeader>
+              <CardTitle>Plano Terapêutico</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Objetivos Terapêuticos
+                  </Label>
+                  <div className="mt-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground text-sm">
+                      {editMode ? (
+                        <Textarea
+                          placeholder="Descreva os objetivos terapêuticos para este paciente..."
+                          rows={4}
+                        />
+                      ) : (
+                        "Nenhum objetivo terapêutico definido ainda."
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Abordagem Terapêutica
+                  </Label>
+                  <div className="mt-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground text-sm">
+                      {editMode ? (
+                        <Textarea
+                          placeholder="Descreva a abordagem terapêutica utilizada..."
+                          rows={3}
+                        />
+                      ) : (
+                        "Abordagem terapêutica não especificada."
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Frequência das Sessões
+                  </Label>
+                  <div className="mt-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground text-sm">
+                      {editMode ? (
+                        <input
+                          type="text"
+                          className="w-full rounded border p-2 text-sm"
+                          placeholder="Ex: Semanal, Quinzenal..."
+                        />
+                      ) : (
+                        "Frequência não definida."
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Previsão de Duração do Tratamento
+                  </Label>
+                  <div className="mt-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground text-sm">
+                      {editMode ? (
+                        <input
+                          type="text"
+                          className="w-full rounded border p-2 text-sm"
+                          placeholder="Ex: 6 meses, 1 ano..."
+                        />
+                      ) : (
+                        "Duração não estimada."
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {editMode && (
+                <div className="flex justify-end">
+                  <Button>Salvar Plano Terapêutico</Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Evolution Tab */}
+        <TabsContent value="evolution">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Evolução do Paciente</CardTitle>
+                <Button variant="outline" size="sm">
+                  Nova Evolução
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Evolução Geral
+                  </Label>
+                  <div className="mt-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground text-sm">
+                      Nenhuma evolução registrada ainda.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div>
+                    <Label className="text-muted-foreground text-sm font-medium">
+                      Progressos Observados
+                    </Label>
+                    <div className="mt-2 rounded-lg border p-4">
+                      <p className="text-muted-foreground text-sm">
+                        Registre os progressos do paciente...
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground text-sm font-medium">
+                      Dificuldades Encontradas
+                    </Label>
+                    <div className="mt-2 rounded-lg border p-4">
+                      <p className="text-muted-foreground text-sm">
+                        Registre as dificuldades observadas...
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Próximos Passos
+                  </Label>
+                  <div className="mt-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground text-sm">
+                      Defina os próximos passos do tratamento...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Sessions Tab - Renamed */}
         <TabsContent value="sessions">
           <Card>
             <CardHeader>
@@ -591,63 +759,60 @@ export default function PsychologicalRecordPage({
           </Card>
         </TabsContent>
 
-        {/* Clinical Tab */}
-        <TabsContent value="clinical">
+        {/* Referrals Tab */}
+        <TabsContent value="referrals">
           <Card>
             <CardHeader>
-              <CardTitle>Informações Clínicas</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Encaminhamentos</CardTitle>
+                <Button variant="outline" size="sm">
+                  Novo Encaminhamento
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                <div>
-                  <Label className="text-muted-foreground text-sm font-medium">
-                    Observações Gerais
-                  </Label>
-                  <p className="mt-2 text-sm leading-relaxed">
-                    {patientData.notes || "Nenhuma observação registrada."}
+                <div className="py-12 text-center">
+                  <FileText className="text-muted-foreground/50 mx-auto h-12 w-12" />
+                  <p className="text-muted-foreground mt-4">
+                    Nenhum encaminhamento registrado ainda.
                   </p>
+                  <Button variant="outline" className="mt-4" size="sm">
+                    Adicionar Encaminhamento
+                  </Button>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  <div className="text-center">
-                    <div className="text-primary text-2xl font-bold">
-                      {patientData.totalConsultations}
+                {/* Template for when there are referrals */}
+                <div className="hidden space-y-4">
+                  <Card className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Badge variant="outline">Psiquiatria</Badge>
+                          <Badge variant="secondary">15/07/2025</Badge>
+                        </div>
+                        <Badge>Pendente</Badge>
+                      </div>
+                      <div>
+                        <Label className="text-muted-foreground text-sm font-medium">
+                          Profissional/Instituição
+                        </Label>
+                        <p className="mt-1 text-sm">
+                          Dr. João Santos - CRM 12345
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-muted-foreground text-sm font-medium">
+                          Motivo do Encaminhamento
+                        </Label>
+                        <p className="mt-1 text-sm">
+                          Avaliação para possível prescrição de medicação para
+                          ansiedade.
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-muted-foreground text-sm">
-                      Total de Consultas
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
-                      {patientData.completedConsultations}
-                    </div>
-                    <p className="text-muted-foreground text-sm">
-                      Consultas Realizadas
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600">
-                      {patientData.totalConsultations -
-                        patientData.completedConsultations}
-                    </div>
-                    <p className="text-muted-foreground text-sm">Faltas</p>
-                  </div>
+                  </Card>
                 </div>
-
-                {patientData.lastConsultationDate && (
-                  <div>
-                    <Label className="text-muted-foreground text-sm font-medium">
-                      Última Consulta
-                    </Label>
-                    <p className="mt-1 text-sm">
-                      {format(
-                        new Date(patientData.lastConsultationDate),
-                        "dd/MM/yyyy",
-                        { locale: ptBR }
-                      )}
-                    </p>
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
@@ -673,67 +838,6 @@ export default function PsychologicalRecordPage({
                 <Button variant="outline" className="mt-4" size="sm">
                   Adicionar Documento
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Notes Tab */}
-        <TabsContent value="notes">
-          <Card>
-            <CardHeader>
-              <CardTitle>Observações Adicionais</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Textarea
-                  placeholder="Adicione observações sobre o paciente..."
-                  value={patientData.notes}
-                  readOnly={!editMode}
-                  rows={6}
-                />
-                {editMode && (
-                  <div className="flex justify-end">
-                    <Button>Salvar Observações</Button>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* History Tab */}
-        <TabsContent value="history">
-          <Card>
-            <CardHeader>
-              <CardTitle>Histórico do Prontuário</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-sm">
-                  <Badge variant="outline">
-                    {patientData.createdAt
-                      ? format(patientData.createdAt, "dd/MM/yyyy", {
-                          locale: ptBR,
-                        })
-                      : "Data não disponível"}
-                  </Badge>
-                  <span className="text-muted-foreground">
-                    Prontuário criado
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Badge variant="outline">
-                    {patientData.updatedAt
-                      ? format(patientData.updatedAt, "dd/MM/yyyy", {
-                          locale: ptBR,
-                        })
-                      : "Data não disponível"}
-                  </Badge>
-                  <span className="text-muted-foreground">
-                    Última atualização
-                  </span>
-                </div>
               </div>
             </CardContent>
           </Card>
