@@ -78,6 +78,13 @@
       "when": 1753925487030,
       "tag": "0010_famous_corsair",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1755916925355,
+      "tag": "0011_panoramic_jackpot",
+      "breakpoints": true
     }
   ]
 }

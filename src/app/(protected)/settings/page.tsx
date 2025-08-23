@@ -2,11 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Bell, Calendar, Clock, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { getSettings } from "@/actions/get-settings";
 import { saveSettings } from "@/actions/save-settings";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -58,6 +59,7 @@ type SettingsFormData = z.infer<typeof settingsSchema>;
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("working-hours");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   const form = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
@@ -78,6 +80,50 @@ export default function SettingsPage() {
     },
   });
 
+  // Carregar configurações existentes
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const result = await getSettings();
+        if (result?.data?.success && result.data.data.settings) {
+          const settings = result.data.data.settings;
+          const workingHoursData = result.data.data.workingHours;
+
+          // Resetar formulário com dados carregados
+          form.reset({
+            name: settings.name || "",
+            email: settings.email || "",
+            phone: settings.phone || "",
+            crp: settings.crp || "",
+            specialization: settings.specialization || "",
+            defaultDuration: settings.defaultDuration || 50,
+            bufferTime: settings.bufferTime || 10,
+            maxAdvanceBooking: settings.maxAdvanceBooking || 30,
+            allowSameDayBooking: settings.allowSameDayBooking || false,
+            emailNotifications: settings.emailNotifications ?? true,
+            smsNotifications: settings.smsNotifications || false,
+            reminderTime: settings.reminderTime || 60,
+            workingHours: workingHoursData.map((wh) => ({
+              dayOfWeek: wh.dayOfWeek,
+              enabled: wh.enabled ?? false,
+              timeSlots:
+                typeof wh.timeSlots === "string"
+                  ? JSON.parse(wh.timeSlots)
+                  : wh.timeSlots || [],
+            })) as SettingsFormData["workingHours"],
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao carregar configurações:", error);
+        toast.error("Erro ao carregar configurações existentes");
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    loadSettings();
+  }, [form]);
+
   const onSubmit = async (data: SettingsFormData) => {
     setIsLoading(true);
     try {
@@ -97,6 +143,19 @@ export default function SettingsPage() {
       setIsLoading(false);
     }
   };
+
+  if (isLoadingData) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-b-2"></div>
+          <p className="text-muted-foreground mt-2 text-sm">
+            Carregando configurações...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 p-6">

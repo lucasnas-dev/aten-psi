@@ -192,6 +192,7 @@ export const userSettings = pgTable("user_settings", {
     .$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
+    .unique()
     .references(() => users.id, { onDelete: "cascade" }),
   tenantId: varchar("tenant_id", { length: 255 })
     .notNull()
