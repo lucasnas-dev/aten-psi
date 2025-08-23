@@ -32,11 +32,6 @@ export const saveSettingsSchema = z.object({
   emailNotifications: z.boolean(),
   smsNotifications: z.boolean(),
   reminderTime: z.number().min(15).max(1440),
-
-  // Configurações de sistema
-  weekStartsOn: z.enum(["0", "1"]),
-  timeFormat: z.enum(["12", "24"]),
-  timezone: z.string(),
 });
 
 export type SaveSettingsInput = z.infer<typeof saveSettingsSchema>;

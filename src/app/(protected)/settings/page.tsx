@@ -4,8 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Bell, Calendar, Clock, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import { saveSettings } from "@/actions/save-settings";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +37,20 @@ const settingsSchema = z.object({
   emailNotifications: z.boolean(),
   smsNotifications: z.boolean(),
   reminderTime: z.number().min(15).max(1440), // em minutos
+
+  // Horários de trabalho
+  workingHours: z.array(
+    z.object({
+      dayOfWeek: z.number().min(0).max(6),
+      enabled: z.boolean(),
+      timeSlots: z.array(
+        z.object({
+          start: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+          end: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+        })
+      ),
+    })
+  ),
 });
 
 type SettingsFormData = z.infer<typeof settingsSchema>;
@@ -58,17 +74,25 @@ export default function SettingsPage() {
       emailNotifications: true,
       smsNotifications: false,
       reminderTime: 60,
+      workingHours: [],
     },
   });
 
   const onSubmit = async (data: SettingsFormData) => {
     setIsLoading(true);
     try {
-      // Aqui você salvaria as configurações no banco
-      console.log("Salvando configurações:", data);
-      // await saveSettings(data);
+      const result = await saveSettings(data);
+
+      if (result?.data?.success) {
+        toast.success(
+          result.data.message || "Configurações salvas com sucesso!"
+        );
+      } else {
+        throw new Error("Falha ao salvar configurações");
+      }
     } catch (error) {
       console.error("Erro ao salvar configurações:", error);
+      toast.error("Erro ao salvar configurações. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -109,18 +133,21 @@ export default function SettingsPage() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <TabsContent value="working-hours" className="mt-0 space-y-6">
-              <WorkingHoursConfig />
+              <WorkingHoursConfig form={form} />
             </TabsContent>
 
             <TabsContent value="appointments" className="mt-0 space-y-6">
+              {/* @ts-expect-error - Type mismatch due to workingHours field */}
               <AppointmentSettings form={form} />
             </TabsContent>
 
             <TabsContent value="notifications" className="mt-0 space-y-6">
+              {/* @ts-expect-error - Type mismatch due to workingHours field */}
               <NotificationSettings form={form} />
             </TabsContent>
 
             <TabsContent value="profile" className="mt-0 space-y-6">
+              {/* @ts-expect-error - Type mismatch due to workingHours field */}
               <ProfileSettings form={form} />
             </TabsContent>
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { Calendar, Clock, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Clock, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,32 +20,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 
 interface TimeSlot {
-  id: string;
   start: string;
   end: string;
 }
 
-interface DayConfig {
+interface WorkingHoursData {
+  dayOfWeek: number;
   enabled: boolean;
   timeSlots: TimeSlot[];
 }
 
-interface WorkingHours {
-  [key: string]: DayConfig;
+interface WorkingHoursConfigProps {
+  form: UseFormReturn<{
+    workingHours: WorkingHoursData[];
+    name: string;
+    email: string;
+    phone?: string;
+    crp?: string;
+    specialization?: string;
+    defaultDuration: number;
+    bufferTime: number;
+    maxAdvanceBooking: number;
+    allowSameDayBooking: boolean;
+    emailNotifications: boolean;
+    smsNotifications: boolean;
+    reminderTime: number;
+  }>;
 }
 
 const DAYS_OF_WEEK = [
-  { key: "monday", label: "Segunda-feira", short: "SEG" },
-  { key: "tuesday", label: "Terça-feira", short: "TER" },
-  { key: "wednesday", label: "Quarta-feira", short: "QUA" },
-  { key: "thursday", label: "Quinta-feira", short: "QUI" },
-  { key: "friday", label: "Sexta-feira", short: "SEX" },
-  { key: "saturday", label: "Sábado", short: "SAB" },
-  { key: "sunday", label: "Domingo", short: "DOM" },
+  { label: "Segunda-feira", dayOfWeek: 1 },
+  { label: "Terça-feira", dayOfWeek: 2 },
+  { label: "Quarta-feira", dayOfWeek: 3 },
+  { label: "Quinta-feira", dayOfWeek: 4 },
+  { label: "Sexta-feira", dayOfWeek: 5 },
+  { label: "Sábado", dayOfWeek: 6 },
+  { label: "Domingo", dayOfWeek: 0 },
 ];
 
 const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
@@ -54,333 +68,180 @@ const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   return { value: time, label: time };
 });
 
-export function WorkingHoursConfig() {
-  const [workingHours, setWorkingHours] = useState<WorkingHours>({
-    monday: {
-      enabled: true,
-      timeSlots: [{ id: "1", start: "08:00", end: "17:00" }],
-    },
-    tuesday: {
-      enabled: true,
-      timeSlots: [{ id: "2", start: "08:00", end: "17:00" }],
-    },
-    wednesday: {
-      enabled: true,
-      timeSlots: [{ id: "3", start: "08:00", end: "17:00" }],
-    },
-    thursday: {
-      enabled: true,
-      timeSlots: [{ id: "4", start: "08:00", end: "17:00" }],
-    },
-    friday: {
-      enabled: true,
-      timeSlots: [{ id: "5", start: "08:00", end: "17:00" }],
-    },
-    saturday: { enabled: false, timeSlots: [] },
-    sunday: { enabled: false, timeSlots: [] },
-  });
+export function WorkingHoursConfig({ form }: WorkingHoursConfigProps) {
+  const [workingHours, setWorkingHours] = useState<WorkingHoursData[]>(
+    DAYS_OF_WEEK.map(day => ({
+      dayOfWeek: day.dayOfWeek,
+      enabled: day.dayOfWeek >= 1 && day.dayOfWeek <= 5, // Segunda a sexta habilitados por padrão
+      timeSlots: day.dayOfWeek >= 1 && day.dayOfWeek <= 5 
+        ? [{ start: "08:00", end: "17:00" }] 
+        : [],
+    }))
+  );
 
-  const [defaultAppointmentDuration, setDefaultAppointmentDuration] =
-    useState(50);
-  const [bufferTime, setBufferTime] = useState(10);
+  // Atualizar o formulário sempre que workingHours mudar
+  useEffect(() => {
+    form.setValue("workingHours", workingHours);
+  }, [workingHours, form]);
 
-  const toggleDay = (dayKey: string) => {
-    setWorkingHours((prev) => ({
-      ...prev,
-      [dayKey]: {
-        ...prev[dayKey],
-        enabled: !prev[dayKey].enabled,
-        timeSlots:
-          !prev[dayKey].enabled && prev[dayKey].timeSlots.length === 0
-            ? [{ id: Date.now().toString(), start: "08:00", end: "17:00" }]
-            : prev[dayKey].timeSlots,
-      },
-    }));
+  const toggleDay = (dayOfWeek: number) => {
+    setWorkingHours(prev => 
+      prev.map(day => 
+        day.dayOfWeek === dayOfWeek 
+          ? {
+              ...day,
+              enabled: !day.enabled,
+              timeSlots: !day.enabled && day.timeSlots.length === 0
+                ? [{ start: "08:00", end: "17:00" }]
+                : day.timeSlots,
+            }
+          : day
+      )
+    );
   };
 
-  const addTimeSlot = (dayKey: string) => {
-    const newSlot: TimeSlot = {
-      id: Date.now().toString(),
-      start: "13:00",
-      end: "18:00",
-    };
-
-    setWorkingHours((prev) => ({
-      ...prev,
-      [dayKey]: {
-        ...prev[dayKey],
-        timeSlots: [...prev[dayKey].timeSlots, newSlot],
-      },
-    }));
+  const addTimeSlot = (dayOfWeek: number) => {
+    setWorkingHours(prev => 
+      prev.map(day => 
+        day.dayOfWeek === dayOfWeek 
+          ? {
+              ...day,
+              timeSlots: [...day.timeSlots, { start: "13:00", end: "18:00" }],
+            }
+          : day
+      )
+    );
   };
 
-  const removeTimeSlot = (dayKey: string, slotId: string) => {
-    setWorkingHours((prev) => ({
-      ...prev,
-      [dayKey]: {
-        ...prev[dayKey],
-        timeSlots: prev[dayKey].timeSlots.filter((slot) => slot.id !== slotId),
-      },
-    }));
+  const removeTimeSlot = (dayOfWeek: number, slotIndex: number) => {
+    setWorkingHours(prev => 
+      prev.map(day => 
+        day.dayOfWeek === dayOfWeek 
+          ? {
+              ...day,
+              timeSlots: day.timeSlots.filter((_, index) => index !== slotIndex),
+            }
+          : day
+      )
+    );
   };
 
   const updateTimeSlot = (
-    dayKey: string,
-    slotId: string,
+    dayOfWeek: number,
+    slotIndex: number,
     field: "start" | "end",
     value: string
   ) => {
-    setWorkingHours((prev) => ({
-      ...prev,
-      [dayKey]: {
-        ...prev[dayKey],
-        timeSlots: prev[dayKey].timeSlots.map((slot) =>
-          slot.id === slotId ? { ...slot, [field]: value } : slot
-        ),
-      },
-    }));
-  };
-
-  const copyToAllDays = (sourceDayKey: string) => {
-    const sourceConfig = workingHours[sourceDayKey];
-    if (!sourceConfig.enabled) return;
-
-    setWorkingHours((prev) => {
-      const updated = { ...prev };
-      DAYS_OF_WEEK.forEach((day) => {
-        if (day.key !== sourceDayKey && updated[day.key].enabled) {
-          updated[day.key] = {
-            ...updated[day.key],
-            timeSlots: sourceConfig.timeSlots.map((slot) => ({
-              ...slot,
-              id: `${day.key}-${Date.now()}-${slot.id}`,
-            })),
-          };
-        }
-      });
-      return updated;
-    });
-  };
-
-  const getTotalHours = () => {
-    let total = 0;
-    Object.values(workingHours).forEach((day) => {
-      if (day.enabled) {
-        day.timeSlots.forEach((slot) => {
-          const start = new Date(`2000-01-01T${slot.start}:00`);
-          const end = new Date(`2000-01-01T${slot.end}:00`);
-          total += (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-        });
-      }
-    });
-    return total;
+    setWorkingHours(prev => 
+      prev.map(day => 
+        day.dayOfWeek === dayOfWeek 
+          ? {
+              ...day,
+              timeSlots: day.timeSlots.map((slot, index) =>
+                index === slotIndex ? { ...slot, [field]: value } : slot
+              ),
+            }
+          : day
+      )
+    );
   };
 
   return (
-    <div className="space-y-6">
-      {/* Configurações Gerais */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Configurações Gerais
-          </CardTitle>
-          <CardDescription>
-            Defina a duração padrão das consultas e tempo de intervalo entre
-            elas.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="defaultDuration">
-                Duração padrão da consulta (minutos)
-              </Label>
-              <Select
-                value={defaultAppointmentDuration.toString()}
-                onValueChange={(value) =>
-                  setDefaultAppointmentDuration(Number(value))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="30">30 minutos</SelectItem>
-                  <SelectItem value="45">45 minutos</SelectItem>
-                  <SelectItem value="50">50 minutos</SelectItem>
-                  <SelectItem value="60">1 hora</SelectItem>
-                  <SelectItem value="90">1h 30min</SelectItem>
-                  <SelectItem value="120">2 horas</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Clock className="h-5 w-5" />
+          Horários de Trabalho
+        </CardTitle>
+        <CardDescription>
+          Configure seus horários de atendimento para cada dia da semana
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {DAYS_OF_WEEK.map((day) => {
+          const dayData = workingHours.find(wh => wh.dayOfWeek === day.dayOfWeek);
+          if (!dayData) return null;
 
-            <div className="space-y-2">
-              <Label htmlFor="bufferTime">
-                Intervalo entre consultas (minutos)
-              </Label>
-              <Select
-                value={bufferTime.toString()}
-                onValueChange={(value) => setBufferTime(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">Sem intervalo</SelectItem>
-                  <SelectItem value="5">5 minutos</SelectItem>
-                  <SelectItem value="10">10 minutos</SelectItem>
-                  <SelectItem value="15">15 minutos</SelectItem>
-                  <SelectItem value="30">30 minutos</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="bg-muted/20 rounded-lg p-4">
-            <div className="flex items-center justify-between text-sm">
-              <span>Total de horas por semana:</span>
-              <span className="font-semibold">
-                {getTotalHours().toFixed(1)}h
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Horários por Dia da Semana */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Horários de Trabalho
-          </CardTitle>
-          <CardDescription>
-            Configure seus horários disponíveis para cada dia da semana. Você
-            pode ter múltiplos períodos por dia.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {DAYS_OF_WEEK.map((day, index) => {
-            const dayConfig = workingHours[day.key];
-
-            return (
-              <div key={day.key} className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Switch
-                      checked={dayConfig.enabled}
-                      onCheckedChange={() => toggleDay(day.key)}
-                    />
-                    <div>
-                      <Label className="text-base font-medium">
-                        {day.label}
-                      </Label>
-                      <div className="text-muted-foreground text-sm">
-                        {dayConfig.enabled && dayConfig.timeSlots.length > 0
-                          ? `${dayConfig.timeSlots.length} período${dayConfig.timeSlots.length > 1 ? "s" : ""}`
-                          : "Indisponível"}
-                      </div>
-                    </div>
-                  </div>
-
-                  {dayConfig.enabled && (
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToAllDays(day.key)}
-                      >
-                        Copiar para todos
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addTimeSlot(day.key)}
-                      >
-                        <Plus className="mr-1 h-4 w-4" />
-                        Período
-                      </Button>
-                    </div>
-                  )}
-                </div>
-
-                {dayConfig.enabled && (
-                  <div className="ml-6 space-y-3">
-                    {dayConfig.timeSlots.map((slot, slotIndex) => (
-                      <div
-                        key={slot.id}
-                        className="bg-muted/20 flex items-center gap-3 rounded-lg p-3"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Label className="text-sm whitespace-nowrap">
-                            Período {slotIndex + 1}:
-                          </Label>
-                        </div>
-
-                        <Select
-                          value={slot.start}
-                          onValueChange={(value) =>
-                            updateTimeSlot(day.key, slot.id, "start", value)
-                          }
-                        >
-                          <SelectTrigger className="w-24">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {TIME_OPTIONS.map((time) => (
-                              <SelectItem key={time.value} value={time.value}>
-                                {time.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-
-                        <span className="text-muted-foreground">às</span>
-
-                        <Select
-                          value={slot.end}
-                          onValueChange={(value) =>
-                            updateTimeSlot(day.key, slot.id, "end", value)
-                          }
-                        >
-                          <SelectTrigger className="w-24">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {TIME_OPTIONS.map((time) => (
-                              <SelectItem key={time.value} value={time.value}>
-                                {time.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-
-                        {dayConfig.timeSlots.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeTimeSlot(day.key, slot.id)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {index < DAYS_OF_WEEK.length - 1 && <Separator />}
+          return (
+            <div key={day.dayOfWeek} className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium">{day.label}</Label>
+                <Switch
+                  checked={dayData.enabled}
+                  onCheckedChange={() => toggleDay(day.dayOfWeek)}
+                />
               </div>
-            );
-          })}
-        </CardContent>
-      </Card>
-    </div>
+
+              {dayData.enabled && (
+                <div className="space-y-2 pl-4">
+                  {dayData.timeSlots.map((slot, slotIndex) => (
+                    <div key={slotIndex} className="flex items-center gap-2">
+                      <Select
+                        value={slot.start}
+                        onValueChange={(value) =>
+                          updateTimeSlot(day.dayOfWeek, slotIndex, "start", value)
+                        }
+                      >
+                        <SelectTrigger className="w-24">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TIME_OPTIONS.map((time) => (
+                            <SelectItem key={time.value} value={time.value}>
+                              {time.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <span className="text-sm text-muted-foreground">até</span>
+
+                      <Select
+                        value={slot.end}
+                        onValueChange={(value) =>
+                          updateTimeSlot(day.dayOfWeek, slotIndex, "end", value)
+                        }
+                      >
+                        <SelectTrigger className="w-24">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TIME_OPTIONS.map((time) => (
+                            <SelectItem key={time.value} value={time.value}>
+                              {time.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeTimeSlot(day.dayOfWeek, slotIndex)}
+                        disabled={dayData.timeSlots.length === 1}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addTimeSlot(day.dayOfWeek)}
+                    className="mt-2"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Adicionar horário
+                  </Button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
   );
 }

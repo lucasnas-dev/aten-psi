@@ -59,7 +59,7 @@ export const saveSettings = tenantActionClient
               tenantId: ctx.user.tenantId,
               dayOfWeek: schedule.dayOfWeek,
               enabled: schedule.enabled,
-              timeSlots: JSON.stringify(schedule.timeSlots),
+              timeSlots: schedule.timeSlots, // Drizzle irá serializar automaticamente
               createdAt: new Date(),
               updatedAt: new Date(),
             }))
