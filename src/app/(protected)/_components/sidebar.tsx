@@ -71,7 +71,7 @@ export function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "group flex items-center rounded-xl px-3 py-2 text-base font-medium transition-all duration-300 ease-in-out",
+                  "group sidebar-nav-link flex items-center rounded-xl px-3 py-2 text-base font-medium transition-all duration-300 ease-in-out",
                   isActive
                     ? "from-primary to-secondary text-primary-foreground scale-[1.02] transform bg-gradient-to-r shadow-lg"
                     : "text-sidebar-foreground/80 hover:from-primary/10 hover:to-secondary/10 hover:text-sidebar-foreground hover:scale-[1.01] hover:transform hover:bg-gradient-to-r hover:shadow-md"

@@ -33,12 +33,11 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({
   children,
   defaultTheme = "default",
-  defaultMode = "light",
   storageKey = "aten-psi-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
-  const [mode, setMode] = useState<Mode>(defaultMode);
+  const [mode, setMode] = useState<Mode>("light"); // Sempre inicializa em light
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -67,17 +66,15 @@ export function ThemeProvider({
   }, [theme, mode, storageKey]);
 
   useEffect(() => {
-    // Carrega o tema e modo do localStorage na inicialização
+    // Carrega apenas o tema do localStorage na inicialização
     const storedTheme = localStorage.getItem(storageKey) as Theme;
-    const storedMode = localStorage.getItem(`${storageKey}-mode`) as Mode;
 
     if (storedTheme) {
       setTheme(storedTheme);
     }
 
-    if (storedMode) {
-      setMode(storedMode);
-    }
+    // Sempre força o modo light, não carrega do localStorage
+    setMode("light");
   }, [storageKey]);
 
   const value = {
