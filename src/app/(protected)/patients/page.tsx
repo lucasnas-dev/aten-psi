@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
-import { getPatients } from "@/actions/get-patients";
 import { archivePatient } from "@/actions/archive-patient";
+import { getPatients } from "@/actions/get-patients";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -44,11 +44,8 @@ export default function PatientsPage() {
   } = useAction(getPatients);
 
   // Usar useAction para arquivar pacientes
-  const {
-    execute: arquivarPaciente,
-    result: resultArquivar,
-    isExecuting: isArchiving,
-  } = useAction(archivePatient);
+  const { execute: arquivarPaciente, isExecuting: isArchiving } =
+    useAction(archivePatient);
 
   // OPTIMIZATION: Aplicar debounce ao termo de busca para evitar chamadas excessivas à API
   useEffect(() => {
@@ -224,26 +221,26 @@ export default function PatientsPage() {
             placeholder="Buscar por nome, email ou telefone..."
             value={termoBusca}
             onChange={(e) => setTermoBusca(e.target.value)}
-            className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 py-3 pl-12 text-base font-medium shadow-sm backdrop-blur-sm transition-all duration-300"
+            className="border-border focus:border-primary focus:ring-primary/30 bg-card h-10 pl-11 text-[0.9375rem] shadow-sm transition-all"
           />
         </div>
         <Select value={filtroStatus} onValueChange={handleFiltroStatusChange}>
-          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 w-full py-3 text-base font-medium shadow-sm backdrop-blur-sm sm:w-[220px]">
+          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card h-10 w-full text-[0.9375rem] shadow-sm sm:w-[200px]">
             <SelectValue placeholder="Filtrar por status" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card shadow-lg">
-            <SelectItem value="all" className="py-3 text-base font-medium">
+            <SelectItem value="all" className="text-[0.9375rem]">
               Todos os pacientes
             </SelectItem>
             <SelectItem
               value="active"
-              className="text-primary py-3 text-base font-medium"
+              className="text-primary text-[0.9375rem]"
             >
               📋 Apenas ativos
             </SelectItem>
             <SelectItem
               value="inactive"
-              className="text-muted-foreground py-3 text-base font-medium"
+              className="text-muted-foreground text-[0.9375rem]"
             >
               📁 Apenas inativos
             </SelectItem>
@@ -260,35 +257,23 @@ export default function PatientsPage() {
             setPaginaAtual(1);
           }}
         >
-          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card/80 w-full py-3 text-base font-medium shadow-sm backdrop-blur-sm sm:w-[180px]">
+          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card h-10 w-full text-[0.9375rem] shadow-sm sm:w-[180px]">
             <SelectValue placeholder="Ordenar por" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card shadow-lg">
-            <SelectItem
-              value="created_at-desc"
-              className="py-3 text-base font-medium"
-            >
+            <SelectItem value="created_at-desc" className="text-[0.9375rem]">
               🕒 Mais recentes
             </SelectItem>
-            <SelectItem
-              value="created_at-asc"
-              className="py-3 text-base font-medium"
-            >
+            <SelectItem value="created_at-asc" className="text-[0.9375rem]">
               🕒 Mais antigos
             </SelectItem>
-            <SelectItem value="name-asc" className="py-3 text-base font-medium">
+            <SelectItem value="name-asc" className="text-[0.9375rem]">
               🔤 Nome A-Z
             </SelectItem>
-            <SelectItem
-              value="name-desc"
-              className="py-3 text-base font-medium"
-            >
+            <SelectItem value="name-desc" className="text-[0.9375rem]">
               🔤 Nome Z-A
             </SelectItem>
-            <SelectItem
-              value="updated_at-desc"
-              className="py-3 text-base font-medium"
-            >
+            <SelectItem value="updated_at-desc" className="text-[0.9375rem]">
               📝 Atualizados recentemente
             </SelectItem>
           </SelectContent>

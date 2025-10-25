@@ -89,11 +89,11 @@ export function PatientViewModal({
           <div className="flex items-center justify-between">
             <Badge
               variant={patient.status === "active" ? "default" : "secondary"}
-              className={`font-medium ${
+              className={
                 patient.status === "active"
-                  ? "bg-green-100 text-green-700 hover:bg-green-100"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-100"
-              }`}
+                  ? "badge-status badge-status--active"
+                  : "badge-status badge-status--muted"
+              }
             >
               {patient.status === "active" ? "Ativo" : "Inativo"}
             </Badge>

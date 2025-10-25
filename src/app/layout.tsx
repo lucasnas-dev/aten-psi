@@ -30,13 +30,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-white text-black antialiased transition-colors duration-300`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased`}
       >
-        <ThemeProvider
-          defaultTheme="default"
-          defaultMode="light"
-          storageKey="aten-psi-theme"
-        >
+        <ThemeProvider storageKey="aten-psi-theme">
           {children}
           <Toaster richColors />
         </ThemeProvider>

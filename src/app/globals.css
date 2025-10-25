@@ -1,13 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@variant dark (&:is(.dark *));
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-family-sans: var(--font-geist-sans);
+  --font-family-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -44,836 +44,222 @@
 }
 
 :root {
-  --radius: 0.625rem;
-
-  /* Base Colors (Light Mode) - Fundo branco puro e texto preto */
-  --background: white;
-  --foreground: black;
-  --surface: white;
-  --surface-foreground: black;
-
-  /* Cards and Containers */
-  --card: white;
-  --card-foreground: black;
-  --popover: white;
-  --popover-foreground: black;
-
-  /* Primary Colors - Preto e branco puros */
-  --primary: black;
-  --primary-foreground: white;
-
-  /* Secondary Colors - Branco com texto preto */
-  --secondary: white;
-  --secondary-foreground: black;
-
-  /* Muted Colors */
-  --muted: oklch(0.95 0 0);
-  --muted-foreground: oklch(0.4 0 0);
-
-  /* Accent Colors - Branco com borda preta */
-  --accent: white;
-  --accent-foreground: black;
-
-  /* Feedback Colors */
-  --destructive: oklch(0.6 0.25 25);
-  --success: oklch(0.6 0.2 140);
-  --warning: oklch(0.6 0.2 80);
-  --info: oklch(0.6 0.2 240);
-
-  /* Borders and Inputs */
-  --border: black;
-  --input: black;
-  --ring: black;
-
-  /* Chart Colors - Escala de cinza */
-  --chart-1: oklch(0.2 0 0);
-  --chart-2: oklch(0.35 0 0);
-  --chart-3: oklch(0.5 0 0);
-  --chart-4: oklch(0.65 0 0);
-  --chart-5: oklch(0.8 0 0);
-
-  /* Sidebar Colors */
-  --sidebar: white;
-  --sidebar-foreground: black;
-  --sidebar-primary: black;
-  --sidebar-primary-foreground: white;
-  --sidebar-accent: oklch(0.95 0 0);
-  --sidebar-accent-foreground: black;
-  --sidebar-border: oklch(0.8 0 0);
-  --sidebar-ring: black;
-
-  /* Header and Sidebar Background Colors */
-  --sidebar-background: white;
-  --header-background: white;
-}
-
-/* Tema Verde Natureza - Transmite equilíbrio e crescimento */
-[data-theme="nature"] {
-  /* Base Colors - Cores suaves e elegantes */
-  --background: oklch(0.97 0.03 140);
-  --card: oklch(0.94 0.04 140);
-  --card-foreground: oklch(0.1 0.01 140);
-  --popover: oklch(0.94 0.04 140);
-  --popover-foreground: oklch(0.1 0.01 140);
-
-  /* Borders and Inputs */
-  --border: oklch(0.78 0.03 140);
-  --input: oklch(0.78 0.03 140);
-
-  --primary: oklch(0.6 0.2 140);
-  --primary-foreground: oklch(0.98 0.01 140);
-  --secondary: oklch(0.65 0.18 120);
-  --secondary-foreground: oklch(0.15 0.02 120);
-  --accent: oklch(0.7 0.15 160);
-  --accent-foreground: oklch(0.15 0.02 160);
-  --ring: oklch(0.6 0.2 140);
-
-  /* Muted Colors */
-  --muted: oklch(0.9 0.02 140);
-  --muted-foreground: oklch(0.4 0.02 140);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.95 0.03 140);
-  --sidebar-foreground: oklch(0.1 0.01 140);
-  --sidebar-primary: oklch(0.6 0.2 140);
-  --sidebar-primary-foreground: oklch(0.98 0.01 140);
-  --sidebar-accent: oklch(0.9 0.02 140);
-  --sidebar-ring: oklch(0.6 0.2 140);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.95 0.03 140);
-  --header-background: oklch(0.96 0.025 140);
-
-  --chart-1: oklch(0.6 0.2 140);
-  --chart-2: oklch(0.65 0.18 120);
-}
-
-/* Tema Roxo Criativo - Transmite criatividade e introspecção */
-[data-theme="creative"] {
-  /* Base Colors - Cores suaves e elegantes */
-  --background: oklch(0.96 0.04 300);
-  --card: oklch(0.93 0.06 300);
-  --card-foreground: oklch(0.1 0.01 300);
-  --popover: oklch(0.93 0.06 300);
-  --popover-foreground: oklch(0.1 0.01 300);
-
-  /* Borders and Inputs */
-  --border: oklch(0.76 0.04 300);
-  --input: oklch(0.76 0.04 300);
-
-  --primary: oklch(0.58 0.22 300);
-  --primary-foreground: oklch(0.98 0.01 300);
-  --secondary: oklch(0.65 0.18 280);
-  --secondary-foreground: oklch(0.15 0.02 280);
-  --accent: oklch(0.7 0.15 320);
-  --accent-foreground: oklch(0.15 0.02 320);
-  --ring: oklch(0.58 0.22 300);
-
-  /* Muted Colors */
-  --muted: oklch(0.88 0.04 300);
-  --muted-foreground: oklch(0.42 0.02 300);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.94 0.04 300);
-  --sidebar-foreground: oklch(0.1 0.01 300);
-  --sidebar-primary: oklch(0.58 0.22 300);
-  --sidebar-primary-foreground: oklch(0.98 0.01 300);
-  --sidebar-accent: oklch(0.88 0.04 300);
-  --sidebar-ring: oklch(0.58 0.22 300);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.94 0.05 340);
-  --header-background: oklch(0.95 0.04 340);
-
-  --chart-1: oklch(0.58 0.22 300);
-  --chart-2: oklch(0.65 0.18 280);
-}
-
-/* Tema Neutro Elegante - Transmite profissionalismo e serenidade */
-[data-theme="elegant"] {
-  /* Base Colors - Cores suaves e elegantes */
-  --background: oklch(0.97 0.01 260);
-  --card: oklch(0.94 0.015 260);
-  --card-foreground: oklch(0.1 0.01 260);
-  --popover: oklch(0.94 0.015 260);
-  --popover-foreground: oklch(0.1 0.01 260);
-
-  /* Borders and Inputs */
-  --border: oklch(0.8 0.015 260);
-  --input: oklch(0.8 0.015 260);
-
-  --primary: oklch(0.48 0.08 260);
-  --primary-foreground: oklch(0.98 0.01 260);
-  --secondary: oklch(0.68 0.04 240);
-  --secondary-foreground: oklch(0.15 0.01 240);
-  --accent: oklch(0.72 0.06 220);
-  --accent-foreground: oklch(0.15 0.01 220);
-  --ring: oklch(0.48 0.08 260);
-
-  /* Muted Colors */
-  --muted: oklch(0.9 0.01 260);
-  --muted-foreground: oklch(0.48 0.01 260);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.95 0.015 260);
-  --sidebar-foreground: oklch(0.1 0.01 260);
-  --sidebar-primary: oklch(0.48 0.08 260);
-  --sidebar-primary-foreground: oklch(0.98 0.01 260);
-  --sidebar-accent: oklch(0.9 0.01 260);
-  --sidebar-ring: oklch(0.48 0.08 260);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.95 0.02 240);
-  --header-background: oklch(0.96 0.015 240);
-
-  --chart-1: oklch(0.48 0.08 260);
-  --chart-2: oklch(0.68 0.04 240);
-}
-
-/* Tema Azul Oceano - Transmite calma e confiança */
-[data-theme="ocean"] {
-  /* Base Colors - Cores suaves e elegantes */
-  --background: oklch(0.97 0.03 220);
-  --card: oklch(0.94 0.04 220);
-  --card-foreground: oklch(0.1 0.01 220);
-  --popover: oklch(0.94 0.04 220);
-  --popover-foreground: oklch(0.1 0.01 220);
-
-  /* Borders and Inputs */
-  --border: oklch(0.78 0.03 220);
-  --input: oklch(0.78 0.03 220);
-
-  --primary: oklch(0.58 0.15 220);
-  --primary-foreground: oklch(0.98 0.01 220);
-  --secondary: oklch(0.68 0.12 200);
-  --secondary-foreground: oklch(0.15 0.02 200);
-  --accent: oklch(0.7 0.1 240);
-  --accent-foreground: oklch(0.15 0.02 240);
-  --ring: oklch(0.58 0.15 220);
-
-  /* Muted Colors */
-  --muted: oklch(0.9 0.02 220);
-  --muted-foreground: oklch(0.42 0.02 220);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.95 0.03 220);
-  --sidebar-foreground: oklch(0.1 0.01 220);
-  --sidebar-primary: oklch(0.58 0.15 220);
-  --sidebar-primary-foreground: oklch(0.98 0.01 220);
-  --sidebar-accent: oklch(0.9 0.02 220);
-  --sidebar-ring: oklch(0.58 0.15 220);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.95 0.04 200);
-  --header-background: oklch(0.96 0.03 200);
-
-  --chart-1: oklch(0.58 0.15 220);
-  --chart-2: oklch(0.68 0.12 200);
-}
-
-/* DARK MODE THEMES */
-
-/* Tema Verde Natureza - Versão Dark */
-.dark[data-theme="nature"] {
-  /* Base Colors - Dark */
-  --background: oklch(0.12 0.03 140);
-  --card: oklch(0.18 0.04 140);
-  --card-foreground: oklch(0.95 0.01 140);
-  --popover: oklch(0.18 0.04 140);
-  --popover-foreground: oklch(0.95 0.01 140);
-
-  /* Borders and Inputs */
-  --border: oklch(0.25 0.03 140);
-  --input: oklch(0.25 0.03 140);
-
-  --primary: oklch(0.65 0.18 140);
-  --primary-foreground: oklch(0.12 0.01 140);
-  --secondary: oklch(0.6 0.15 120);
-  --secondary-foreground: oklch(0.95 0.01 120);
-  --accent: oklch(0.65 0.12 160);
-  --accent-foreground: oklch(0.95 0.01 160);
-  --ring: oklch(0.65 0.18 140);
-
-  /* Muted Colors */
-  --muted: oklch(0.22 0.02 140);
-  --muted-foreground: oklch(0.7 0.02 140);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.16 0.03 140);
-  --sidebar-foreground: oklch(0.95 0.01 140);
-  --sidebar-primary: oklch(0.65 0.18 140);
-  --sidebar-primary-foreground: oklch(0.12 0.01 140);
-  --sidebar-accent: oklch(0.22 0.02 140);
-  --sidebar-ring: oklch(0.65 0.18 140);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.14 0.03 140);
-  --header-background: oklch(0.16 0.025 140);
-
-  --chart-1: oklch(0.65 0.18 140);
-  --chart-2: oklch(0.6 0.15 120);
-}
-
-/* Tema Roxo Criativo - Versão Dark */
-.dark[data-theme="creative"] {
-  /* Base Colors - Dark */
-  --background: oklch(0.12 0.04 300);
-  --card: oklch(0.18 0.06 300);
-  --card-foreground: oklch(0.95 0.01 300);
-  --popover: oklch(0.18 0.06 300);
-  --popover-foreground: oklch(0.95 0.01 300);
-
-  /* Borders and Inputs */
-  --border: oklch(0.25 0.04 300);
-  --input: oklch(0.25 0.04 300);
-
-  --primary: oklch(0.65 0.2 300);
-  --primary-foreground: oklch(0.12 0.01 300);
-  --secondary: oklch(0.6 0.16 280);
-  --secondary-foreground: oklch(0.95 0.01 280);
-  --accent: oklch(0.65 0.13 320);
-  --accent-foreground: oklch(0.95 0.01 320);
-  --ring: oklch(0.65 0.2 300);
-
-  /* Muted Colors */
-  --muted: oklch(0.22 0.04 300);
-  --muted-foreground: oklch(0.72 0.02 300);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.16 0.04 300);
-  --sidebar-foreground: oklch(0.95 0.01 300);
-  --sidebar-primary: oklch(0.65 0.2 300);
-  --sidebar-primary-foreground: oklch(0.12 0.01 300);
-  --sidebar-accent: oklch(0.22 0.04 300);
-  --sidebar-ring: oklch(0.65 0.2 300);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.14 0.05 340);
-  --header-background: oklch(0.16 0.04 340);
-
-  --chart-1: oklch(0.65 0.2 300);
-  --chart-2: oklch(0.6 0.16 280);
-}
-
-/* Tema Neutro Elegante - Versão Dark */
-.dark[data-theme="elegant"] {
-  /* Base Colors - Dark */
-  --background: oklch(0.12 0.01 260);
-  --card: oklch(0.18 0.015 260);
-  --card-foreground: oklch(0.95 0.01 260);
-  --popover: oklch(0.18 0.015 260);
-  --popover-foreground: oklch(0.95 0.01 260);
-
-  /* Borders and Inputs */
-  --border: oklch(0.25 0.015 260);
-  --input: oklch(0.25 0.015 260);
-
-  --primary: oklch(0.58 0.1 260);
-  --primary-foreground: oklch(0.95 0.01 260);
-  --secondary: oklch(0.55 0.06 240);
-  --secondary-foreground: oklch(0.95 0.01 240);
-  --accent: oklch(0.6 0.08 220);
-  --accent-foreground: oklch(0.95 0.01 220);
-  --ring: oklch(0.58 0.1 260);
-
-  /* Muted Colors */
-  --muted: oklch(0.22 0.01 260);
-  --muted-foreground: oklch(0.72 0.01 260);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.16 0.015 260);
-  --sidebar-foreground: oklch(0.95 0.01 260);
-  --sidebar-primary: oklch(0.58 0.1 260);
-  --sidebar-primary-foreground: oklch(0.95 0.01 260);
-  --sidebar-accent: oklch(0.22 0.01 260);
-  --sidebar-ring: oklch(0.58 0.1 260);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.14 0.02 240);
-  --header-background: oklch(0.16 0.015 240);
-
-  --chart-1: oklch(0.58 0.1 260);
-  --chart-2: oklch(0.55 0.06 240);
-}
-
-/* Tema Azul Oceano - Versão Dark */
-.dark[data-theme="ocean"] {
-  /* Base Colors - Dark */
-  --background: oklch(0.12 0.03 220);
-  --card: oklch(0.18 0.04 220);
-  --card-foreground: oklch(0.95 0.01 220);
-  --popover: oklch(0.18 0.04 220);
-  --popover-foreground: oklch(0.95 0.01 220);
-
-  /* Borders and Inputs */
-  --border: oklch(0.25 0.03 220);
-  --input: oklch(0.25 0.03 220);
-
-  --primary: oklch(0.65 0.13 220);
-  --primary-foreground: oklch(0.12 0.01 220);
-  --secondary: oklch(0.6 0.1 200);
-  --secondary-foreground: oklch(0.95 0.01 200);
-  --accent: oklch(0.65 0.08 240);
-  --accent-foreground: oklch(0.95 0.01 240);
-  --ring: oklch(0.65 0.13 220);
-
-  /* Muted Colors */
-  --muted: oklch(0.22 0.02 220);
-  --muted-foreground: oklch(0.72 0.02 220);
-
-  /* Sidebar específico do tema */
-  --sidebar: oklch(0.16 0.03 220);
-  --sidebar-foreground: oklch(0.95 0.01 220);
-  --sidebar-primary: oklch(0.65 0.13 220);
-  --sidebar-primary-foreground: oklch(0.12 0.01 220);
-  --sidebar-accent: oklch(0.22 0.02 220);
-  --sidebar-ring: oklch(0.65 0.13 220);
-
-  /* Header and Sidebar Background específico do tema */
-  --sidebar-background: oklch(0.14 0.04 200);
-  --header-background: oklch(0.16 0.03 200);
-
-  --chart-1: oklch(0.65 0.13 220);
-  --chart-2: oklch(0.6 0.1 200);
+  --radius: 0.5rem;
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f8fafc;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #2563eb;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #22c55e;
+  --success-contrast: #166534; /* cor mais escura para badges */
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #2563eb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #2563eb;
+  --chart-1: #2563eb;
+  --chart-2: #3b82f6;
+  --chart-3: #60a5fa;
+  --chart-4: #93c5fd;
+  --chart-5: #dbeafe;
 }
 
 .dark {
-  /* Base Colors (Dark Mode) - Neutro Preto/Branco/Cinza */
-  --background: oklch(0.08 0 0);
-  --foreground: oklch(0.95 0 0);
-  --surface: oklch(0.12 0 0);
-  --surface-foreground: oklch(0.95 0 0);
-
-  /* Cards and Containers */
-  --card: oklch(0.1 0 0);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.1 0 0);
-  --popover-foreground: oklch(0.95 0 0);
-
-  /* Primary Colors - Mesmo cinza médio suave para dark mode */
-  --primary: oklch(0.6 0 0);
-  --primary-foreground: oklch(0.95 0 0);
-
-  /* Secondary Colors - Mesmo cinza suave */
-  --secondary: oklch(0.6 0 0);
-  --secondary-foreground: oklch(0.95 0 0);
-
-  /* Muted Colors */
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-
-  /* Accent Colors */
-  --accent: oklch(0.6 0 0);
-  --accent-foreground: oklch(0.95 0 0);
-
-  /* Feedback Colors (adjusted for dark mode) */
-  --destructive: oklch(0.6 0.22 25);
-  --success: oklch(0.6 0.18 140);
-  --warning: oklch(0.6 0.18 80);
-  --info: oklch(0.6 0.18 240);
-
-  /* Borders and Inputs */
-  --border: oklch(0.6 0 0);
-  --input: oklch(0.6 0 0);
-  --ring: oklch(0.6 0 0);
-
-  /* Chart Colors (Dark Mode) - Escala de cinza */
-  --chart-1: oklch(0.85 0 0);
-  --chart-2: oklch(0.7 0 0);
-  --chart-3: oklch(0.55 0 0);
-  --chart-4: oklch(0.4 0 0);
-  --chart-5: oklch(0.25 0 0);
-
-  /* Sidebar Colors (Dark Mode) */
-  --sidebar: oklch(0.12 0 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.85 0 0);
-  --sidebar-primary-foreground: oklch(0.08 0 0);
-  --sidebar-accent: oklch(0.2 0 0);
-  --sidebar-accent-foreground: oklch(0.95 0 0);
-  --sidebar-border: oklch(0.25 0 0);
-  --sidebar-ring: oklch(0.85 0 0);
-
-  /* Header and Sidebar Backgrounds (Dark Mode) */
-  --sidebar-background: oklch(0.1 0 0);
-  --header-background: oklch(0.12 0 0);
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --popover: #1e293b;
+  --popover-foreground: #f1f5f9;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --secondary-foreground: #f1f5f9;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #1e293b;
+  --accent-foreground: #f1f5f9;
+  --border: #334155;
+  --input: #334155;
+  --ring: #3b82f6;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --sidebar: #1e293b;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #f1f5f9;
+  --sidebar-border: #334155;
+  --sidebar-ring: #3b82f6;
+  --chart-1: #3b82f6;
+  --chart-2: #60a5fa;
+  --chart-3: #93c5fd;
+  --chart-4: #dbeafe;
+  --chart-5: #eff6ff;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
   }
-  html,
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
     overflow: hidden;
     height: 100%;
   }
 }
 
 @layer utilities {
-  /* Feedback Color Classes */
+  .shadow-professional {
+    box-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.1),
+      0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+  .shadow-professional-lg {
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
   .text-success {
-    color: oklch(0.7 0.2 140);
+    color: var(--success);
   }
   .bg-success {
-    background-color: oklch(0.7 0.2 140);
+    background-color: var(--success);
   }
   .text-warning {
-    color: oklch(0.8 0.2 80);
+    color: var(--warning);
   }
   .bg-warning {
-    background-color: oklch(0.8 0.2 80);
+    background-color: var(--warning);
   }
   .text-info {
-    color: oklch(0.7 0.2 240);
+    color: var(--info);
   }
   .bg-info {
-    background-color: oklch(0.7 0.2 240);
+    background-color: var(--info);
   }
-
-  /* Surface Colors */
-  .bg-surface {
-    background-color: var(--surface);
-    color: var(--surface-foreground);
-  }
-
-  /* Dark mode adjustments */
-  .dark .text-success {
-    color: oklch(0.65 0.18 140);
-  }
-  .dark .bg-success {
-    background-color: oklch(0.65 0.18 140);
-  }
-  .dark .text-warning {
-    color: oklch(0.75 0.18 80);
-  }
-  .dark .bg-warning {
-    background-color: oklch(0.75 0.18 80);
-  }
-  .dark .text-info {
-    color: oklch(0.65 0.18 240);
-  }
-  .dark .bg-info {
-    background-color: oklch(0.65 0.18 240);
-  }
-
-  /* Interactive gradient utilities */
-  .gradient-bg-primary {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-  }
-
-  .gradient-bg-subtle {
-    background: linear-gradient(
-      135deg,
-      var(--primary) / 10%,
-      var(--secondary) / 10%
-    );
-  }
-
-  .gradient-text {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* Smooth transitions for theme changes */
-  * {
-    transition-property:
-      background-color, border-color, color, fill, stroke, box-shadow;
-    transition-duration: 300ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Enhanced hover effects */
-  .hover-lift:hover {
-    transform: translateY(-2px);
+  .card-professional {
+    background-color: var(--card);
+    color: var(--card-foreground);
     box-shadow:
-      0 10px 25px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      0 1px 3px 0 rgb(0 0 0 / 0.1),
+      0 1px 2px -1px rgb(0 0 0 / 0.1);
+    border-radius: 0.5rem;
+    border-width: 1px;
+    border-color: var(--border);
   }
-
-  .hover-scale:hover {
-    transform: scale(1.05);
+  .input-professional {
+    border-color: var(--input);
+    background-color: var(--background);
+    width: 100%;
+    border-radius: 0.375rem;
+    border-width: 1px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
-
-  /* Custom scrollbar for sidebar */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
+  .input-professional:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--ring);
   }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
+  .input-professional:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--primary) / 30%;
-    border-radius: 2px;
+  /* Tabela principal do app */
+  .app-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem; /* 15px - mais legível */
   }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--primary) / 50%;
+  .app-table th {
+    background-color: var(--muted);
+    color: var(--foreground);
+    font-weight: 600;
+    padding: 1rem 1rem;
+    text-align: left;
+    font-size: 0.8125rem; /* 13px */
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
   }
-
-  /* Sidebar and Header Background Classes */
-  .bg-sidebar {
-    background-color: var(--sidebar-background);
+  .app-table td {
+    padding: 1rem 1rem;
+    color: var(--foreground);
+    vertical-align: middle;
+    font-size: 0.9375rem; /* 15px */
   }
-
-  .bg-header-background {
-    background-color: var(--header-background);
+  .app-table tr:nth-child(even) {
+    background-color: rgba(2, 6, 23, 0.02); /* subtle striped rows */
   }
-
-  /* Melhorias específicas para o tema neutro */
-  .btn-neutral {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
+  /* Badges (status) */
+  .badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem; /* 13px */
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
-
-  .btn-neutral:hover {
-    background-color: black;
-    color: white;
+  .badge-status--active {
+    background-color: var(--success-contrast);
+    color: #fff;
   }
-
-  .dark .btn-neutral {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
+  .badge-status--muted {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    border: 1px solid var(--border);
   }
-
-  .dark .btn-neutral:hover {
-    background-color: black;
-    color: white;
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.375rem;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
-
-  /* Remove símbolos extras dos tooltips */
-  [data-radix-tooltip-content]::before,
-  [data-radix-tooltip-content]::after {
-    display: none !important;
+  .sidebar-link:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
   }
-
-  [data-radix-tooltip-content] {
-    position: relative;
+  .sidebar-link-active {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
   }
-
-  [data-radix-tooltip-content] span::before,
-  [data-radix-tooltip-content] span::after {
-    display: none !important;
-  }
-}
-
-/* Melhorias nos campos de formulário - Maior contraste */
-.form-input-enhanced {
-  background-color: oklch(0.95 0.005 240) !important;
-  border: 1.5px solid oklch(0.8 0.02 240) !important;
-  transition: all 0.2s ease-in-out;
-}
-
-.form-input-enhanced:focus {
-  background-color: oklch(0.98 0.005 240) !important;
-  border-color: oklch(0.55 0.15 240) !important;
-  box-shadow: 0 0 0 3px oklch(0.55 0.15 240 / 0.15) !important;
-}
-
-.form-input-enhanced:hover:not(:focus) {
-  background-color: oklch(0.94 0.01 240) !important;
-  border-color: oklch(0.7 0.05 240) !important;
-}
-
-/* Para inputs desabilitados */
-.form-input-enhanced:disabled {
-  background-color: oklch(0.9 0.01 240) !important;
-  border-color: oklch(0.85 0.01 240) !important;
-  opacity: 0.6;
-}
-
-/* Para selects */
-.form-select-enhanced {
-  background-color: oklch(0.95 0.005 240) !important;
-  border: 1.5px solid oklch(0.8 0.02 240) !important;
-}
-
-.form-select-enhanced:focus {
-  background-color: oklch(0.98 0.005 240) !important;
-  border-color: oklch(0.55 0.15 240) !important;
-  box-shadow: 0 0 0 3px oklch(0.55 0.15 240 / 0.15) !important;
-}
-
-/* Para textareas */
-.form-textarea-enhanced {
-  background-color: oklch(0.95 0.005 240) !important;
-  border: 1.5px solid oklch(0.8 0.02 240) !important;
-  resize: vertical;
-}
-
-.form-textarea-enhanced:focus {
-  background-color: oklch(0.98 0.005 240) !important;
-  border-color: oklch(0.55 0.15 240) !important;
-  box-shadow: 0 0 0 3px oklch(0.55 0.15 240 / 0.15) !important;
-}
-
-/* FORÇAR SEMPRE FUNDO BRANCO E TEXTO PRETO */
-html,
-body {
-  background-color: white !important;
-  color: black !important;
-}
-
-/* Garantir que cards e containers também sejam brancos */
-.bg-background,
-.bg-card,
-.bg-popover {
-  background-color: white !important;
-  color: black !important;
-}
-
-/* Forçar sidebar e header brancos */
-.bg-sidebar,
-.bg-header-background {
-  background-color: white !important;
-}
-
-/* Desabilitar completamente o dark mode */
-.dark {
-  background-color: white !important;
-  color: black !important;
-}
-
-.dark * {
-  background-color: inherit !important;
-  color: inherit !important;
-}
-
-/* FORÇAR BOTÕES APENAS PRETO E BRANCO */
-button,
-.btn,
-[role="button"] {
-  background-color: white !important;
-  color: black !important;
-  border: 1px solid black !important;
-}
-
-button:hover,
-.btn:hover,
-[role="button"]:hover {
-  background-color: black !important;
-  color: white !important;
-}
-
-/* Botões primários sempre pretos */
-button[data-variant="default"],
-.btn-primary {
-  background-color: black !important;
-  color: white !important;
-}
-
-button[data-variant="default"]:hover,
-.btn-primary:hover {
-  background-color: white !important;
-  color: black !important;
-  border: 1px solid black !important;
-}
-
-/* Botões secundários sempre brancos com borda preta */
-button[data-variant="secondary"],
-.btn-secondary {
-  background-color: white !important;
-  color: black !important;
-  border: 1px solid black !important;
-}
-
-button[data-variant="secondary"]:hover,
-.btn-secondary:hover {
-  background-color: black !important;
-  color: white !important;
-}
-
-/* ESTILOS ESPECÍFICOS PARA SIDEBAR */
-/* Links de navegação do sidebar */
-.sidebar-nav-link {
-  background-color: white !important;
-  color: black !important;
-  border: 1px solid transparent !important;
-}
-
-.sidebar-nav-link:hover {
-  background-color: black !important;
-  color: white !important;
-  border: 1px solid black !important;
-}
-
-.sidebar-nav-link.active {
-  background-color: black !important;
-  color: white !important;
-  border: 1px solid black !important;
-}
-
-/* Força todos os links dentro do sidebar a serem preto e branco */
-.bg-sidebar a,
-.bg-sidebar [role="link"] {
-  background-color: white !important;
-  color: black !important;
-}
-
-.bg-sidebar a:hover,
-.bg-sidebar [role="link"]:hover {
-  background-color: black !important;
-  color: white !important;
-}
-
-/* Força ícones do sidebar */
-.bg-sidebar svg {
-  color: inherit !important;
-}
-
-/* Remove gradientes do sidebar */
-.bg-sidebar .bg-gradient-to-r,
-.bg-sidebar .bg-gradient-to-br,
-.bg-sidebar .from-primary,
-.bg-sidebar .to-secondary {
-  background: white !important;
-  color: black !important;
-}
-
-/* Botão de logout específico */
-.bg-sidebar .btn,
-.bg-sidebar button {
-  background-color: white !important;
-  color: black !important;
-  border: 1px solid black !important;
-}
-
-.bg-sidebar .btn:hover,
-.bg-sidebar button:hover {
-  background-color: black !important;
-  color: white !important;
-}
-
-/* FORÇAR OVERRIDE COMPLETO DE TODAS AS CORES NO SIDEBAR */
-[class*="sidebar"] *,
-.bg-sidebar *,
-div[class*="sidebar"] * {
-  /* avoid heavy global overrides; keep only color inheritance */
-  background-image: none !important;
-}
-
-/* Sobrescrever qualquer classe de gradiente */
-.from-primary,
-.to-secondary,
-.bg-gradient-to-r,
-.bg-gradient-to-br {
-  background: white !important;
-  background-image: none !important;
-  color: black !important;
-}
-
-/* Elementos ativos e hover no sidebar */
-.bg-sidebar .transform,
-.bg-sidebar a[class*="scale"],
-.bg-sidebar a:hover {
-  background: black !important;
-  background-image: none !important;
-  color: white !important;
 }

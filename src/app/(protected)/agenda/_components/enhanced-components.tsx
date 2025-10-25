@@ -40,7 +40,7 @@ export function EventTooltip({ event, position, visible }: EventTooltipProps) {
 
   return (
     <div
-      className="pointer-events-none fixed z-50 w-80 rounded-lg border bg-white p-4 shadow-lg"
+      className="bg-card pointer-events-none fixed z-50 w-80 rounded-lg border p-4 shadow-lg"
       style={{
         left: Math.min(position.x, window.innerWidth - 320),
         top: Math.max(10, position.y - 150),

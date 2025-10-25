@@ -134,25 +134,25 @@ export function PatientsTablePure({
       <Table className="bg-card border-collapse">
         <TableHeader className="sticky top-0 z-10">
           <TableRow className="from-primary/15 to-secondary/15 border-border hover:from-primary/20 hover:to-secondary/20 h-14 bg-gradient-to-r transition-all duration-300">
-            <TableHead className="w-[250px] px-6 text-base font-extrabold text-slate-700 dark:text-slate-300">
+            <TableHead className="text-muted-foreground w-[250px] px-6 text-xs font-semibold tracking-wide uppercase">
               Paciente
             </TableHead>
-            <TableHead className="w-[120px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
+            <TableHead className="text-muted-foreground w-[120px] px-4 text-xs font-semibold tracking-wide uppercase">
               Idade
             </TableHead>
-            <TableHead className="w-[200px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
+            <TableHead className="text-muted-foreground w-[200px] px-4 text-xs font-semibold tracking-wide uppercase">
               Email
             </TableHead>
-            <TableHead className="w-[150px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
+            <TableHead className="text-muted-foreground w-[150px] px-4 text-xs font-semibold tracking-wide uppercase">
               Telefone
             </TableHead>
-            <TableHead className="w-[120px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
+            <TableHead className="text-muted-foreground w-[120px] px-4 text-xs font-semibold tracking-wide uppercase">
               Cadastro
             </TableHead>
-            <TableHead className="w-[80px] px-4 text-base font-extrabold text-slate-700 dark:text-slate-300">
+            <TableHead className="text-muted-foreground w-[80px] px-4 text-xs font-semibold tracking-wide uppercase">
               Status
             </TableHead>
-            <TableHead className="w-[120px] px-4 text-center text-base font-extrabold text-slate-700 dark:text-slate-300">
+            <TableHead className="text-muted-foreground w-[120px] px-4 text-center text-xs font-semibold tracking-wide uppercase">
               Ações
             </TableHead>
           </TableRow>
@@ -224,32 +224,47 @@ export function PatientsTablePure({
                   key={paciente.id}
                   className="group border-border/50 hover:from-primary/8 hover:to-secondary/8 hover:border-primary/30 bg-card h-13.5 border-b transition-all duration-300 hover:bg-gradient-to-r"
                 >
-                  <TableCell className="px-6 py-2">
-                    <div className="text-foreground group-hover:text-primary text-base font-semibold transition-colors">
+                  <TableCell className="px-6 py-3">
+                    <div
+                      className="text-foreground group-hover:text-primary font-medium transition-colors"
+                      style={{ fontSize: "0.9375rem" }}
+                    >
                       {paciente.name}
                     </div>
                   </TableCell>
 
-                  <TableCell className="px-4 py-2">
-                    <span className="text-muted-foreground text-base font-medium">
+                  <TableCell className="px-4 py-3">
+                    <span
+                      className="text-muted-foreground font-normal"
+                      style={{ fontSize: "0.9375rem" }}
+                    >
                       {calculateAge(paciente.birthDate)} anos
                     </span>
                   </TableCell>
 
-                  <TableCell className="px-4 py-2">
-                    <div className="text-muted-foreground max-w-[180px] truncate text-base font-medium">
+                  <TableCell className="px-4 py-3">
+                    <div
+                      className="text-muted-foreground max-w-[180px] truncate font-normal"
+                      style={{ fontSize: "0.9375rem" }}
+                    >
                       {paciente.email || "—"}
                     </div>
                   </TableCell>
 
-                  <TableCell className="px-4 py-2">
-                    <div className="text-muted-foreground text-base font-medium">
+                  <TableCell className="px-4 py-3">
+                    <div
+                      className="text-muted-foreground font-normal"
+                      style={{ fontSize: "0.9375rem" }}
+                    >
                       {paciente.phone || "—"}
                     </div>
                   </TableCell>
 
-                  <TableCell className="px-4 py-2">
-                    <div className="text-muted-foreground text-base font-medium">
+                  <TableCell className="px-4 py-3">
+                    <div
+                      className="text-muted-foreground font-normal"
+                      style={{ fontSize: "0.9375rem" }}
+                    >
                       {formatDateString(paciente.createdAt)}
                     </div>
                   </TableCell>
@@ -259,11 +274,11 @@ export function PatientsTablePure({
                       variant={
                         paciente.status === "active" ? "default" : "secondary"
                       }
-                      className={`px-2 py-1 text-xs font-medium transition-all duration-300 ${
+                      className={
                         paciente.status === "active"
-                          ? "from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r shadow-sm"
-                          : "bg-muted text-muted-foreground border-border hover:bg-muted/80 border"
-                      }`}
+                          ? "badge-status badge-status--active"
+                          : "badge-status badge-status--muted"
+                      }
                     >
                       {paciente.status === "active"
                         ? "✅ Ativo"

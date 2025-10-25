@@ -1,6 +1,5 @@
+import { eq } from "drizzle-orm";
 import {
-  Archive,
-  ArrowLeft,
   Calendar,
   Edit,
   FileText,
@@ -9,19 +8,19 @@ import {
   Phone,
   User,
 } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { headers } from "next/headers";
 
-import { auth } from "@/lib/auth";
-import { db } from "@/db";
-import { patients, users } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { BackButton } from "./_components/back-button";
+import { db } from "@/db";
+import { patients, users } from "@/db/schema";
+import { auth } from "@/lib/auth";
+
 import { ArchiveButton } from "./_components/archive-button";
+import { BackButton } from "./_components/back-button";
 
 // Tipagem do paciente baseada no schema do banco
 type Patient = {
@@ -131,6 +130,11 @@ export default async function PatientDetailsPage({
               </h1>
               <Badge
                 variant={patient.status === "active" ? "default" : "secondary"}
+                className={
+                  patient.status === "active"
+                    ? "badge-status badge-status--active"
+                    : "badge-status badge-status--muted"
+                }
               >
                 {patient.status === "active" ? "Ativo" : "Inativo"}
               </Badge>
