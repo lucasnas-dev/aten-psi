@@ -133,26 +133,26 @@ export function PatientsTablePure({
     <div className="bg-card rounded-md">
       <Table className="bg-card border-collapse">
         <TableHeader className="sticky top-0 z-10">
-          <TableRow className="from-primary/15 to-secondary/15 border-border hover:from-primary/20 hover:to-secondary/20 h-14 bg-gradient-to-r transition-all duration-300">
-            <TableHead className="text-muted-foreground w-[250px] px-6 text-xs font-semibold tracking-wide uppercase">
+          <TableRow className="border-b">
+            <TableHead className="text-muted-foreground w-[250px] px-6 py-3 text-xs font-semibold tracking-wider uppercase">
               Paciente
             </TableHead>
-            <TableHead className="text-muted-foreground w-[120px] px-4 text-xs font-semibold tracking-wide uppercase">
+            <TableHead className="text-muted-foreground w-[120px] px-4 py-3 text-xs font-semibold tracking-wider uppercase">
               Idade
             </TableHead>
-            <TableHead className="text-muted-foreground w-[200px] px-4 text-xs font-semibold tracking-wide uppercase">
+            <TableHead className="text-muted-foreground w-[200px] px-4 py-3 text-xs font-semibold tracking-wider uppercase">
               Email
             </TableHead>
-            <TableHead className="text-muted-foreground w-[150px] px-4 text-xs font-semibold tracking-wide uppercase">
+            <TableHead className="text-muted-foreground w-[150px] px-4 py-3 text-xs font-semibold tracking-wider uppercase">
               Telefone
             </TableHead>
-            <TableHead className="text-muted-foreground w-[120px] px-4 text-xs font-semibold tracking-wide uppercase">
+            <TableHead className="text-muted-foreground w-[120px] px-4 py-3 text-xs font-semibold tracking-wider uppercase">
               Cadastro
             </TableHead>
-            <TableHead className="text-muted-foreground w-[80px] px-4 text-xs font-semibold tracking-wide uppercase">
+            <TableHead className="text-muted-foreground w-[80px] px-4 py-3 text-xs font-semibold tracking-wider uppercase">
               Status
             </TableHead>
-            <TableHead className="text-muted-foreground w-[120px] px-4 text-center text-xs font-semibold tracking-wide uppercase">
+            <TableHead className="text-muted-foreground w-[120px] px-4 py-3 text-center text-xs font-semibold tracking-wider uppercase">
               Ações
             </TableHead>
           </TableRow>
@@ -289,7 +289,7 @@ export function PatientsTablePure({
                       <div className="flex items-center justify-center gap-2">
                         <ActionButton asChild tooltip="Ver detalhes">
                           <Link href={`/patients/${paciente.id}`}>
-                            <Eye className="h-4 w-4" />
+                            <Eye className="h-4 w-4 text-blue-600" />
                           </Link>
                         </ActionButton>
 
@@ -297,7 +297,7 @@ export function PatientsTablePure({
                           <Link
                             href={`/patients/${paciente.id}/psychological-record`}
                           >
-                            <FileText className="h-4 w-4" />
+                            <FileText className="h-4 w-4 text-green-600" />
                           </Link>
                         </ActionButton>
 
@@ -315,9 +315,9 @@ export function PatientsTablePure({
                           {isArchiving ? (
                             <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
                           ) : paciente.status === "active" ? (
-                            <Archive className="h-4 w-4" />
+                            <Archive className="h-4 w-4 text-red-600" />
                           ) : (
-                            <ArchiveRestore className="h-4 w-4" />
+                            <ArchiveRestore className="h-4 w-4 text-orange-600" />
                           )}
                         </ActionButton>
 

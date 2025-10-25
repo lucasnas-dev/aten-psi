@@ -10,10 +10,10 @@ export function ModeToggle() {
 
   return (
     <Button
-      variant="outline"
-      size="sm"
+      variant="ghost"
+      size="icon"
       onClick={toggleMode}
-      className="h-8 w-8 p-0"
+      className="hover:bg-accent hover:text-accent-foreground h-8 w-8"
       title={
         mode === "light"
           ? "Alternar para modo escuro"

@@ -3,7 +3,6 @@
 import { Bell, Settings } from "lucide-react";
 
 import { ModeToggle } from "@/components/mode-toggle";
-import { ThemeSelector } from "@/components/theme-selector";
 import { Button } from "@/components/ui/button";
 
 export function Header() {
@@ -22,7 +21,6 @@ export function Header() {
 
       {/* Right side buttons */}
       <div className="flex items-center gap-1">
-        <ThemeSelector />
         <ModeToggle />
         <Button
           variant="ghost"

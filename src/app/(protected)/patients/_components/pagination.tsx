@@ -131,7 +131,7 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
         {/* Indicador de página atual */}
         <div className="mx-2 flex items-center gap-2 text-xs font-semibold">
           <span className="text-muted-foreground">Página</span>
-          <span className="from-primary to-secondary text-primary-foreground rounded-xl bg-gradient-to-r px-2 py-1 text-xs font-bold shadow-md">
+          <span className="rounded-lg bg-[#2563eb] px-2.5 py-0.5 text-sm font-bold text-white">
             {paginaAtual}
           </span>
           <span className="text-muted-foreground">de</span>

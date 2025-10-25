@@ -92,12 +92,14 @@ export function PatientsPagination({
           {renderPageNumbers().map((page, index) => (
             <Button
               key={index}
-              variant={page === currentPage ? "default" : "outline"}
+              variant={page === currentPage ? "ghost" : "outline"}
               size="sm"
               onClick={() => typeof page === "number" && onPageClick(page)}
               disabled={page === "..."}
               className={`h-9 w-9 p-0 ${
-                page === currentPage ? "bg-primary text-primary-foreground" : ""
+                page === currentPage
+                  ? "pagination-active text-base font-bold"
+                  : "text-foreground"
               }`}
             >
               {page}

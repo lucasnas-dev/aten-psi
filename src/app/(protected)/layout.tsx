@@ -11,7 +11,7 @@ export default function ProtectedLayout({
       <Sidebar />
       <div className="ml-44 flex flex-1 flex-col">
         <Header />
-        <main className="bg-muted/30 flex-1 overflow-y-auto px-6 py-4">
+        <main className="bg-muted/30 flex-1 overflow-y-auto px-4 py-3">
           {children}
         </main>
       </div>

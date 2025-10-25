@@ -212,9 +212,9 @@ export default function PatientsPage() {
   }
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-3">
       {/* Filtros com botão Novo Paciente */}
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="text-primary/70 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
           <Input
