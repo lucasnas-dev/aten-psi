@@ -280,9 +280,7 @@ export function PatientsTablePure({
                           : "badge-status badge-status--muted"
                       }
                     >
-                      {paciente.status === "active"
-                        ? "✅ Ativo"
-                        : "📁 Arquivado"}
+                      {paciente.status === "active" ? "Ativo" : "Arquivado"}
                     </Badge>
                   </TableCell>
 
