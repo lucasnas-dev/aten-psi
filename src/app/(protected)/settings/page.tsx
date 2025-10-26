@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Calendar, Clock, Settings, User } from "lucide-react";
+import { Bell, Calendar, Clock, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -100,7 +100,7 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-8">
+      <div className="flex items-center justify-center py-12">
         <div className="text-center">
           <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-b-2"></div>
           <p className="text-muted-foreground mt-2 text-sm">
@@ -112,72 +112,65 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Configurações</h1>
-          <p className="text-muted-foreground">
-            Gerencie suas preferências e configurações do sistema
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Settings className="text-muted-foreground h-5 w-5" />
-        </div>
-      </div>
-
+    <div className="space-y-4">
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="space-y-6"
+        className="space-y-4"
       >
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="profile" className="flex items-center gap-2">
+        <TabsList className="grid h-10 w-full grid-cols-4">
+          <TabsTrigger
+            value="profile"
+            className="flex items-center gap-2 text-xs"
+          >
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Perfil</span>
           </TabsTrigger>
           <TabsTrigger
             value="working-hours"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-xs"
           >
             <Clock className="h-4 w-4" />
             <span className="hidden sm:inline">Horários</span>
           </TabsTrigger>
-          <TabsTrigger value="appointments" className="flex items-center gap-2">
+          <TabsTrigger
+            value="appointments"
+            className="flex items-center gap-2 text-xs"
+          >
             <Calendar className="h-4 w-4" />
             <span className="hidden sm:inline">Consultas</span>
           </TabsTrigger>
           <TabsTrigger
             value="notifications"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-xs"
           >
             <Bell className="h-4 w-4" />
             <span className="hidden sm:inline">Notificações</span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile" className="mt-0 space-y-6">
+        <TabsContent value="profile" className="mt-0 space-y-4">
           <ProfileSettingsSimple
             settings={settings}
             onUpdate={handleSettingsUpdate}
           />
         </TabsContent>
 
-        <TabsContent value="working-hours" className="mt-0 space-y-6">
+        <TabsContent value="working-hours" className="mt-0 space-y-4">
           <WorkingHoursSimple
             settings={settings}
             onUpdate={handleSettingsUpdate}
           />
         </TabsContent>
 
-        <TabsContent value="appointments" className="mt-0 space-y-6">
+        <TabsContent value="appointments" className="mt-0 space-y-4">
           <AppointmentSettingsSimple
             settings={settings}
             onUpdate={handleSettingsUpdate}
           />
         </TabsContent>
 
-        <TabsContent value="notifications" className="mt-0 space-y-6">
+        <TabsContent value="notifications" className="mt-0 space-y-4">
           <NotificationSettingsSimple
             settings={settings}
             onUpdate={handleSettingsUpdate}
