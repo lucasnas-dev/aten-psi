@@ -8,20 +8,12 @@ import {
   Clock,
   Edit2,
   Save,
-  X,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { saveSettings } from "@/actions/save-settings";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -58,22 +50,17 @@ export function AppointmentSettingsSimple({
   settings,
   onUpdate,
 }: AppointmentSettingsSimpleProps) {
-  const [isEditing, setIsEditing] = useState<keyof SettingsData | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editValues, setEditValues] = useState<Partial<SettingsData>>({});
 
   if (!settings) return null;
 
-  const handleEdit = (field: keyof SettingsData) => {
-    setIsEditing(field);
-    setEditValues({
-      [field]: settings[field],
-    });
-  };
-
-  const handleCancel = () => {
-    setIsEditing(null);
-    setEditValues({});
+  const handleInputChange = (
+    field: keyof SettingsData,
+    value: string | number | boolean
+  ) => {
+    setEditValues({ ...editValues, [field]: value });
   };
 
   const handleSave = async () => {
@@ -88,32 +75,8 @@ export function AppointmentSettingsSimple({
 
       if (result?.data?.success) {
         onUpdate(editValues);
-        setIsEditing(null);
+        setIsEditing(false);
         setEditValues({});
-        toast.success("Configuração atualizada com sucesso!");
-      } else {
-        throw new Error("Falha ao salvar configuração");
-      }
-    } catch (error) {
-      console.error("Erro ao salvar:", error);
-      toast.error("Erro ao salvar. Tente novamente.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleToggle = async (field: keyof SettingsData, value: boolean) => {
-    setIsSaving(true);
-    try {
-      const updatedData = {
-        ...settings,
-        [field]: value,
-      };
-
-      const result = await saveSettings(updatedData);
-
-      if (result?.data?.success) {
-        onUpdate({ [field]: value });
         toast.success("Configuração atualizada com sucesso!");
       } else {
         throw new Error("Falha ao salvar configuração");
@@ -143,57 +106,24 @@ export function AppointmentSettingsSimple({
     min: number;
     max: number;
   }) => (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="flex items-center gap-3">
-        <Icon className="text-muted-foreground h-5 w-5" />
-        <div>
-          <Label className="font-medium">{label}</Label>
-          {isEditing === field ? (
-            <div className="mt-1 flex items-center gap-2">
-              <Input
-                type="number"
-                value={(editValues[field] as number) || value}
-                onChange={(e) =>
-                  setEditValues({
-                    ...editValues,
-                    [field]: Number(e.target.value),
-                  })
-                }
-                className="w-24"
-                min={min}
-                max={max}
-                autoFocus
-              />
-              <span className="text-muted-foreground text-sm">{unit}</span>
-            </div>
-          ) : (
-            <p className="text-muted-foreground text-sm">
-              {value} {unit}
-            </p>
-          )}
+    <div className="flex items-center gap-3 py-2">
+      <Icon className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+      <div className="min-w-0 flex-1">
+        <Label className="text-muted-foreground text-xs">{label}</Label>
+        <div className="mt-1 flex items-center gap-2">
+          <Input
+            type="number"
+            value={
+              typeof editValues[field] === "number" ? editValues[field] : value
+            }
+            onChange={(e) => handleInputChange(field, Number(e.target.value))}
+            className="h-8 w-24 text-sm"
+            min={min}
+            max={max}
+            disabled={isSaving}
+          />
+          <span className="text-muted-foreground text-xs">{unit}</span>
         </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        {isEditing === field ? (
-          <>
-            <Button size="sm" onClick={handleSave} disabled={isSaving}>
-              <Save className="h-4 w-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleCancel}
-              disabled={isSaving}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </>
-        ) : (
-          <Button size="sm" variant="ghost" onClick={() => handleEdit(field)}>
-            <Edit2 className="h-4 w-4" />
-          </Button>
-        )}
       </div>
     </div>
   );
@@ -211,18 +141,18 @@ export function AppointmentSettingsSimple({
     icon: LucideIcon;
     description: string;
   }) => (
-    <div className="flex items-center justify-between rounded-lg border p-4">
+    <div className="flex items-center justify-between py-3">
       <div className="flex items-center gap-3">
-        <Icon className="text-muted-foreground h-5 w-5" />
+        <Icon className="text-muted-foreground h-4 w-4" />
         <div>
-          <Label className="font-medium">{label}</Label>
-          <p className="text-muted-foreground text-sm">{description}</p>
+          <Label className="text-sm">{label}</Label>
+          <p className="text-muted-foreground text-xs">{description}</p>
         </div>
       </div>
 
       <Switch
         checked={value}
-        onCheckedChange={(checked) => handleToggle(field, checked)}
+        onCheckedChange={(checked) => handleInputChange(field, checked)}
         disabled={isSaving}
       />
     </div>
@@ -230,17 +160,33 @@ export function AppointmentSettingsSimple({
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+      {/* Configurações de Consulta */}
+      <div className="max-w-2xl">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <Calendar className="h-4 w-4" />
             Configurações de Consulta
-          </CardTitle>
-          <CardDescription>
-            Defina os parâmetros padrão para suas consultas
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h3>
+          {isEditing ? (
+            <div className="flex items-center gap-2">
+              <Button onClick={handleSave} disabled={isSaving} size="sm">
+                <Save className="mr-1.5 h-3.5 w-3.5" />
+                Salvar
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setIsEditing(true)}
+              variant="outline"
+              size="sm"
+            >
+              <Edit2 className="mr-1.5 h-3.5 w-3.5" />
+              Editar
+            </Button>
+          )}
+        </div>
+
+        <div className="space-y-1 border-t pt-3">
           <NumberFieldRow
             label="Duração padrão"
             field="defaultDuration"
@@ -270,18 +216,22 @@ export function AppointmentSettingsSimple({
             min={1}
             max={365}
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CalendarCheck className="h-5 w-5" />
+      {/* Preferências de Agendamento */}
+      <div className="space-y-3">
+        <div>
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <CalendarCheck className="h-4 w-4" />
             Preferências de Agendamento
-          </CardTitle>
-          <CardDescription>Configure as regras de agendamento</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </h3>
+          <p className="text-muted-foreground mt-0.5 text-xs">
+            Configure as regras de agendamento
+          </p>
+        </div>
+
+        <div>
           <SwitchRow
             label="Permitir agendamento no mesmo dia"
             field="allowSameDayBooking"
@@ -289,8 +239,8 @@ export function AppointmentSettingsSimple({
             icon={CalendarX}
             description="Permite que pacientes agendem consultas para o mesmo dia"
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

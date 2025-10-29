@@ -1,18 +1,11 @@
 "use client";
 
-import { Clock, Edit2, Plus, Save, Trash2, X } from "lucide-react";
+import { Clock, Edit2, Plus, Save, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { saveSettings } from "@/actions/save-settings";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -64,8 +57,10 @@ export function WorkingHoursSimple({
   onUpdate,
 }: WorkingHoursSimpleProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [editingDay, setEditingDay] = useState<number | null>(null);
   const [tempTimeSlots, setTempTimeSlots] = useState<TimeSlot[]>([]);
+  const [tempWorkingHours, setTempWorkingHours] = useState<WorkingHour[]>([]);
 
   if (!settings) return null;
 
@@ -81,38 +76,28 @@ export function WorkingHoursSimple({
     );
   });
 
-  const handleDayToggle = async (dayOfWeek: number, enabled: boolean) => {
-    setIsSaving(true);
-    try {
-      const updatedWorkingHours = workingHours.map((wh) =>
-        wh.dayOfWeek === dayOfWeek
-          ? { ...wh, enabled, timeSlots: enabled ? wh.timeSlots : [] }
-          : wh
-      );
+  const displayWorkingHours = isEditing ? tempWorkingHours : workingHours;
 
-      const updatedData = {
-        ...settings,
-        workingHours: updatedWorkingHours,
-      };
+  const handleStartEdit = () => {
+    setTempWorkingHours(JSON.parse(JSON.stringify(workingHours)));
+    setIsEditing(true);
+  };
 
-      const result = await saveSettings(updatedData);
+  const handleDayToggle = (dayOfWeek: number, enabled: boolean) => {
+    if (!isEditing) return;
 
-      if (result?.data?.success) {
-        onUpdate({ workingHours: updatedWorkingHours });
-        toast.success("Horários atualizados com sucesso!");
-      } else {
-        throw new Error("Falha ao salvar horários");
-      }
-    } catch (error) {
-      console.error("Erro ao salvar:", error);
-      toast.error("Erro ao salvar. Tente novamente.");
-    } finally {
-      setIsSaving(false);
-    }
+    const updated = tempWorkingHours.map((wh) =>
+      wh.dayOfWeek === dayOfWeek
+        ? { ...wh, enabled, timeSlots: enabled ? wh.timeSlots : [] }
+        : wh
+    );
+    setTempWorkingHours(updated);
   };
 
   const handleEditTimeSlots = (dayOfWeek: number) => {
-    const dayWorkingHours = workingHours.find(
+    if (!isEditing) return;
+
+    const dayWorkingHours = tempWorkingHours.find(
       (wh) => wh.dayOfWeek === dayOfWeek
     );
     setEditingDay(dayOfWeek);
@@ -140,26 +125,33 @@ export function WorkingHoursSimple({
     setTempTimeSlots(updated);
   };
 
-  const handleSaveTimeSlots = async () => {
+  const handleSaveTimeSlots = () => {
     if (editingDay === null) return;
 
+    const updated = tempWorkingHours.map((wh) =>
+      wh.dayOfWeek === editingDay ? { ...wh, timeSlots: tempTimeSlots } : wh
+    );
+    setTempWorkingHours(updated);
+    setEditingDay(null);
+    setTempTimeSlots([]);
+  };
+
+  const handleSaveAll = async () => {
     setIsSaving(true);
     try {
-      const updatedWorkingHours = workingHours.map((wh) =>
-        wh.dayOfWeek === editingDay ? { ...wh, timeSlots: tempTimeSlots } : wh
-      );
-
       const updatedData = {
         ...settings,
-        workingHours: updatedWorkingHours,
+        workingHours: tempWorkingHours,
       };
 
       const result = await saveSettings(updatedData);
 
       if (result?.data?.success) {
-        onUpdate({ workingHours: updatedWorkingHours });
+        onUpdate({ workingHours: tempWorkingHours });
+        setIsEditing(false);
         setEditingDay(null);
         setTempTimeSlots([]);
+        setTempWorkingHours([]);
         toast.success("Horários atualizados com sucesso!");
       } else {
         throw new Error("Falha ao salvar horários");
@@ -172,31 +164,35 @@ export function WorkingHoursSimple({
     }
   };
 
-  const handleCancelEdit = () => {
-    setEditingDay(null);
-    setTempTimeSlots([]);
-  };
-
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+      <div className="max-w-3xl">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <Clock className="h-4 w-4" />
             Horários de Trabalho
-          </CardTitle>
-          <CardDescription>
-            Configure seus horários de atendimento para cada dia da semana
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {workingHours.map((workingHour) => (
-            <div key={workingHour.dayOfWeek} className="rounded-lg border p-4">
-              <div className="mb-3 flex items-center justify-between">
+          </h3>
+          {isEditing ? (
+            <Button onClick={handleSaveAll} disabled={isSaving} size="sm">
+              <Save className="mr-1.5 h-3.5 w-3.5" />
+              Salvar
+            </Button>
+          ) : (
+            <Button onClick={handleStartEdit} variant="outline" size="sm">
+              <Edit2 className="mr-1.5 h-3.5 w-3.5" />
+              Editar
+            </Button>
+          )}
+        </div>
+
+        <div className="space-y-3 border-t pt-3">
+          {displayWorkingHours.map((workingHour) => (
+            <div
+              key={workingHour.dayOfWeek}
+              className="border-b py-3 last:border-0"
+            >
+              <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Label className="text-base font-medium">
-                    {dayNames[workingHour.dayOfWeek]}
-                  </Label>
                   <Switch
                     checked={workingHour.enabled}
                     onCheckedChange={(enabled) =>
@@ -204,25 +200,34 @@ export function WorkingHoursSimple({
                     }
                     disabled={isSaving}
                   />
+                  <Label className="text-sm font-medium">
+                    {dayNames[workingHour.dayOfWeek]}
+                  </Label>
                 </div>
 
-                {workingHour.enabled && (
+                {workingHour.enabled && isEditing && (
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => handleEditTimeSlots(workingHour.dayOfWeek)}
-                    disabled={editingDay !== null}
+                    disabled={
+                      editingDay !== null &&
+                      editingDay !== workingHour.dayOfWeek
+                    }
+                    className="h-7 text-xs"
                   >
-                    <Edit2 className="h-4 w-4" />
-                    Editar horários
+                    <Edit2 className="mr-1 h-3 w-3" />
+                    {editingDay === workingHour.dayOfWeek
+                      ? "Editando..."
+                      : "Horários"}
                   </Button>
                 )}
               </div>
 
               {workingHour.enabled && (
-                <div className="ml-6 space-y-2">
+                <div className="ml-11 space-y-2">
                   {editingDay === workingHour.dayOfWeek ? (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {tempTimeSlots.map((slot, index) => (
                         <div key={index} className="flex items-center gap-2">
                           <Input
@@ -235,72 +240,66 @@ export function WorkingHoursSimple({
                                 e.target.value
                               )
                             }
-                            className="w-32"
+                            className="h-8 w-28 text-sm"
                           />
-                          <span className="text-muted-foreground">às</span>
+                          <span className="text-muted-foreground text-xs">
+                            às
+                          </span>
                           <Input
                             type="time"
                             value={slot.end}
                             onChange={(e) =>
                               handleTimeSlotChange(index, "end", e.target.value)
                             }
-                            className="w-32"
+                            className="h-8 w-28 text-sm"
                           />
                           {tempTimeSlots.length > 1 && (
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => handleRemoveTimeSlot(index)}
+                              className="h-7 w-7 p-0"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3 text-red-600" />
                             </Button>
                           )}
                         </div>
                       ))}
 
-                      <div className="flex items-center gap-2 pt-2">
+                      <div className="flex items-center gap-2 pt-1">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={handleAddTimeSlot}
+                          className="h-7 text-xs"
                         >
-                          <Plus className="mr-1 h-4 w-4" />
-                          Adicionar horário
+                          <Plus className="mr-1 h-3 w-3" />
+                          Adicionar
                         </Button>
 
                         <Button
                           size="sm"
                           onClick={handleSaveTimeSlots}
-                          disabled={isSaving}
+                          className="h-7 text-xs"
                         >
-                          <Save className="mr-1 h-4 w-4" />
-                          Salvar
-                        </Button>
-
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={handleCancelEdit}
-                          disabled={isSaving}
-                        >
-                          <X className="mr-1 h-4 w-4" />
-                          Cancelar
+                          <Save className="mr-1 h-3 w-3" />
+                          OK
                         </Button>
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       {workingHour.timeSlots.length > 0 ? (
                         workingHour.timeSlots.map((slot, index) => (
                           <p
                             key={index}
-                            className="text-muted-foreground text-sm"
+                            className="text-muted-foreground text-xs"
                           >
                             {slot.start} às {slot.end}
                           </p>
                         ))
                       ) : (
-                        <p className="text-muted-foreground text-sm italic">
+                        <p className="text-muted-foreground text-xs italic">
                           Nenhum horário configurado
                         </p>
                       )}
@@ -310,25 +309,23 @@ export function WorkingHoursSimple({
               )}
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
-        <CardHeader>
-          <CardTitle className="text-blue-800 dark:text-blue-200">
+      <div className="max-w-3xl">
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950">
+          <h4 className="mb-2 text-sm font-semibold text-blue-800 dark:text-blue-200">
             Dicas para configurar horários
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-1 text-sm text-blue-700 dark:text-blue-300">
+          </h4>
+          <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
             <li>• Você pode adicionar múltiplos períodos para o mesmo dia</li>
             <li>• Configure intervalos de almoço criando períodos separados</li>
             <li>
               • Os horários configurados serão usados para validar agendamentos
             </li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

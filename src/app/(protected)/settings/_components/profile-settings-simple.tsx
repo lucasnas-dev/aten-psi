@@ -1,19 +1,12 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { Edit2, Mail, Phone, Save, User, UserCheck, X } from "lucide-react";
+import { Edit2, Mail, Phone, Save, User, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { saveSettings } from "@/actions/save-settings";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -49,22 +42,17 @@ export function ProfileSettingsSimple({
   settings,
   onUpdate,
 }: ProfileSettingsSimpleProps) {
-  const [isEditing, setIsEditing] = useState<keyof SettingsData | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editValues, setEditValues] = useState<Partial<SettingsData>>({});
 
   if (!settings) return null;
 
-  const handleEdit = (field: keyof SettingsData) => {
-    setIsEditing(field);
-    setEditValues({
-      [field]: settings[field] || "",
-    });
-  };
-
-  const handleCancel = () => {
-    setIsEditing(null);
-    setEditValues({});
+  const handleInputChange = (
+    field: keyof SettingsData,
+    value: string | number | boolean
+  ) => {
+    setEditValues({ ...editValues, [field]: value });
   };
 
   const handleSave = async () => {
@@ -79,7 +67,7 @@ export function ProfileSettingsSimple({
 
       if (result?.data?.success) {
         onUpdate(editValues);
-        setIsEditing(null);
+        setIsEditing(false);
         setEditValues({});
         toast.success("Configuração atualizada com sucesso!");
       } else {
@@ -91,10 +79,6 @@ export function ProfileSettingsSimple({
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handleInputChange = (field: keyof SettingsData, value: string) => {
-    setEditValues({ ...editValues, [field]: value });
   };
 
   const FieldRow = ({
@@ -112,47 +96,21 @@ export function ProfileSettingsSimple({
     placeholder: string;
     type?: string;
   }) => (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="flex items-center gap-3">
-        <Icon className="text-muted-foreground h-5 w-5" />
-        <div>
-          <Label className="font-medium">{label}</Label>
-          {isEditing === field ? (
-            <Input
-              type={type}
-              value={(editValues[field] as string) || ""}
-              onChange={(e) => handleInputChange(field, e.target.value)}
-              placeholder={placeholder}
-              className="mt-1 w-64"
-              autoFocus
-            />
-          ) : (
-            <p className="text-muted-foreground text-sm">
-              {value || "Não informado"}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        {isEditing === field ? (
-          <>
-            <Button size="sm" onClick={handleSave} disabled={isSaving}>
-              <Save className="h-4 w-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleCancel}
-              disabled={isSaving}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </>
+    <div className="flex items-center gap-3 py-2">
+      <Icon className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+      <div className="min-w-0 flex-1">
+        <Label className="text-muted-foreground text-xs">{label}</Label>
+        {isEditing ? (
+          <Input
+            type={type}
+            value={(editValues[field] as string) || ""}
+            onChange={(e) => handleInputChange(field, e.target.value)}
+            placeholder={placeholder}
+            className="mt-1 h-8 text-sm"
+            disabled={isSaving}
+          />
         ) : (
-          <Button size="sm" variant="ghost" onClick={() => handleEdit(field)}>
-            <Edit2 className="h-4 w-4" />
-          </Button>
+          <p className="mt-1 text-sm">{value || "Não informado"}</p>
         )}
       </div>
     </div>
@@ -160,17 +118,33 @@ export function ProfileSettingsSimple({
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
+      {/* Informações Pessoais */}
+      <div className="max-w-2xl">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <User className="h-4 w-4" />
             Informações Pessoais
-          </CardTitle>
-          <CardDescription>
-            Gerencie seus dados pessoais e profissionais
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h3>
+          {isEditing ? (
+            <div className="flex items-center gap-2">
+              <Button onClick={handleSave} disabled={isSaving} size="sm">
+                <Save className="mr-1.5 h-3.5 w-3.5" />
+                Salvar
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setIsEditing(true)}
+              variant="outline"
+              size="sm"
+            >
+              <Edit2 className="mr-1.5 h-3.5 w-3.5" />
+              Editar
+            </Button>
+          )}
+        </div>
+
+        <div className="space-y-1 border-t pt-3">
           <FieldRow
             label="Nome completo"
             field="name"
@@ -195,20 +169,19 @@ export function ProfileSettingsSimple({
             icon={Phone}
             placeholder="(11) 99999-9999"
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <UserCheck className="h-5 w-5" />
+      {/* Informações Profissionais */}
+      <div className="max-w-2xl">
+        <div className="mb-3">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <UserCheck className="h-4 w-4" />
             Informações Profissionais
-          </CardTitle>
-          <CardDescription>
-            Dados relacionados à sua prática profissional
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h3>
+        </div>
+
+        <div className="space-y-1 border-t pt-3">
           <FieldRow
             label="CRP"
             field="crp"
@@ -224,8 +197,8 @@ export function ProfileSettingsSimple({
             icon={UserCheck}
             placeholder="Sua área de especialização"
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
