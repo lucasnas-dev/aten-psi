@@ -15,10 +15,10 @@ export function NewPatientConsultation({ patient }: { patient: Patient }) {
         variant="outline"
         size="sm"
         onClick={() => setIsOpen(true)}
-        className="h-8 gap-1.5 border-purple-300 bg-purple-50 px-3 text-xs font-semibold text-purple-600 hover:border-purple-400 hover:bg-purple-100"
+        className="h-8 gap-2 px-3 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
       >
-        <CalendarPlus className="h-4 w-4" />
-        Agendar
+        <CalendarPlus className="h-4 w-4 text-purple-600" />
+        <span className="text-xs font-medium text-purple-600">Agendar</span>
       </Button>
       <NewConsultationModal
         isOpen={isOpen}

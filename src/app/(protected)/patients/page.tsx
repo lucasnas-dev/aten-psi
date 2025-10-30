@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Search } from "lucide-react";
+import { Search, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
@@ -216,31 +216,28 @@ export default function PatientsPage() {
       {/* Filtros com botão Novo Paciente */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
-          <Search className="text-primary/70 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
+          <Search className="text-primary/70 absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2" />
           <Input
             placeholder="Buscar por nome, email ou telefone..."
             value={termoBusca}
             onChange={(e) => setTermoBusca(e.target.value)}
-            className="border-border focus:border-primary focus:ring-primary/30 bg-card h-10 pl-11 text-[0.9375rem] shadow-sm transition-all"
+            className="border-border focus:border-primary focus:ring-primary/30 bg-card h-8 pl-10 text-sm shadow-sm transition-all"
           />
         </div>
         <Select value={filtroStatus} onValueChange={handleFiltroStatusChange}>
-          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card h-10 w-full text-[0.9375rem] shadow-sm sm:w-[200px]">
+          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card h-8 w-full text-sm shadow-sm sm:w-[200px]">
             <SelectValue placeholder="Filtrar por status" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card shadow-lg">
-            <SelectItem value="all" className="text-[0.9375rem]">
+            <SelectItem value="all" className="text-sm">
               Todos os pacientes
             </SelectItem>
-            <SelectItem
-              value="active"
-              className="text-primary text-[0.9375rem]"
-            >
+            <SelectItem value="active" className="text-primary text-sm">
               📋 Apenas ativos
             </SelectItem>
             <SelectItem
               value="inactive"
-              className="text-muted-foreground text-[0.9375rem]"
+              className="text-muted-foreground text-sm"
             >
               📁 Apenas inativos
             </SelectItem>
@@ -257,23 +254,23 @@ export default function PatientsPage() {
             setPaginaAtual(1);
           }}
         >
-          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card h-10 w-full text-[0.9375rem] shadow-sm sm:w-[180px]">
+          <SelectTrigger className="border-border focus:border-primary focus:ring-primary/30 bg-card h-8 w-full text-sm shadow-sm sm:w-[180px]">
             <SelectValue placeholder="Ordenar por" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card shadow-lg">
-            <SelectItem value="created_at-desc" className="text-[0.9375rem]">
+            <SelectItem value="created_at-desc" className="text-sm">
               🕒 Mais recentes
             </SelectItem>
-            <SelectItem value="created_at-asc" className="text-[0.9375rem]">
+            <SelectItem value="created_at-asc" className="text-sm">
               🕒 Mais antigos
             </SelectItem>
-            <SelectItem value="name-asc" className="text-[0.9375rem]">
+            <SelectItem value="name-asc" className="text-sm">
               🔤 Nome A-Z
             </SelectItem>
-            <SelectItem value="name-desc" className="text-[0.9375rem]">
+            <SelectItem value="name-desc" className="text-sm">
               🔤 Nome Z-A
             </SelectItem>
-            <SelectItem value="updated_at-desc" className="text-[0.9375rem]">
+            <SelectItem value="updated_at-desc" className="text-sm">
               📝 Atualizados recentemente
             </SelectItem>
           </SelectContent>
@@ -281,10 +278,11 @@ export default function PatientsPage() {
         <Button
           asChild
           variant="outline"
-          className="px-6 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+          size="sm"
+          className="h-8 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
         >
-          <Link href="/patients/new" className="flex items-center gap-3">
-            <Plus className="h-5 w-5" />
+          <Link href="/patients/new" className="flex items-center gap-2">
+            <UserPlus className="h-4 w-4" />
             Novo Paciente
           </Link>
         </Button>

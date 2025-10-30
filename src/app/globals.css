@@ -224,25 +224,13 @@
     background-color: rgba(2, 6, 23, 0.02); /* subtle striped rows */
   }
   /* Badges (status) */
-  .badge-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem; /* 12px */
-    font-weight: 500;
-    letter-spacing: 0.01em;
-  }
   .badge-status--active {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border: 1px solid #a5d6a7;
+    color: #16a34a !important;
+    border-color: #16a34a !important;
   }
   .badge-status--muted {
-    background-color: var(--muted);
-    color: var(--muted-foreground);
-    border: 1px solid var(--border);
+    color: #f97316 !important;
+    border-color: #f97316 !important;
   }
   .sidebar-link {
     display: flex;

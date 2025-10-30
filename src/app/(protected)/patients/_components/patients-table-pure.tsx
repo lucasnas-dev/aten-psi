@@ -271,13 +271,11 @@ export function PatientsTablePure({
 
                   <TableCell className="px-4 py-2">
                     <Badge
-                      variant={
-                        paciente.status === "active" ? "default" : "secondary"
-                      }
+                      variant="outline"
                       className={
                         paciente.status === "active"
-                          ? "badge-status badge-status--active"
-                          : "badge-status badge-status--muted"
+                          ? "border-green-600 text-green-600"
+                          : "border-orange-500 text-orange-500"
                       }
                     >
                       {paciente.status === "active" ? "Ativo" : "Arquivado"}
