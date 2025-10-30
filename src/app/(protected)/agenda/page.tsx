@@ -5,6 +5,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
 import { getConsultations } from "@/actions/get-consultations";
+import { getSettings } from "@/actions/get-settings";
 import { deleteConsultation } from "@/actions/manage-consultation";
 
 import {
@@ -41,6 +42,21 @@ export default function AgendaPage() {
   const [, setPreselectedTime] = useState<string | undefined>();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [workingHours, setWorkingHours] = useState<
+    Array<{
+      dayOfWeek: number;
+      enabled: boolean;
+      timeSlots: Array<{ start: string; end: string }>;
+    }>
+  >([]);
+
+  const { execute: loadSettings } = useAction(getSettings, {
+    onSuccess: (result) => {
+      if (result.data?.workingHours) {
+        setWorkingHours(result.data.workingHours as any);
+      }
+    },
+  });
 
   const { execute: loadConsultations } = useAction(getConsultations, {
     onSuccess: (result) => {
@@ -67,7 +83,8 @@ export default function AgendaPage() {
   // Carregar consultas do banco de dados
   useEffect(() => {
     loadConsultations({});
-  }, [loadConsultations]);
+    loadSettings();
+  }, [loadConsultations, loadSettings]);
 
   // Filtrar eventos baseado nos filtros selecionados
   const filteredEvents = useMemo(() => {
@@ -170,6 +187,7 @@ export default function AgendaPage() {
                   newDate.setHours(hours, minutes, 0, 0);
                   handleTimeSlotClick(newDate);
                 }}
+                workingHours={workingHours}
               />
             </div>
           </div>
@@ -181,6 +199,7 @@ export default function AgendaPage() {
             events={filteredEvents}
             onEventClick={handleEventClick}
             onTimeSlotClick={handleTimeSlotClick}
+            workingHours={workingHours}
           />
         );
       case "list":

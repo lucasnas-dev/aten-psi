@@ -15,6 +15,11 @@ interface DayViewProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   onTimeSlotClick: (date: Date) => void;
+  workingHours?: Array<{
+    dayOfWeek: number;
+    enabled: boolean;
+    timeSlots: Array<{ start: string; end: string }>;
+  }>;
 }
 
 export function DayView({
@@ -22,13 +27,53 @@ export function DayView({
   events,
   onEventClick,
   onTimeSlotClick,
+  workingHours = [],
 }: DayViewProps) {
-  // Gerar horários das 8h às 18h
-  const timeSlots = Array.from({ length: 20 }, (_, i) => {
-    const hour = 8 + Math.floor(i / 2);
-    const minute = i % 2 === 0 ? 0 : 30;
-    return addHours(startOfDay(selectedDate), hour + minute / 60);
-  });
+  // Obter horários de trabalho para o dia selecionado
+  const dayOfWeek = selectedDate.getDay();
+  const dayWorkingHours = workingHours.find((wh) => wh.dayOfWeek === dayOfWeek);
+
+  // Função para gerar time slots baseados nos horários de trabalho
+  const generateTimeSlots = () => {
+    if (!dayWorkingHours?.enabled || !dayWorkingHours.timeSlots.length) {
+      // Horários padrão se não houver configuração: 8h às 18h
+      return Array.from({ length: 20 }, (_, i) => {
+        const hour = 8 + Math.floor(i / 2);
+        const minute = i % 2 === 0 ? 0 : 30;
+        return addHours(startOfDay(selectedDate), hour + minute / 60);
+      });
+    }
+
+    const slots: Date[] = [];
+    dayWorkingHours.timeSlots.forEach((timeSlot) => {
+      const [startHour, startMinute] = timeSlot.start.split(":").map(Number);
+      const [endHour, endMinute] = timeSlot.end.split(":").map(Number);
+
+      let currentHour = startHour;
+      let currentMinute = startMinute;
+
+      while (
+        currentHour < endHour ||
+        (currentHour === endHour && currentMinute < endMinute)
+      ) {
+        const slotDate = new Date(selectedDate);
+        slotDate.setHours(currentHour, currentMinute, 0, 0);
+        slots.push(slotDate);
+
+        // Avançar 30 minutos
+        currentMinute += 30;
+        if (currentMinute >= 60) {
+          currentMinute = 0;
+          currentHour += 1;
+        }
+      }
+    });
+
+    return slots;
+  };
+
+  // Gerar horários
+  const timeSlots = generateTimeSlots();
 
   const getEventsForTimeSlot = (time: Date) => {
     return events.filter(

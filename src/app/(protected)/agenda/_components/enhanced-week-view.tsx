@@ -26,6 +26,11 @@ interface EnhancedWeekViewProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   onTimeSlotClick: (date: Date, time: string) => void;
+  workingHours?: Array<{
+    dayOfWeek: number;
+    enabled: boolean;
+    timeSlots: Array<{ start: string; end: string }>;
+  }>;
 }
 
 export function EnhancedWeekView({
@@ -34,9 +39,34 @@ export function EnhancedWeekView({
   events,
   onEventClick,
   onTimeSlotClick,
+  workingHours = [],
 }: EnhancedWeekViewProps) {
-  const [viewStartHour, setViewStartHour] = useState(7);
-  const [viewEndHour, setViewEndHour] = useState(19);
+  const [viewStartHour, setViewStartHour] = useState(8);
+  const [viewEndHour, setViewEndHour] = useState(18);
+
+  // Calcular horários baseados nos workingHours
+  useState(() => {
+    if (workingHours.length > 0) {
+      let earliestStart = 23;
+      let latestEnd = 0;
+
+      workingHours.forEach((wh) => {
+        if (wh.enabled && wh.timeSlots.length > 0) {
+          wh.timeSlots.forEach((slot) => {
+            const [startHour] = slot.start.split(":").map(Number);
+            const [endHour] = slot.end.split(":").map(Number);
+            earliestStart = Math.min(earliestStart, startHour);
+            latestEnd = Math.max(latestEnd, endHour);
+          });
+        }
+      });
+
+      if (earliestStart <= latestEnd) {
+        setViewStartHour(earliestStart);
+        setViewEndHour(latestEnd);
+      }
+    }
+  });
 
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
