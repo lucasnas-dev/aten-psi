@@ -2,7 +2,7 @@
 
 import { format, isSameDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Clock, Plus, User } from "lucide-react";
+import { CalendarPlus, Clock, User } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -84,11 +84,12 @@ export function DayEventsList({
           </CardTitle>
           <Button
             onClick={handleNewAppointment}
+            variant="outline"
             size="sm"
-            className="flex items-center gap-2"
+            className="h-8 gap-2 px-3 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
           >
-            <Plus className="h-4 w-4" />
-            Nova Consulta
+            <CalendarPlus className="h-4 w-4 text-purple-600" />
+            <span className="text-xs font-medium text-purple-600">Agendar</span>
           </Button>
         </div>
       </CardHeader>
