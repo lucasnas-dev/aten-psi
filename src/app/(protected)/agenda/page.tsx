@@ -52,8 +52,15 @@ export default function AgendaPage() {
 
   const { execute: loadSettings } = useAction(getSettings, {
     onSuccess: (result) => {
-      if (result.data?.workingHours) {
-        setWorkingHours(result.data.workingHours as any);
+      if (result.data?.data?.workingHours) {
+        setWorkingHours(
+          result.data.data.workingHours.map((wh) => ({
+            dayOfWeek: wh.dayOfWeek,
+            enabled: wh.enabled ?? false,
+            timeSlots:
+              (wh.timeSlots as Array<{ start: string; end: string }>) || [],
+          }))
+        );
       }
     },
   });

@@ -275,7 +275,6 @@ export default function PatientsPage() {
             </SelectItem>
           </SelectContent>
         </Select>
-        {/* Botão Novo Paciente com variant outline */}
         <Button
           asChild
           variant="outline"
