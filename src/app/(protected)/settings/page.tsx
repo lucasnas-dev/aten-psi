@@ -1,6 +1,7 @@
 "use client";
 
 import { Bell, Calendar, Clock, User } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -45,9 +46,18 @@ interface SettingsData {
 }
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState("profile");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabParam || "profile");
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<SettingsData | null>(null);
+
+  // Atualizar aba quando o parâmetro mudar
+  useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   // Carregar configurações existentes
   useEffect(() => {

@@ -24,6 +24,12 @@ interface CalendarViewProps {
   onDayClick: (date: Date) => void;
   compact?: boolean;
   selectedDate?: Date;
+  workingHours?: Array<{
+    dayOfWeek: number;
+    enabled: boolean;
+    timeSlots: Array<{ start: string; end: string }>;
+  }>;
+  defaultDuration?: number;
 }
 
 export function CalendarView({
@@ -34,10 +40,25 @@ export function CalendarView({
   onDayClick,
   compact = false,
   selectedDate,
+  workingHours = [],
+  defaultDuration = 50,
 }: CalendarViewProps) {
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+
+  // Preencher dias do mês anterior para alinhar com o dia da semana
+  const firstDayOfWeek = monthStart.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+  const previousMonthDays: Date[] = [];
+
+  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+    const date = new Date(monthStart);
+    date.setDate(date.getDate() - (i + 1));
+    previousMonthDays.push(date);
+  }
+
+  // Combinar dias do mês anterior + dias do mês atual
+  const allDays = [...previousMonthDays, ...daysInMonth];
 
   const previousMonth = () => {
     const newDate = new Date(currentDate);
@@ -53,6 +74,50 @@ export function CalendarView({
 
   const getEventsForDay = (date: Date) => {
     return events.filter((event) => isSameDay(event.start, date));
+  };
+
+  const hasAvailableSlots = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    const dayConfig = workingHours.find((wh) => wh.dayOfWeek === dayOfWeek);
+
+    console.log(
+      "Debug - Data:",
+      date.toDateString(),
+      "DayOfWeek:",
+      dayOfWeek,
+      "Config:",
+      dayConfig
+    );
+
+    if (!dayConfig || !dayConfig.enabled || !dayConfig.timeSlots.length) {
+      return false;
+    }
+
+    const dayEvents = getEventsForDay(date);
+
+    // Calcular minutos totais disponíveis
+    const totalAvailableMinutes = dayConfig.timeSlots.reduce((total, slot) => {
+      const [startHour, startMin] = slot.start.split(":").map(Number);
+      const [endHour, endMin] = slot.end.split(":").map(Number);
+      const slotMinutes = endHour * 60 + endMin - (startHour * 60 + startMin);
+      return total + slotMinutes;
+    }, 0);
+
+    // Calcular minutos ocupados
+    const occupiedMinutes = dayEvents.reduce((total, event) => {
+      const duration = event.end.getTime() - event.start.getTime();
+      return total + duration / 60000; // Converter ms para minutos
+    }, 0);
+
+    console.log(
+      "Debug - Total disponível:",
+      totalAvailableMinutes,
+      "Ocupado:",
+      occupiedMinutes
+    );
+
+    // Retorna true se ainda há pelo menos uma duração padrão disponível
+    return totalAvailableMinutes - occupiedMinutes >= defaultDuration;
   };
 
   const getStatusColor = (status: string) => {
@@ -135,10 +200,20 @@ export function CalendarView({
 
       {/* Grid do Calendário */}
       <div className={cn("grid grid-cols-7", compact ? "gap-1.5" : "gap-3")}>
-        {daysInMonth.map((date) => {
+        {allDays.map((date) => {
           const dayEvents = getEventsForDay(date);
           const isCurrentDay = isToday(date);
           const isSelected = selectedDate && isSameDay(date, selectedDate);
+          const hasSlots = hasAvailableSlots(date);
+          const isCurrentMonth = date.getMonth() === currentDate.getMonth();
+
+          // Verificar se o dia tem horário configurado
+          const dayOfWeek = date.getDay();
+          const dayConfig = workingHours.find(
+            (wh) => wh.dayOfWeek === dayOfWeek
+          );
+          const hasWorkingHours =
+            dayConfig?.enabled && dayConfig?.timeSlots?.length > 0;
 
           return (
             <div
@@ -146,11 +221,14 @@ export function CalendarView({
               className={cn(
                 "relative aspect-square cursor-pointer rounded-lg border transition-all duration-200 hover:shadow-md",
                 compact ? "p-1" : "px-1.5 pt-0 pb-1.5",
+                !isCurrentMonth && "opacity-40",
                 isCurrentDay && !isSelected
                   ? "border-primary bg-primary/5 ring-primary/30 ring-2"
-                  : isSelected
-                    ? "border-primary bg-primary/20 ring-primary/50 shadow-lg ring-2"
-                    : "border-border hover:border-primary/50"
+                  : isSelected && hasSlots
+                    ? "border-green-500 bg-green-500/20 shadow-lg ring-2 ring-green-500/50"
+                    : isSelected && !hasSlots
+                      ? "border-red-500 bg-red-500/20 shadow-lg ring-2 ring-red-500/50"
+                      : "border-border hover:border-primary/50"
               )}
               onClick={() => onDayClick(date)}
             >
@@ -166,6 +244,14 @@ export function CalendarView({
                   {format(date, "d")}
                 </span>
               </div>
+
+              {!hasWorkingHours && isCurrentMonth && (
+                <div className="absolute top-0.5 right-1">
+                  <div className="text-muted-foreground flex h-4 w-4 items-center justify-center text-[10px] font-bold opacity-50">
+                    ✕
+                  </div>
+                </div>
+              )}
 
               {dayEvents.length > 0 && (
                 <div className="absolute right-1 bottom-1">

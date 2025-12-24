@@ -49,6 +49,7 @@ export default function AgendaPage() {
       timeSlots: Array<{ start: string; end: string }>;
     }>
   >([]);
+  const [defaultDuration, setDefaultDuration] = useState(50);
 
   const { execute: loadSettings } = useAction(getSettings, {
     onSuccess: (result) => {
@@ -61,6 +62,9 @@ export default function AgendaPage() {
               (wh.timeSlots as Array<{ start: string; end: string }>) || [],
           }))
         );
+      }
+      if (result.data?.data?.settings?.defaultDuration) {
+        setDefaultDuration(result.data.data.settings.defaultDuration);
       }
     },
   });
@@ -153,6 +157,8 @@ export default function AgendaPage() {
                 onDayClick={handleDayClick}
                 compact={true}
                 selectedDate={selectedDate}
+                workingHours={workingHours}
+                defaultDuration={defaultDuration}
               />
             </div>
 
@@ -163,6 +169,7 @@ export default function AgendaPage() {
                 events={filteredEvents}
                 onEventClick={handleEventClick}
                 onTimeSlotClick={handleTimeSlotClick}
+                workingHours={workingHours}
               />
             </div>
           </div>

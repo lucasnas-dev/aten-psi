@@ -2,7 +2,7 @@
 
 import { format, isSameDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarPlus, Clock, User } from "lucide-react";
+import { CalendarPlus, Clock, Settings, User } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,16 +16,28 @@ interface DayEventsListProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   onTimeSlotClick: (date: Date) => void;
+  workingHours?: Array<{
+    dayOfWeek: number;
+    enabled: boolean;
+    timeSlots: Array<{ start: string; end: string }>;
+  }>;
 }
 
 export function DayEventsList({
   selectedDate,
   events,
   onEventClick,
+  workingHours = [],
 }: DayEventsListProps) {
   const dayEvents = events.filter((event) =>
     isSameDay(event.start, selectedDate)
   );
+
+  // Verificar se o dia tem horário configurado
+  const dayOfWeek = selectedDate.getDay();
+  const dayConfig = workingHours.find((wh) => wh.dayOfWeek === dayOfWeek);
+  const hasWorkingHours =
+    dayConfig?.enabled && dayConfig?.timeSlots?.length > 0;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -94,7 +106,30 @@ export function DayEventsList({
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {dayEvents.length === 0 ? (
+        {!hasWorkingHours ? (
+          <div className="py-8 text-center">
+            <div className="text-muted-foreground mb-4">
+              <Clock className="mx-auto h-12 w-12 opacity-50" />
+              <p className="mt-2 text-lg font-medium">
+                Sem horário de atendimento
+              </p>
+              <p className="mb-4 text-sm">
+                Este dia não possui horários configurados para atendimento.
+              </p>
+              <Button
+                onClick={() =>
+                  (window.location.href = "/settings?tab=working-hours")
+                }
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <Settings className="h-4 w-4" />
+                Configurar Horários
+              </Button>
+            </div>
+          </div>
+        ) : dayEvents.length === 0 ? (
           <div className="py-8 text-center">
             <div className="text-muted-foreground mb-4">
               <Clock className="mx-auto h-12 w-12 opacity-50" />
