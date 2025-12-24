@@ -11,11 +11,10 @@ import {
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { CalendarEvent, Consulta } from "./types";
+import { CalendarEvent } from "./types";
 
 interface CalendarViewProps {
   currentDate: Date;
@@ -135,7 +134,7 @@ export function CalendarView({
       </div>
 
       {/* Grid do Calendário */}
-      <div className={cn("grid grid-cols-7", compact ? "gap-1" : "gap-2")}>
+      <div className={cn("grid grid-cols-7", compact ? "gap-1.5" : "gap-3")}>
         {daysInMonth.map((date) => {
           const dayEvents = getEventsForDay(date);
           const isCurrentDay = isToday(date);
@@ -145,38 +144,41 @@ export function CalendarView({
             <div
               key={date.toISOString()}
               className={cn(
-                "cursor-pointer rounded-lg border p-2 transition-all duration-200 hover:shadow-md",
-                compact ? "min-h-[60px]" : "min-h-[120px]",
-                isCurrentDay
-                  ? "border-primary bg-primary/5"
+                "relative aspect-square cursor-pointer rounded-lg border transition-all duration-200 hover:shadow-md",
+                compact ? "p-1" : "px-1.5 pt-0 pb-1.5",
+                isCurrentDay && !isSelected
+                  ? "border-primary bg-primary/5 ring-primary/30 ring-2"
                   : isSelected
-                    ? "border-primary bg-primary/10"
+                    ? "border-primary bg-primary/20 ring-primary/50 shadow-lg ring-2"
                     : "border-border hover:border-primary/50"
               )}
               onClick={() => onDayClick(date)}
             >
-              <div className="mb-1 flex items-center justify-between">
+              <div className="absolute top-0.5 left-1">
                 <span
                   className={cn(
-                    "font-medium",
+                    "block leading-[0.5] font-medium",
                     compact ? "text-xs" : "text-sm",
                     isCurrentDay ? "text-primary font-bold" : "text-foreground"
                   )}
+                  style={{ lineHeight: "1" }}
                 >
                   {format(date, "d")}
                 </span>
-                {dayEvents.length > 0 && (
-                  <Badge
-                    variant="secondary"
+              </div>
+
+              {dayEvents.length > 0 && (
+                <div className="absolute right-1 bottom-1">
+                  <div
                     className={cn(
-                      "text-xs",
-                      compact && "h-4 w-4 p-0 text-[10px]"
+                      "flex items-center justify-center rounded-full bg-blue-500 font-semibold text-white shadow-lg ring-2 ring-blue-600/20 transition-all duration-200 hover:scale-110",
+                      compact ? "h-6 w-6 text-[10px]" : "h-8 w-8 text-sm"
                     )}
                   >
                     {dayEvents.length}
-                  </Badge>
-                )}
-              </div>
+                  </div>
+                </div>
+              )}
 
               {!compact && (
                 <div className="space-y-1">
