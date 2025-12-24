@@ -109,8 +109,13 @@ export function EditConsultationModal({
     onSuccess: (result) => {
       if (result.data?.success && result.data.data) {
         const consultation = result.data.data;
+
+        // Criar data no timezone local evitando conversão UTC
+        const [year, month, day] = consultation.date.split("-").map(Number);
+        const consultationDate = new Date(year, month - 1, day);
+
         form.reset({
-          date: new Date(consultation.date + "T00:00:00"),
+          date: consultationDate,
           time: consultation.time,
           duration: consultation.duration,
           type: consultation.type as
@@ -175,10 +180,16 @@ export function EditConsultationModal({
   const onSubmit = async (data: EditConsultationFormData) => {
     if (!event?.id) return;
 
+    // Formatar data no timezone local para evitar problemas de conversão
+    const year = data.date.getFullYear();
+    const month = String(data.date.getMonth() + 1).padStart(2, "0");
+    const day = String(data.date.getDate()).padStart(2, "0");
+    const localDate = `${year}-${month}-${day}`;
+
     executeUpdate({
       id: event.id,
       data: {
-        date: format(data.date, "yyyy-MM-dd"),
+        date: localDate,
         time: data.time,
         duration: data.duration,
         type: data.type,

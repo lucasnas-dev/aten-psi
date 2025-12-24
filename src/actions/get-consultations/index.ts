@@ -40,8 +40,18 @@ export const getConsultations = tenantActionClient
         // Transformar os dados para o formato esperado pelo componente
         const formattedConsultations = result.map((consultation) => {
           const [hours, minutes] = consultation.time.split(":").map(Number);
-          const startDate = new Date(consultation.date);
-          startDate.setHours(hours, minutes, 0, 0);
+
+          // Criar data no timezone local evitando conversão UTC
+          const [year, month, day] = consultation.date.split("-").map(Number);
+          const startDate = new Date(
+            year,
+            month - 1,
+            day,
+            hours,
+            minutes,
+            0,
+            0
+          );
 
           const endDate = new Date(startDate);
           endDate.setMinutes(

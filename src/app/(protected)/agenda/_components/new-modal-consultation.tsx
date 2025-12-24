@@ -117,9 +117,15 @@ export function NewConsultationModal({
   });
 
   const onSubmit = async (data: NewConsultationFormData) => {
+    // Formatar data no timezone local para evitar problemas de conversão
+    const year = data.date.getFullYear();
+    const month = String(data.date.getMonth() + 1).padStart(2, "0");
+    const day = String(data.date.getDate()).padStart(2, "0");
+    const localDate = `${year}-${month}-${day}`;
+
     execute({
       patient_id: data.patient_id,
-      date: format(data.date, "yyyy-MM-dd"),
+      date: localDate,
       time: data.time,
       duration: data.duration,
       type: data.type,
