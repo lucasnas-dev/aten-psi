@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  date,
   integer,
   json,
   pgTable,
@@ -236,6 +237,8 @@ export const workingHours = pgTable("working_hours", {
     .notNull()
     .references(() => tenants.id),
 
+  month: integer("month"), // 1-12, null = padrão para todos os meses
+  year: integer("year"), // 2025, null = padrão para todos os anos
   dayOfWeek: integer("day_of_week").notNull(), // 0 = domingo, 1 = segunda, etc.
   enabled: boolean("enabled").default(true),
   timeSlots: json("time_slots").default([]), // Array de {start: "08:00", end: "12:00"}
@@ -267,6 +270,35 @@ export const workingHoursRelations = relations(workingHours, ({ one }) => ({
   }),
   tenant: one(tenants, {
     fields: [workingHours.tenantId],
+    references: [tenants.id],
+  }),
+}));
+
+// ===== DAYS OFF TABLE =====
+export const daysOff = pgTable("days_off", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  tenantId: varchar("tenant_id", { length: 255 })
+    .notNull()
+    .references(() => tenants.id),
+  date: date("date").notNull(), // Data específica sem expediente (formato YYYY-MM-DD)
+  reason: text("reason"), // Motivo: feriado, folga, etc (opcional)
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const daysOffRelations = relations(daysOff, ({ one }) => ({
+  user: one(users, {
+    fields: [daysOff.userId],
+    references: [users.id],
+  }),
+  tenant: one(tenants, {
+    fields: [daysOff.tenantId],
     references: [tenants.id],
   }),
 }));

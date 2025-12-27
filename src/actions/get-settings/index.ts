@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 
 import { db } from "@/db";
 import { userSettings, workingHours } from "@/db/schema";
@@ -23,11 +23,17 @@ export const getSettings = tenantActionClient.action(
         .where(eq(userSettings.userId, ctx.user.id))
         .limit(1);
 
-      // Buscar horários de trabalho
+      // Buscar horários de trabalho padrão (month e year null)
       const workingHoursData = await db
         .select()
         .from(workingHours)
-        .where(eq(workingHours.userId, ctx.user.id));
+        .where(
+          and(
+            eq(workingHours.userId, ctx.user.id),
+            isNull(workingHours.month),
+            isNull(workingHours.year)
+          )
+        );
 
       return {
         success: true,

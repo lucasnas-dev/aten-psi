@@ -85,6 +85,20 @@
       "when": 1755916925355,
       "tag": "0011_panoramic_jackpot",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1766621758588,
+      "tag": "0012_steady_stature",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1766626815180,
+      "tag": "0013_loving_enchantress",
+      "breakpoints": true
     }
   ]
 }
