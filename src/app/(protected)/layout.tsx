@@ -7,11 +7,11 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-background flex h-screen overflow-hidden">
+    <div className="app-shell bg-background flex flex-col md:flex-row">
       <Sidebar />
-      <div className="ml-44 flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <Header />
-        <main className="bg-muted/30 flex-1 overflow-y-auto px-4 py-3">
+        <main className="bg-muted/30 min-w-0 flex-1 overflow-y-auto px-4 py-3 sm:px-6 sm:py-4">
           {children}
         </main>
       </div>

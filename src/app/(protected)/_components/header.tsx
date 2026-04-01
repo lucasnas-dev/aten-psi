@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export function Header() {
   return (
-    <header className="bg-card border-border/50 flex h-14 items-center justify-between border-b px-6 shadow-sm">
+    <header className="bg-card border-border/50 flex h-14 items-center justify-between border-b px-4 shadow-sm sm:px-6">
       {/* Left side with date */}
       <div className="flex items-center">
         <span className="text-foreground text-sm font-medium">

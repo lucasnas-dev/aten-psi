@@ -123,6 +123,7 @@
     border-color: var(--border);
   }
   html {
+    height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -133,12 +134,24 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
-    overflow: hidden;
-    height: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+    min-height: 100dvh;
   }
 }
 
 @layer utilities {
+  .app-shell {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    min-height: 100dvh;
+  }
+  .sidebar-shell {
+    height: 100vh;
+    height: -webkit-fill-available;
+    height: 100dvh;
+  }
   .shadow-professional {
     box-shadow:
       0 1px 3px 0 rgb(0 0 0 / 0.1),

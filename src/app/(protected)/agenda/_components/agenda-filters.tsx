@@ -31,12 +31,12 @@ export function Filters({
 }: FiltersProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
         {/* Filtros de Visualização */}
         <div className="flex items-center gap-2">
           <Calendar className="text-primary h-5 w-5" />
           <Select value={viewMode} onValueChange={onViewModeChange}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -52,7 +52,7 @@ export function Filters({
         <div className="flex items-center gap-2">
           <Filter className="text-muted-foreground h-4 w-4" />
           <Select value={statusFilter} onValueChange={onStatusFilterChange}>
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-full sm:w-[160px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -68,7 +68,7 @@ export function Filters({
 
         {/* Filtro por Tipo */}
         <Select value={tipoFilter} onValueChange={onTipoFilterChange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Tipo de Consulta" />
           </SelectTrigger>
           <SelectContent>

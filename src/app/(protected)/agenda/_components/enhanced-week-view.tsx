@@ -150,10 +150,10 @@ export function EnhancedWeekView({
   };
 
   return (
-    <div className="bg-background flex h-full flex-col">
+    <div className="bg-background flex h-full min-h-0 flex-col">
       {/* Header com navegação */}
-      <div className="bg-card flex items-center justify-between border-b p-4">
-        <div className="flex items-center gap-4">
+      <div className="bg-card flex flex-col gap-3 border-b p-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-wrap items-center gap-3">
           <Button variant="outline" size="sm" onClick={previousWeek}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -166,7 +166,7 @@ export function EnhancedWeekView({
           </Button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -202,7 +202,7 @@ export function EnhancedWeekView({
 
       {/* Grid da semana */}
       <div className="flex-1 overflow-auto">
-        <div className="min-h-full">
+        <div className="min-h-full min-w-[900px]">
           {/* Header dos dias */}
           <div className="bg-muted/30 sticky top-0 z-10 grid grid-cols-8 border-b">
             <div className="border-r p-2 text-center text-sm font-medium">
