@@ -199,35 +199,25 @@ export default function RecordsPage() {
   };
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
+    <div className="container mx-auto max-w-7xl space-y-4 p-4 sm:space-y-5 sm:p-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            Arquivo de Prontuários
-          </h1>
-          <p className="mt-1 text-gray-600 dark:text-gray-400">
-            Sistema de organização e localização de prontuários psicológicos
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <CodingSystemInfo />
-          <ArchiveStatistics records={statisticsData} />
-          <Button variant="outline" size="sm">
-            <Archive className="mr-2 h-4 w-4" />
-            Arquivar Prontuário
-          </Button>
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Relatório de Arquivo
-          </Button>
-        </div>
+      <div className="flex w-full flex-wrap items-center justify-start gap-2">
+        <CodingSystemInfo />
+        <ArchiveStatistics records={statisticsData} />
+        <Button variant="outline" size="sm">
+          <Archive className="mr-2 h-4 w-4" />
+          Arquivar Prontuário
+        </Button>
+        <Button variant="outline" size="sm">
+          <Download className="mr-2 h-4 w-4" />
+          Relatório de Arquivo
+        </Button>
       </div>
 
       {/* Search and Filters */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
             <Search className="h-5 w-5" />
             Busca e Filtros
           </CardTitle>
@@ -318,13 +308,15 @@ export default function RecordsPage() {
       </Card>
 
       {/* Statistics cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <Card>
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-4">
+        <Card className="shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <FileText className="h-8 w-8 text-blue-500" />
+              <FileText className="h-7 w-7 text-blue-500" />
               <div>
-                <p className="text-xl sm:text-2xl font-bold">{displayRecords.length}</p>
+                <p className="text-xl font-bold sm:text-2xl">
+                  {displayRecords.length}
+                </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Total de Prontuários
                 </p>
@@ -333,12 +325,12 @@ export default function RecordsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <User className="h-8 w-8 text-green-500" />
+              <User className="h-7 w-7 text-green-500" />
               <div>
-                <p className="text-xl sm:text-2xl font-bold">
+                <p className="text-xl font-bold sm:text-2xl">
                   {displayRecords.filter((r) => r.status === "ativo").length}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -349,12 +341,12 @@ export default function RecordsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <Archive className="h-8 w-8 text-orange-500" />
+              <Archive className="h-7 w-7 text-orange-500" />
               <div>
-                <p className="text-xl sm:text-2xl font-bold">
+                <p className="text-xl font-bold sm:text-2xl">
                   {
                     displayRecords.filter((r) => r.status === "concluido")
                       .length
@@ -368,12 +360,12 @@ export default function RecordsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <FolderOpen className="h-8 w-8 text-purple-500" />
+              <FolderOpen className="h-7 w-7 text-purple-500" />
               <div>
-                <p className="text-xl sm:text-2xl font-bold">
+                <p className="text-xl font-bold sm:text-2xl">
                   {new Set(displayRecords.map((r) => r.sector)).size}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -386,7 +378,7 @@ export default function RecordsPage() {
       </div>
 
       {/* Records List */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span className="flex items-center gap-2">
@@ -405,7 +397,7 @@ export default function RecordsPage() {
             ) : error ? (
               <div className="py-8 text-center">
                 <FileText className="mx-auto mb-4 h-12 w-12 text-red-400" />
-                <h3 className="mb-2 text-base sm:text-lg font-medium text-red-900 dark:text-red-100">
+                <h3 className="mb-2 text-base font-medium text-red-900 sm:text-lg dark:text-red-100">
                   Erro ao carregar prontuários
                 </h3>
                 <p className="text-red-600 dark:text-red-400">{error}</p>
@@ -420,7 +412,7 @@ export default function RecordsPage() {
             ) : filteredRecords.length === 0 ? (
               <div className="py-8 text-center">
                 <FileText className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-                <h3 className="mb-2 text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">
+                <h3 className="mb-2 text-base font-medium text-gray-900 sm:text-lg dark:text-gray-100">
                   Nenhum prontuário encontrado
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -433,104 +425,105 @@ export default function RecordsPage() {
               </div>
             ) : (
               filteredRecords.map((record) => (
-                <Card key={record.id} className="border-l-4 border-l-blue-500">
-                  <CardContent className="p-4">
-                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                      {/* Main information */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Hash className="h-4 w-4 text-gray-500" />
-                          <span className="font-mono text-sm font-medium">
-                            {record.archivalCode}
+                <div
+                  key={record.id}
+                  className="bg-card rounded-lg border border-l-4 border-l-blue-500 p-4"
+                >
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                    {/* Main information */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Hash className="h-4 w-4 text-gray-500" />
+                        <span className="font-mono text-sm font-medium">
+                          {record.archivalCode}
+                        </span>
+                      </div>
+                      <h3 className="text-base font-semibold sm:text-lg">
+                        {record.patientName}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        CPF: {record.patientCpf || "Não informado"}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Prontuário: {record.recordNumber}
+                      </p>
+                    </div>
+
+                    {/* Physical location */}
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Localização Física
+                      </h4>
+                      <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">Setor:</span>
+                          <span className="ml-1 font-medium">
+                            {record.sector}
                           </span>
                         </div>
-                        <h3 className="text-base sm:text-lg font-semibold">
-                          {record.patientName}
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          CPF: {record.patientCpf || "Não informado"}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Prontuário: {record.recordNumber}
-                        </p>
-                      </div>
-
-                      {/* Physical location */}
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Localização Física
-                        </h4>
-                        <div className="grid grid-cols-3 gap-2 text-sm">
-                          <div>
-                            <span className="text-gray-500">Setor:</span>
-                            <span className="ml-1 font-medium">
-                              {record.sector}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Prateleira:</span>
-                            <span className="ml-1 font-medium">
-                              {record.shelf}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Posição:</span>
-                            <span className="ml-1 font-medium">
-                              {record.position}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Psicólogo: {record.psychologist} (
-                          {record.psychologistCrp})
-                        </p>
-                      </div>
-
-                      {/* Status and actions */}
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          {getStatusBadge(record.status)}
-                          <span className="text-sm text-gray-500">
-                            {record.totalConsultations} consultas
+                        <div>
+                          <span className="text-gray-500">Prateleira:</span>
+                          <span className="ml-1 font-medium">
+                            {record.shelf}
                           </span>
                         </div>
-
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            Início:{" "}
-                            {format(record.startDate, "dd/MM/yyyy", {
-                              locale: ptBR,
-                            })}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            Última:{" "}
-                            {format(record.lastConsultationDate, "dd/MM/yyyy", {
-                              locale: ptBR,
-                            })}
-                          </div>
+                        <div>
+                          <span className="text-gray-500">Posição:</span>
+                          <span className="ml-1 font-medium">
+                            {record.position}
+                          </span>
                         </div>
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Psicólogo: {record.psychologist} (
+                        {record.psychologistCrp})
+                      </p>
+                    </div>
 
-                        <div className="flex gap-2">
-                          <Link
-                            href={`/patients/${record.patientId}/psychological-record`}
-                          >
-                            <Button variant="outline" size="sm">
-                              <Eye className="mr-1 h-4 w-4" />
-                              Visualizar
-                            </Button>
-                          </Link>
-                          <RecordLocator archivalCode={record.archivalCode} />
+                    {/* Status and actions */}
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {getStatusBadge(record.status)}
+                        <span className="text-sm text-gray-500">
+                          {record.totalConsultations} consultas
+                        </span>
+                      </div>
+
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          Início:{" "}
+                          {format(record.startDate, "dd/MM/yyyy", {
+                            locale: ptBR,
+                          })}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          Última:{" "}
+                          {format(record.lastConsultationDate, "dd/MM/yyyy", {
+                            locale: ptBR,
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        <Link
+                          href={`/patients/${record.patientId}/psychological-record`}
+                        >
                           <Button variant="outline" size="sm">
-                            <Download className="mr-1 h-4 w-4" />
-                            Exportar
+                            <Eye className="mr-1 h-4 w-4" />
+                            Visualizar
                           </Button>
-                        </div>
+                        </Link>
+                        <RecordLocator archivalCode={record.archivalCode} />
+                        <Button variant="outline" size="sm">
+                          <Download className="mr-1 h-4 w-4" />
+                          Exportar
+                        </Button>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))
             )}
           </div>
