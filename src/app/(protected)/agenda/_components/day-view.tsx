@@ -138,7 +138,7 @@ export function DayView({
     <div className="bg-card rounded-lg border shadow-sm">
       {/* Header */}
       <div className="border-b p-6">
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-xl sm:text-2xl font-bold">
           {format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", {
             locale: ptBR,
           })}

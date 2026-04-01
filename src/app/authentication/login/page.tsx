@@ -17,7 +17,7 @@ export default function LoginPage() {
 
         <div className="bg-card text-card-foreground rounded-lg border shadow-sm">
           <div className="flex flex-col space-y-1.5 p-6">
-            <h2 className="text-2xl leading-none font-semibold tracking-tight">
+            <h2 className="text-xl sm:text-2xl leading-none font-semibold tracking-tight">
               Login
             </h2>
             <p className="text-muted-foreground text-sm">

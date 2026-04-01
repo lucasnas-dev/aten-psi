@@ -44,7 +44,7 @@ export function PatientsFilters({
           />
           {termoBusca && (
             <div className="absolute top-2.5 right-2.5">
-              <div className="bg-primary text-primary-foreground flex h-4 w-4 items-center justify-center rounded-full text-xs font-medium">
+              <div className="bg-primary text-primary-foreground flex h-4 w-4 items-center justify-center rounded-full text-sm font-medium">
                 <span className="text-[10px]">{totalItens}</span>
               </div>
             </div>
@@ -60,7 +60,7 @@ export function PatientsFilters({
             <SelectItem value="todos">
               <div className="flex w-full items-center justify-between">
                 <span>Todos</span>
-                <span className="text-muted-foreground ml-2 text-xs">
+                <span className="text-muted-foreground ml-2 text-sm">
                   {contadores.total}
                 </span>
               </div>
@@ -68,7 +68,7 @@ export function PatientsFilters({
             <SelectItem value="ativo">
               <div className="flex w-full items-center justify-between">
                 <span>Ativos</span>
-                <span className="text-muted-foreground ml-2 text-xs">
+                <span className="text-muted-foreground ml-2 text-sm">
                   {contadores.ativos}
                 </span>
               </div>
@@ -76,7 +76,7 @@ export function PatientsFilters({
             <SelectItem value="inativo">
               <div className="flex w-full items-center justify-between">
                 <span>Arquivados</span>
-                <span className="text-muted-foreground ml-2 text-xs">
+                <span className="text-muted-foreground ml-2 text-sm">
                   {contadores.inativos}
                 </span>
               </div>

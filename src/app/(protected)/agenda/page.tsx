@@ -228,7 +228,7 @@ export default function AgendaPage() {
       default:
         return (
           <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
-            <h3 className="mb-2 text-lg font-medium">
+            <h3 className="mb-2 text-base sm:text-lg font-medium">
               Visualização em desenvolvimento
             </h3>
             <p className="text-muted-foreground">

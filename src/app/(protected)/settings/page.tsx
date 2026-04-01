@@ -131,28 +131,28 @@ export default function SettingsPage() {
         <TabsList className="grid h-10 w-full grid-cols-4">
           <TabsTrigger
             value="profile"
-            className="flex items-center gap-2 text-xs"
+            className="flex items-center gap-2 text-sm"
           >
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Perfil</span>
           </TabsTrigger>
           <TabsTrigger
             value="working-hours"
-            className="flex items-center gap-2 text-xs"
+            className="flex items-center gap-2 text-sm"
           >
             <Clock className="h-4 w-4" />
             <span className="hidden sm:inline">Horários</span>
           </TabsTrigger>
           <TabsTrigger
             value="appointments"
-            className="flex items-center gap-2 text-xs"
+            className="flex items-center gap-2 text-sm"
           >
             <Calendar className="h-4 w-4" />
             <span className="hidden sm:inline">Consultas</span>
           </TabsTrigger>
           <TabsTrigger
             value="notifications"
-            className="flex items-center gap-2 text-xs"
+            className="flex items-center gap-2 text-sm"
           >
             <Bell className="h-4 w-4" />
             <span className="hidden sm:inline">Notificações</span>

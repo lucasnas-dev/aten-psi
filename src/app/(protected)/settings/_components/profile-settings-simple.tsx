@@ -99,7 +99,7 @@ export function ProfileSettingsSimple({
     <div className="flex items-center gap-3 py-2">
       <Icon className="text-muted-foreground h-4 w-4 flex-shrink-0" />
       <div className="min-w-0 flex-1">
-        <Label className="text-muted-foreground text-xs">{label}</Label>
+        <Label className="text-muted-foreground text-sm">{label}</Label>
         {isEditing ? (
           <Input
             type={type}

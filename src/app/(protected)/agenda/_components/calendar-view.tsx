@@ -151,7 +151,12 @@ export function CalendarView({
           compact ? "mb-4" : "mb-6"
         )}
       >
-        <h2 className={cn("font-bold", compact ? "text-lg" : "text-2xl")}>
+        <h2
+          className={cn(
+            "font-bold",
+            compact ? "text-base sm:text-lg" : "text-lg sm:text-2xl"
+          )}
+        >
           {format(currentDate, "MMMM yyyy", { locale: ptBR })}
         </h2>
         <div className="flex items-center gap-2">
@@ -190,7 +195,7 @@ export function CalendarView({
             key={day}
             className={cn(
               "text-muted-foreground py-2 text-center font-medium",
-              compact ? "text-xs" : "text-sm"
+              compact ? "text-sm" : "text-sm"
             )}
           >
             {compact ? day.charAt(0) : day}
@@ -236,7 +241,7 @@ export function CalendarView({
                 <span
                   className={cn(
                     "block leading-[0.5] font-medium",
-                    compact ? "text-xs" : "text-sm",
+                    compact ? "text-sm" : "text-sm",
                     isCurrentDay ? "text-primary font-bold" : "text-foreground"
                   )}
                   style={{ lineHeight: "1" }}
@@ -247,7 +252,7 @@ export function CalendarView({
 
               {!hasWorkingHours && isCurrentMonth && (
                 <div className="absolute top-0.5 right-1">
-                  <div className="text-muted-foreground flex h-4 w-4 items-center justify-center text-[10px] font-bold opacity-50">
+                  <div className="text-muted-foreground flex h-4 w-4 items-center justify-center text-[9px] font-bold opacity-50 sm:text-[10px]">
                     ✕
                   </div>
                 </div>
@@ -258,7 +263,9 @@ export function CalendarView({
                   <div
                     className={cn(
                       "flex items-center justify-center rounded-full bg-blue-500 font-semibold text-white shadow-lg ring-2 ring-blue-600/20 transition-all duration-200 hover:scale-110",
-                      compact ? "h-6 w-6 text-[10px]" : "h-8 w-8 text-sm"
+                      compact
+                        ? "h-6 w-6 text-[9px] sm:text-[10px]"
+                        : "h-8 w-8 text-sm"
                     )}
                   >
                     {dayEvents.length}
@@ -272,7 +279,7 @@ export function CalendarView({
                     <div
                       key={event.id}
                       className={cn(
-                        "cursor-pointer rounded px-2 py-1 text-xs transition-all duration-200 hover:scale-105",
+                        "cursor-pointer rounded px-2 py-1 text-sm transition-all duration-200 hover:scale-105",
                         getStatusColor(event.status)
                       )}
                       onClick={(e) => {
@@ -290,7 +297,7 @@ export function CalendarView({
                     </div>
                   ))}
                   {dayEvents.length > 3 && (
-                    <div className="text-muted-foreground py-1 text-center text-xs">
+                    <div className="text-muted-foreground py-1 text-center text-sm">
                       +{dayEvents.length - 3} mais
                     </div>
                   )}

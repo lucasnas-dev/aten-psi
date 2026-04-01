@@ -18,7 +18,7 @@ export function NewPatientConsultation({ patient }: { patient: Patient }) {
         className="h-8 gap-2 px-3 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
       >
         <CalendarPlus className="h-4 w-4 text-purple-600" />
-        <span className="text-xs font-medium text-purple-600">Agendar</span>
+        <span className="text-sm font-medium text-purple-600">Agendar</span>
       </Button>
       <NewConsultationModal
         isOpen={isOpen}

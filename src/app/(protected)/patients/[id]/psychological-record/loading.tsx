@@ -26,7 +26,7 @@ export default function ProntuarioLoading() {
               </h1>
             </div>
           </div>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-base sm:text-lg">
             Carregando dados do prontuário...
           </p>
         </div>

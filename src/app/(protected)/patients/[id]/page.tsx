@@ -171,7 +171,7 @@ export default async function PatientDetailsPage({
       <div className="space-y-6">
         {/* Informações Pessoais e Contato */}
         <div>
-          <h2 className="mb-3 text-xl font-semibold">
+          <h2 className="mb-3 text-lg sm:text-xl font-semibold">
             Informações Pessoais e Contato
           </h2>
           <div className="space-y-3">
@@ -275,7 +275,7 @@ export default async function PatientDetailsPage({
               🚨 IMPLEMENTAR HISTÓRICO DE CONSULTAS!!!!!!
             </p>
           </div>
-          <p className="mt-2 text-xs text-red-600">
+          <p className="mt-2 text-sm text-red-600">
             Lembrete: Criar tabela de consultas no banco e implementar
             funcionalidade de histórico
           </p>

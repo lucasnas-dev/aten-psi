@@ -324,7 +324,7 @@ export default function RecordsPage() {
             <div className="flex items-center gap-3">
               <FileText className="h-8 w-8 text-blue-500" />
               <div>
-                <p className="text-2xl font-bold">{displayRecords.length}</p>
+                <p className="text-xl sm:text-2xl font-bold">{displayRecords.length}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Total de Prontuários
                 </p>
@@ -338,7 +338,7 @@ export default function RecordsPage() {
             <div className="flex items-center gap-3">
               <User className="h-8 w-8 text-green-500" />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold">
                   {displayRecords.filter((r) => r.status === "ativo").length}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -354,7 +354,7 @@ export default function RecordsPage() {
             <div className="flex items-center gap-3">
               <Archive className="h-8 w-8 text-orange-500" />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold">
                   {
                     displayRecords.filter((r) => r.status === "concluido")
                       .length
@@ -373,7 +373,7 @@ export default function RecordsPage() {
             <div className="flex items-center gap-3">
               <FolderOpen className="h-8 w-8 text-purple-500" />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold">
                   {new Set(displayRecords.map((r) => r.sector)).size}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -405,7 +405,7 @@ export default function RecordsPage() {
             ) : error ? (
               <div className="py-8 text-center">
                 <FileText className="mx-auto mb-4 h-12 w-12 text-red-400" />
-                <h3 className="mb-2 text-lg font-medium text-red-900 dark:text-red-100">
+                <h3 className="mb-2 text-base sm:text-lg font-medium text-red-900 dark:text-red-100">
                   Erro ao carregar prontuários
                 </h3>
                 <p className="text-red-600 dark:text-red-400">{error}</p>
@@ -420,7 +420,7 @@ export default function RecordsPage() {
             ) : filteredRecords.length === 0 ? (
               <div className="py-8 text-center">
                 <FileText className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-                <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
+                <h3 className="mb-2 text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">
                   Nenhum prontuário encontrado
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -444,7 +444,7 @@ export default function RecordsPage() {
                             {record.archivalCode}
                           </span>
                         </div>
-                        <h3 className="text-lg font-semibold">
+                        <h3 className="text-base sm:text-lg font-semibold">
                           {record.patientName}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">

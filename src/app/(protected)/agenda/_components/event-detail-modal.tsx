@@ -99,7 +99,7 @@ export function EventDetailModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
+          <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Calendar className="h-5 w-5" />
             Detalhes da Consulta
           </DialogTitle>
@@ -122,7 +122,7 @@ export function EventDetailModal({
                 <User className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold">{event.pacienteNome}</h3>
+                <h3 className="text-base sm:text-lg font-semibold">{event.pacienteNome}</h3>
                 <p className="text-muted-foreground text-sm">Paciente</p>
               </div>
             </div>

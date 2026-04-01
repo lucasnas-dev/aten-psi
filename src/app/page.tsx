@@ -56,7 +56,7 @@ export default function Home() {
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
                   AtenPsi - Sistema de Atendimento Psicológico
                 </h1>
-                <p className="text-muted-foreground mx-auto max-w-[700px] md:text-xl">
+                <p className="text-muted-foreground mx-auto max-w-[700px] md:text-lg sm:text-xl">
                   Uma solução completa para gerenciar atendimentos psicológicos,
                   consultas e registros de pacientes.
                 </p>
@@ -77,7 +77,7 @@ export default function Home() {
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-4">
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-xl">Gestão de Pacientes</h3>
+                  <h3 className="text-lg sm:text-xl">Gestão de Pacientes</h3>
                 </div>
                 <div>
                   <div className="flex items-center gap-4">
@@ -98,7 +98,7 @@ export default function Home() {
               </div>
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-xl">Agendamento de Consultas</h3>
+                  <h3 className="text-lg sm:text-xl">Agendamento de Consultas</h3>
                 </div>
                 <div>
                   <div className="flex items-center gap-4">
@@ -119,7 +119,7 @@ export default function Home() {
               </div>
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-xl">Controle de Sessões</h3>
+                  <h3 className="text-lg sm:text-xl">Controle de Sessões</h3>
                 </div>
                 <div>
                   <div className="flex items-center gap-4">
@@ -140,7 +140,7 @@ export default function Home() {
               </div>
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-xl">Relatórios e Análises</h3>
+                  <h3 className="text-lg sm:text-xl">Relatórios e Análises</h3>
                 </div>
                 <div>
                   <div className="flex items-center gap-4">

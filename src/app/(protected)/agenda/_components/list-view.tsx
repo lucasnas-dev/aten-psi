@@ -101,7 +101,7 @@ export function ListView({
     return (
       <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
         <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-        <h3 className="mb-2 text-lg font-medium">
+        <h3 className="mb-2 text-base font-medium sm:text-lg">
           Nenhuma consulta encontrada
         </h3>
         <p className="text-muted-foreground mb-6">
@@ -115,24 +115,38 @@ export function ListView({
   return (
     <div className="bg-card rounded-lg border shadow-sm">
       <div className="border-b p-6">
-        <h2 className="text-2xl font-bold">Lista de Consultas</h2>
+        <h2 className="text-xl font-bold sm:text-2xl">Lista de Consultas</h2>
         <p className="text-muted-foreground mt-1">
           {events.length} consulta{events.length !== 1 ? "s" : ""} encontrada
           {events.length !== 1 ? "s" : ""}
         </p>
       </div>
 
-      <div className="overflow-x-auto">
-        <Table>
+      <div>
+        <Table className="min-w-[900px]">
           <TableHeader>
             <TableRow>
-              <TableHead>Paciente</TableHead>
-              <TableHead>Data & Hora</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead>Modalidade</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Observações</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+              <TableHead className="text-xs font-semibold uppercase">
+                Paciente
+              </TableHead>
+              <TableHead className="text-xs font-semibold uppercase">
+                Data & Hora
+              </TableHead>
+              <TableHead className="text-xs font-semibold uppercase">
+                Tipo
+              </TableHead>
+              <TableHead className="text-xs font-semibold uppercase">
+                Modalidade
+              </TableHead>
+              <TableHead className="text-xs font-semibold uppercase">
+                Status
+              </TableHead>
+              <TableHead className="text-xs font-semibold uppercase">
+                Observações
+              </TableHead>
+              <TableHead className="text-right text-xs font-semibold uppercase">
+                Ações
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

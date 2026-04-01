@@ -257,7 +257,7 @@ export default function PsychologicalRecordPage({
               </h1>
             </div>
           </div>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-base sm:text-lg">
             Registro completo conforme exigências do CFP
           </p>
         </div>
@@ -283,7 +283,7 @@ export default function PsychologicalRecordPage({
           <div className="flex flex-col items-start gap-4 md:flex-row">
             <div className="flex-1 space-y-3">
               <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold">{patientData.name}</h2>
+                <h2 className="text-xl sm:text-2xl font-bold">{patientData.name}</h2>
                 {getStatusBadge(patientData.status)}
               </div>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -431,7 +431,7 @@ export default function PsychologicalRecordPage({
 
               {/* Address Information */}
               <div className="border-t pt-6">
-                <h3 className="mb-4 text-lg font-semibold">Endereço</h3>
+                <h3 className="mb-4 text-base sm:text-lg font-semibold">Endereço</h3>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div>
                     <Label className="text-muted-foreground text-sm font-medium">
@@ -486,7 +486,7 @@ export default function PsychologicalRecordPage({
 
               {/* Psychologist Information */}
               <div className="border-t pt-6">
-                <h3 className="mb-4 text-lg font-semibold">
+                <h3 className="mb-4 text-base sm:text-lg font-semibold">
                   Psicólogo Responsável
                 </h3>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

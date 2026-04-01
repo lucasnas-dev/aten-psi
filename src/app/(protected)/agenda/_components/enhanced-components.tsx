@@ -49,8 +49,8 @@ export function EventTooltip({ event, position, visible }: EventTooltipProps) {
       <div className="space-y-3">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold">{event.title}</h3>
-          <Badge className={cn("text-xs", getStatusColor(event.status))}>
+          <h3 className="text-sm sm:text-base font-semibold">{event.title}</h3>
+          <Badge className={cn("text-sm", getStatusColor(event.status))}>
             {event.status.replace("_", " ")}
           </Badge>
         </div>
@@ -82,7 +82,7 @@ export function EventTooltip({ event, position, visible }: EventTooltipProps) {
 
         {/* Observações */}
         {event.observacoes && (
-          <div className="text-muted-foreground bg-muted/30 rounded p-2 text-xs">
+          <div className="text-muted-foreground bg-muted/30 rounded p-2 text-sm">
             {event.observacoes}
           </div>
         )}
@@ -105,7 +105,7 @@ export function ConflictIndicator({
   return (
     <div
       className={cn(
-        "absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white",
+        "absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-sm font-bold text-white",
         className
       )}
     >
@@ -144,7 +144,7 @@ export function TimeIndicator({
       style={{ top: `${topPercent}%` }}
     >
       <div className="flex items-center">
-        <div className="rounded-l bg-red-500 px-2 py-1 text-xs font-medium text-white">
+        <div className="rounded-l bg-red-500 px-2 py-1 text-sm font-medium text-white">
           {format(currentTime, "HH:mm")}
         </div>
         <div className="h-0.5 flex-1 bg-red-500"></div>

@@ -89,8 +89,8 @@ export function DayEventsList({
   return (
     <Card className="h-full">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <CardTitle className="text-base sm:text-lg">
             Agenda do dia{" "}
             {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
           </CardTitle>
@@ -101,7 +101,7 @@ export function DayEventsList({
             className="h-8 gap-2 px-3 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
           >
             <CalendarPlus className="h-4 w-4 text-purple-600" />
-            <span className="text-xs font-medium text-purple-600">Agendar</span>
+            <span className="text-sm font-medium text-purple-600">Agendar</span>
           </Button>
         </div>
       </CardHeader>
@@ -110,7 +110,7 @@ export function DayEventsList({
           <div className="py-8 text-center">
             <div className="text-muted-foreground mb-4">
               <Clock className="mx-auto h-12 w-12 opacity-50" />
-              <p className="mt-2 text-lg font-medium">
+              <p className="mt-2 text-base font-medium sm:text-lg">
                 Sem horário de atendimento
               </p>
               <p className="mb-4 text-sm">
@@ -133,7 +133,7 @@ export function DayEventsList({
           <div className="py-8 text-center">
             <div className="text-muted-foreground mb-4">
               <Clock className="mx-auto h-12 w-12 opacity-50" />
-              <p className="mt-2 text-lg font-medium">
+              <p className="mt-2 text-base font-medium sm:text-lg">
                 Nenhuma consulta agendada
               </p>
               <p className="text-sm">
@@ -147,11 +147,13 @@ export function DayEventsList({
             <div
               key={event.id}
               onClick={() => onEventClick(event)}
-              className="hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-colors"
+              className="hover:bg-muted/50 flex flex-wrap items-center justify-between gap-2 rounded-lg border p-4 transition-colors"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                 <User className="text-muted-foreground h-4 w-4" />
-                <span className="font-medium">{event.pacienteNome}</span>
+                <span className="truncate text-sm font-medium sm:text-base">
+                  {event.pacienteNome}
+                </span>
                 <span className="text-muted-foreground text-sm">
                   • {getTipoLabel(event.tipo)}
                 </span>
@@ -160,7 +162,12 @@ export function DayEventsList({
                   {event.modalidade === "presencial" ? "Presencial" : "Online"}
                 </span>
               </div>
-              <Badge className={cn("text-xs", getStatusColor(event.status))}>
+              <Badge
+                className={cn(
+                  "text-[10px] sm:text-sm",
+                  getStatusColor(event.status)
+                )}
+              >
                 {getStatusLabel(event.status)}
               </Badge>
             </div>

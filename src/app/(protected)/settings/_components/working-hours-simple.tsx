@@ -385,7 +385,7 @@ export function WorkingHoursSimple({
                 disabled={isLoadingMonth || isSaving}
               >
                 <Clock className="mb-1 h-4 w-4" />
-                <span className="text-xs">Padrão</span>
+                <span className="text-sm">Padrão</span>
                 <span className="text-[10px] opacity-70">
                   Mesmos horários sempre
                 </span>
@@ -398,7 +398,7 @@ export function WorkingHoursSimple({
                 disabled={isLoadingMonth || isSaving}
               >
                 <Copy className="mb-1 h-4 w-4" />
-                <span className="text-xs">Personalizado</span>
+                <span className="text-sm">Personalizado</span>
                 <span className="text-[10px] opacity-70">
                   Horários específicos
                 </span>
@@ -411,7 +411,7 @@ export function WorkingHoursSimple({
                 disabled={isLoadingMonth || isSaving}
               >
                 <XCircle className="mb-1 h-4 w-4" />
-                <span className="text-xs">Sem Atendimento</span>
+                <span className="text-sm">Sem Atendimento</span>
                 <span className="text-[10px] opacity-70">Férias/Recesso</span>
               </Button>
             </div>
@@ -537,7 +537,7 @@ export function WorkingHoursSimple({
                         editingDay !== null &&
                         editingDay !== workingHour.dayOfWeek
                       }
-                      className="h-7 text-xs"
+                      className="h-7 text-sm"
                     >
                       <Edit2 className="mr-1 h-3 w-3" />
                       {editingDay === workingHour.dayOfWeek
@@ -565,7 +565,7 @@ export function WorkingHoursSimple({
                               }
                               className="h-8 w-28 text-sm"
                             />
-                            <span className="text-muted-foreground text-xs">
+                            <span className="text-muted-foreground text-sm">
                               às
                             </span>
                             <Input
@@ -598,7 +598,7 @@ export function WorkingHoursSimple({
                             size="sm"
                             variant="outline"
                             onClick={handleAddTimeSlot}
-                            className="h-7 text-xs"
+                            className="h-7 text-sm"
                           >
                             <Plus className="mr-1 h-3 w-3" />
                             Adicionar
@@ -607,7 +607,7 @@ export function WorkingHoursSimple({
                           <Button
                             size="sm"
                             onClick={handleSaveTimeSlots}
-                            className="h-7 text-xs"
+                            className="h-7 text-sm"
                           >
                             <Save className="mr-1 h-3 w-3" />
                             OK
@@ -620,13 +620,13 @@ export function WorkingHoursSimple({
                           workingHour.timeSlots.map((slot, index) => (
                             <p
                               key={index}
-                              className="text-muted-foreground text-xs"
+                              className="text-muted-foreground text-sm"
                             >
                               {slot.start} às {slot.end}
                             </p>
                           ))
                         ) : (
-                          <p className="text-muted-foreground text-xs italic">
+                          <p className="text-muted-foreground text-sm italic">
                             Nenhum horário configurado
                           </p>
                         )}
@@ -643,7 +643,7 @@ export function WorkingHoursSimple({
               <h4 className="mb-2 text-sm font-semibold text-blue-800 dark:text-blue-200">
                 Dicas para configurar horários
               </h4>
-              <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
+              <ul className="space-y-1 text-sm text-blue-700 dark:text-blue-300">
                 <li>
                   • Você pode adicionar múltiplos períodos para o mesmo dia
                 </li>

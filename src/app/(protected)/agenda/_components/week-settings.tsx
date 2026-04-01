@@ -70,7 +70,7 @@ export function WeekViewSettings({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-muted-foreground text-xs">Início</Label>
+                <Label className="text-muted-foreground text-sm">Início</Label>
                 <select
                   value={settings.startHour}
                   onChange={(e) =>
@@ -87,7 +87,7 @@ export function WeekViewSettings({
               </div>
 
               <div>
-                <Label className="text-muted-foreground text-xs">Fim</Label>
+                <Label className="text-muted-foreground text-sm">Fim</Label>
                 <select
                   value={settings.endHour}
                   onChange={(e) =>

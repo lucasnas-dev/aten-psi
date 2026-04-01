@@ -98,7 +98,7 @@ export function PatientsPagination({
               disabled={page === "..."}
               className={`h-9 w-9 p-0 ${
                 page === currentPage
-                  ? "pagination-active text-base font-bold"
+                  ? "pagination-active text-sm font-bold"
                   : "text-foreground"
               }`}
             >

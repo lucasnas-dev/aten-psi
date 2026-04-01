@@ -43,21 +43,24 @@ export function Sidebar() {
   const userEmail = session?.user?.email || "email@exemplo.com";
 
   return (
-    <div className="sidebar-shell bg-sidebar flex w-full flex-col border-b md:sticky md:top-0 md:z-40 md:w-44 md:flex-shrink-0 md:border-r md:border-b-0">
+    <div className="sidebar-shell bg-sidebar sticky top-0 z-40 flex w-full flex-col border-b md:top-0 md:w-44 md:flex-shrink-0 md:border-r md:border-b-0">
       {/* Header */}
-      <div className="flex h-14 items-center border-b px-3">
+      <div className="hidden h-14 items-center border-b px-3 md:flex">
         <div className="flex items-center gap-2">
-          <div className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold shadow-sm">
+          <div className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-lg text-sm font-bold shadow-sm">
             A
           </div>
-          <div className="text-foreground text-base font-bold">
+          <div className="text-foreground text-sm font-bold sm:text-base">
             Aten<span className="text-primary">PSI</span>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex gap-1 overflow-x-auto p-2 md:flex-1 md:flex-col md:space-y-0.5 md:overflow-visible">
+      <nav className="flex items-center gap-1 overflow-x-auto px-2 py-1.5 md:flex-1 md:flex-col md:items-stretch md:space-y-0.5 md:overflow-visible md:p-2">
+        <div className="bg-primary text-primary-foreground flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-bold md:hidden">
+          A
+        </div>
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -68,12 +71,14 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "sidebar-link shrink-0 text-sm md:shrink",
+                "sidebar-link shrink-0 px-2 py-1 text-xs sm:text-sm md:shrink md:px-2 md:py-1.5",
                 isActive && "sidebar-link-active"
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              <span className="truncate">{item.name}</span>
+              <span className="hidden truncate sm:inline md:inline">
+                {item.name}
+              </span>
             </Link>
           );
         })}
@@ -82,7 +87,7 @@ export function Sidebar() {
       {/* Footer */}
       <div className="hidden border-t p-2 md:block">
         <div className="mb-2 flex flex-col gap-0.5">
-          <p className="text-sidebar-foreground truncate text-xs font-medium">
+          <p className="text-sidebar-foreground truncate text-sm font-medium">
             {userName}
           </p>
           <p className="text-muted-foreground truncate text-[10px]">
@@ -92,7 +97,7 @@ export function Sidebar() {
         <Button
           variant="outline"
           size="sm"
-          className="h-7 w-full justify-start px-2 text-xs"
+          className="h-7 w-full justify-start px-2 text-sm"
           onClick={handleLogout}
         >
           <LogOut className="mr-1.5 h-3 w-3" />

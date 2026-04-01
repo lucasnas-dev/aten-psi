@@ -149,7 +149,7 @@ export function PatientFields({
     <div className="space-y-1">
       {/* Seção: Informações Pessoais */}
       <div className="space-y-1">
-        <h3 className="text-foreground border-b pb-1 text-base font-semibold">
+        <h3 className="text-foreground border-b pb-1 text-sm sm:text-base font-semibold">
           Informações Pessoais
         </h3>
         <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-2 lg:grid-cols-3">
@@ -267,7 +267,7 @@ export function PatientFields({
                   />
                 </FormControl>
                 <FormMessage />
-                <p className="text-muted-foreground text-xs">
+                <p className="text-muted-foreground text-sm">
                   Preencher apenas se o paciente for menor de idade
                 </p>
               </FormItem>
@@ -308,7 +308,7 @@ export function PatientFields({
 
       {/* Seção: Endereço */}
       <div className="space-y-1">
-        <h3 className="text-foreground border-b pb-1 text-base font-semibold">
+        <h3 className="text-foreground border-b pb-1 text-sm sm:text-base font-semibold">
           Endereço
         </h3>
         <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-4">
@@ -339,7 +339,7 @@ export function PatientFields({
                     Buscando endereço...
                   </p>
                 ) : (
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-muted-foreground text-sm">
                     📍 Endereço preenchido automaticamente
                   </p>
                 )}

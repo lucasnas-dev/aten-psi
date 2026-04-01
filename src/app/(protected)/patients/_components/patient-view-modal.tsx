@@ -72,11 +72,11 @@ export function PatientViewModal({
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-lg font-medium text-blue-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-base sm:text-lg font-medium text-blue-600">
               {getInitials(patient.name)}
             </div>
             <div>
-              <div className="text-xl font-semibold">{patient.name}</div>
+              <div className="text-lg sm:text-xl font-semibold">{patient.name}</div>
               <div className="text-muted-foreground text-sm">
                 Informações do paciente
               </div>
@@ -106,7 +106,7 @@ export function PatientViewModal({
 
           {/* Informações Pessoais */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Informações Pessoais</h3>
+            <h3 className="text-base sm:text-lg font-medium">Informações Pessoais</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex items-center gap-3">
                 <User className="text-muted-foreground h-5 w-5" />
@@ -142,7 +142,7 @@ export function PatientViewModal({
 
           {/* Informações de Contato */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Contato</h3>
+            <h3 className="text-base sm:text-lg font-medium">Contato</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Mail className="text-muted-foreground h-5 w-5" />
@@ -181,7 +181,7 @@ export function PatientViewModal({
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <FileText className="text-muted-foreground h-5 w-5" />
-                  <h3 className="text-lg font-medium">Observações</h3>
+                  <h3 className="text-base sm:text-lg font-medium">Observações</h3>
                 </div>
                 <div className="bg-muted rounded-md p-4 text-sm">
                   {patient.notes}
@@ -195,7 +195,7 @@ export function PatientViewModal({
             <>
               <Separator />
               <div className="space-y-3">
-                <h3 className="text-lg font-medium">Última Consulta</h3>
+                <h3 className="text-base sm:text-lg font-medium">Última Consulta</h3>
                 <div className="text-muted-foreground text-sm">
                   {formatDate(patient.lastConsultation)}
                 </div>

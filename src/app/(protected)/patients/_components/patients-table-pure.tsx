@@ -196,7 +196,7 @@ export function PatientsTablePure({
                   {termoBusca || filtroStatus !== "all" ? (
                     <div className="text-muted-foreground">
                       <Search className="mx-auto mb-4 h-12 w-12 opacity-50" />
-                      <p className="text-lg font-medium">
+                      <p className="text-base font-medium sm:text-lg">
                         Nenhum paciente encontrado
                       </p>
                       <p className="text-sm">
@@ -206,7 +206,7 @@ export function PatientsTablePure({
                   ) : (
                     <div className="text-muted-foreground">
                       <Plus className="mx-auto mb-4 h-12 w-12 opacity-50" />
-                      <p className="text-lg font-medium">
+                      <p className="text-base font-medium sm:text-lg">
                         Nenhum paciente cadastrado
                       </p>
                       <p className="text-sm">
@@ -225,46 +225,31 @@ export function PatientsTablePure({
                   className="group border-border/50 hover:from-primary/8 hover:to-secondary/8 hover:border-primary/30 bg-card h-13.5 border-b transition-all duration-300 hover:bg-gradient-to-r"
                 >
                   <TableCell className="px-6 py-3">
-                    <div
-                      className="text-foreground group-hover:text-primary font-medium transition-colors"
-                      style={{ fontSize: "0.9375rem" }}
-                    >
+                    <div className="text-foreground group-hover:text-primary text-sm font-medium transition-colors">
                       {paciente.name}
                     </div>
                   </TableCell>
 
                   <TableCell className="px-4 py-3">
-                    <span
-                      className="text-muted-foreground font-normal"
-                      style={{ fontSize: "0.9375rem" }}
-                    >
+                    <span className="text-muted-foreground text-sm font-normal">
                       {calculateAge(paciente.birthDate)} anos
                     </span>
                   </TableCell>
 
                   <TableCell className="px-4 py-3">
-                    <div
-                      className="text-muted-foreground max-w-[180px] truncate font-normal"
-                      style={{ fontSize: "0.9375rem" }}
-                    >
+                    <div className="text-muted-foreground max-w-[180px] truncate text-sm font-normal">
                       {paciente.email || "—"}
                     </div>
                   </TableCell>
 
                   <TableCell className="px-4 py-3">
-                    <div
-                      className="text-muted-foreground font-normal"
-                      style={{ fontSize: "0.9375rem" }}
-                    >
+                    <div className="text-muted-foreground text-sm font-normal">
                       {paciente.phone || "—"}
                     </div>
                   </TableCell>
 
                   <TableCell className="px-4 py-3">
-                    <div
-                      className="text-muted-foreground font-normal"
-                      style={{ fontSize: "0.9375rem" }}
-                    >
+                    <div className="text-muted-foreground text-sm font-normal">
                       {formatDateString(paciente.createdAt)}
                     </div>
                   </TableCell>

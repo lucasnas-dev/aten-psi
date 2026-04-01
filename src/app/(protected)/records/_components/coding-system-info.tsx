@@ -45,14 +45,14 @@ export function CodingSystemInfo() {
           {/* Estrutura do Código */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Estrutura do Código</CardTitle>
+              <CardTitle className="text-base sm:text-lg">Estrutura do Código</CardTitle>
               <CardDescription>
                 Cada prontuário recebe um código único seguindo o padrão
                 internacional
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 rounded-lg bg-gray-50 p-4 text-center font-mono text-lg dark:bg-gray-800">
+              <div className="mb-4 rounded-lg bg-gray-50 p-4 text-center font-mono text-base sm:text-lg dark:bg-gray-800">
                 <span className="text-blue-600">PSI</span>-
                 <span className="text-green-600">2025</span>-
                 <span className="text-purple-600">001</span>-
@@ -259,7 +259,7 @@ export function CodingSystemInfo() {
             <CardContent>
               <div className="space-y-4">
                 <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-                  <div className="mb-2 font-mono text-lg">
+                  <div className="mb-2 font-mono text-base sm:text-lg">
                     PSI-2025-001-A1-P1-001
                   </div>
                   <p className="text-sm">
@@ -269,7 +269,7 @@ export function CodingSystemInfo() {
                 </div>
 
                 <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
-                  <div className="mb-2 font-mono text-lg">
+                  <div className="mb-2 font-mono text-base sm:text-lg">
                     PSI-2024-125-C2-P3-078
                   </div>
                   <p className="text-sm">
@@ -279,7 +279,7 @@ export function CodingSystemInfo() {
                 </div>
 
                 <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
-                  <div className="mb-2 font-mono text-lg">
+                  <div className="mb-2 font-mono text-base sm:text-lg">
                     PSI-2023-456-D1-P5-234
                   </div>
                   <p className="text-sm">

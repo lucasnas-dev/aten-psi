@@ -128,7 +128,7 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
             <Card>
               <CardContent className="p-4 text-center">
                 <FileText className="mx-auto mb-2 h-8 w-8 text-blue-500" />
-                <div className="text-2xl font-bold">{stats.totalRecords}</div>
+                <div className="text-xl sm:text-2xl font-bold">{stats.totalRecords}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Total
                 </div>
@@ -138,7 +138,7 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
             <Card>
               <CardContent className="p-4 text-center">
                 <Users className="mx-auto mb-2 h-8 w-8 text-green-500" />
-                <div className="text-2xl font-bold">{stats.activeRecords}</div>
+                <div className="text-xl sm:text-2xl font-bold">{stats.activeRecords}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Ativos
                 </div>
@@ -148,7 +148,7 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
             <Card>
               <CardContent className="p-4 text-center">
                 <TrendingUp className="mx-auto mb-2 h-8 w-8 text-purple-500" />
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold">
                   {stats.averageConsultations}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -160,7 +160,7 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
             <Card>
               <CardContent className="p-4 text-center">
                 <Calendar className="mx-auto mb-2 h-8 w-8 text-orange-500" />
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold">
                   {Math.round((stats.activeRecords / stats.totalRecords) * 100)}
                   %
                 </div>

@@ -34,8 +34,8 @@ export default function DashboardPage() {
             <Users className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-2xl font-bold">42</div>
-            <p className="text-muted-foreground text-xs">
+            <div className="text-xl sm:text-2xl font-bold">42</div>
+            <p className="text-muted-foreground text-sm">
               +2 desde o mês passado
             </p>
           </div>
@@ -47,8 +47,8 @@ export default function DashboardPage() {
             <CalendarIcon className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-muted-foreground text-xs">Próximos 7 dias</p>
+            <div className="text-xl sm:text-2xl font-bold">12</div>
+            <p className="text-muted-foreground text-sm">Próximos 7 dias</p>
           </div>
         </div>
 
@@ -58,8 +58,8 @@ export default function DashboardPage() {
             <Clock className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-2xl font-bold">24,5</div>
-            <p className="text-muted-foreground text-xs">Este mês</p>
+            <div className="text-xl sm:text-2xl font-bold">24,5</div>
+            <p className="text-muted-foreground text-sm">Este mês</p>
           </div>
         </div>
 
@@ -69,8 +69,8 @@ export default function DashboardPage() {
             <FileText className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-muted-foreground text-xs">
+            <div className="text-xl sm:text-2xl font-bold">3</div>
+            <p className="text-muted-foreground text-sm">
               Precisam ser concluídas
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function DashboardPage() {
 
         <TabsContent value="proximas" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-xl font-semibold">Próximas Consultas</h3>
+            <h3 className="mb-2 text-lg sm:text-xl font-semibold">Próximas Consultas</h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Suas consultas agendadas para os próximos dias
             </p>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
         <TabsContent value="pacientes" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-xl font-semibold">Pacientes Recentes</h3>
+            <h3 className="mb-2 text-lg sm:text-xl font-semibold">Pacientes Recentes</h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Últimos pacientes atendidos
             </p>
@@ -115,7 +115,7 @@ export default function DashboardPage() {
 
         <TabsContent value="alertas" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-xl font-semibold">Alertas e Lembretes</h3>
+            <h3 className="mb-2 text-lg sm:text-xl font-semibold">Alertas e Lembretes</h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Notificações importantes que requerem sua atenção
             </p>

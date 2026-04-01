@@ -127,7 +127,7 @@ export function MiniCalendar({
         {["D", "S", "T", "Q", "Q", "S", "S"].map((day, index) => (
           <div
             key={index}
-            className="text-muted-foreground py-1 text-center text-xs font-medium"
+            className="text-muted-foreground py-1 text-center text-sm font-medium"
           >
             {day}
           </div>

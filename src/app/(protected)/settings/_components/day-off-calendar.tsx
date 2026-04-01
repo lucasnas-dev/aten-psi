@@ -162,7 +162,7 @@ export function DayOffCalendar({
               size="sm"
               onClick={handleAddAllHolidays}
               disabled={isLoading}
-              className="h-7 gap-2 text-xs"
+              className="h-7 gap-2 text-sm"
             >
               <CalendarDays className="h-3 w-3" />
               Adicionar feriados
@@ -219,14 +219,14 @@ export function DayOffCalendar({
                     </span>
                   </div>
                   {alreadyMarked ? (
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-sm">
                       Marcado
                     </Badge>
                   ) : (
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 text-xs"
+                      className="h-6 text-sm"
                       onClick={() =>
                         handleToggleDayOff(holiday.date, holiday.name)
                       }
@@ -284,8 +284,8 @@ export function DayOffCalendar({
 
       {/* Legenda */}
       <div className="bg-muted/50 rounded-lg border p-3">
-        <Label className="mb-2 block text-xs font-medium">Legenda:</Label>
-        <div className="flex flex-col gap-1.5 text-xs">
+        <Label className="mb-2 block text-sm font-medium">Legenda:</Label>
+        <div className="flex flex-col gap-1.5 text-sm">
           <div className="flex items-center gap-2">
             <div className="h-5 w-5 rounded border border-orange-300 bg-orange-100 dark:border-orange-700 dark:bg-orange-950"></div>
             <span className="text-muted-foreground">

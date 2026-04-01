@@ -69,7 +69,7 @@ export function WeekView({
       {/* Header */}
       <div className="border-b p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-xl sm:text-2xl font-bold">
             {format(weekStart, "d MMM", { locale: ptBR })} -{" "}
             {format(weekEnd, "d MMM yyyy", { locale: ptBR })}
           </h2>
@@ -120,7 +120,7 @@ export function WeekView({
                   >
                     {format(day, "EEE, d MMM", { locale: ptBR })}
                   </span>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-sm">
                     {dayEvents.length} consulta
                     {dayEvents.length === 1 ? "" : "s"}
                   </Badge>
@@ -133,7 +133,7 @@ export function WeekView({
                       onClick={() => onEventClick(event)}
                     >
                       <span className="font-medium">{event.pacienteNome}</span>
-                      <span className="text-muted-foreground text-xs">
+                      <span className="text-muted-foreground text-sm">
                         {event.tipo === "avaliacao_inicial"
                           ? "Avaliação"
                           : event.tipo === "atendimento"
@@ -141,7 +141,7 @@ export function WeekView({
                             : "Retorno"}
                       </span>
                       <Badge
-                        className={cn("text-xs", getStatusColor(event.status))}
+                        className={cn("text-sm", getStatusColor(event.status))}
                       >
                         {event.status}
                       </Badge>

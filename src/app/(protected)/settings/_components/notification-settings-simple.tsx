@@ -100,7 +100,7 @@ export function NotificationSettingsSimple({
         <Icon className="text-muted-foreground h-4 w-4" />
         <div>
           <Label className="text-sm">{label}</Label>
-          <p className="text-muted-foreground text-xs">{description}</p>
+          <p className="text-muted-foreground text-sm">{description}</p>
         </div>
       </div>
 
@@ -116,7 +116,7 @@ export function NotificationSettingsSimple({
     <div className="flex items-center gap-3 py-2">
       <Clock className="text-muted-foreground h-4 w-4 flex-shrink-0" />
       <div className="min-w-0 flex-1">
-        <Label className="text-muted-foreground text-xs">
+        <Label className="text-muted-foreground text-sm">
           Tempo de lembrete
         </Label>
         <div className="mt-1 flex items-center gap-2">
@@ -135,7 +135,7 @@ export function NotificationSettingsSimple({
             max={1440}
             disabled={isSaving}
           />
-          <span className="text-muted-foreground text-xs">minutos antes</span>
+          <span className="text-muted-foreground text-sm">minutos antes</span>
         </div>
       </div>
     </div>

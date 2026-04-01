@@ -54,47 +54,47 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
   }
 
   return (
-    <div className="bg-card flex items-center justify-between gap-2 rounded-xl px-3 py-1.5 text-sm shadow-md backdrop-blur-sm transition-all duration-300">
+    <div className="bg-card flex flex-col gap-3 rounded-xl px-3 py-2 text-sm shadow-md backdrop-blur-sm transition-all duration-300 sm:flex-row sm:items-center sm:justify-between sm:py-1.5">
       {/* ✅ INFORMAÇÕES DA PAGINAÇÃO */}
-      <div className="text-muted-foreground flex items-center gap-4 text-xs">
-        <div className="text-xs font-semibold">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm sm:gap-4">
+        <div className="text-sm font-semibold">
           Total de{" "}
-          <span className="text-primary align-middle text-xs font-medium">
+          <span className="text-primary align-middle text-sm font-medium">
             {totalItens}
           </span>{" "}
           paciente(s)
         </div>
 
         {/* ✅ SELETOR DE ITENS POR PÁGINA */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium">Itens por página:</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm font-medium">Itens por página:</span>
           <Select
             value={itensPorPagina.toString()}
             onValueChange={(value) => alterarItensPorPagina(Number(value))}
           >
-            <SelectTrigger className="border-border hover:bg-primary/15 hover:border-primary hover:text-primary bg-card flex h-6 w-auto min-w-[45px] items-center justify-center rounded-lg px-3 text-xs font-medium transition-all duration-300">
+            <SelectTrigger className="border-border hover:bg-primary/15 hover:border-primary hover:text-primary bg-card flex h-6 w-auto min-w-[45px] items-center justify-center rounded-lg px-3 text-sm font-medium transition-all duration-300">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="border-border bg-card w-auto min-w-[45px] p-1 shadow-md">
-              <SelectItem value="5" className="rounded px-2 py-1 text-xs">
+              <SelectItem value="5" className="rounded px-2 py-1 text-sm">
                 5
               </SelectItem>
-              <SelectItem value="8" className="rounded px-2 py-1 text-xs">
+              <SelectItem value="8" className="rounded px-2 py-1 text-sm">
                 8
               </SelectItem>
-              <SelectItem value="10" className="rounded px-2 py-1 text-xs">
+              <SelectItem value="10" className="rounded px-2 py-1 text-sm">
                 10
               </SelectItem>
-              <SelectItem value="15" className="rounded px-2 py-1 text-xs">
+              <SelectItem value="15" className="rounded px-2 py-1 text-sm">
                 15
               </SelectItem>
-              <SelectItem value="20" className="rounded px-2 py-1 text-xs">
+              <SelectItem value="20" className="rounded px-2 py-1 text-sm">
                 20
               </SelectItem>
-              <SelectItem value="25" className="rounded px-2 py-1 text-xs">
+              <SelectItem value="25" className="rounded px-2 py-1 text-sm">
                 25
               </SelectItem>
-              <SelectItem value="50" className="rounded px-2 py-1 text-xs">
+              <SelectItem value="50" className="rounded px-2 py-1 text-sm">
                 50
               </SelectItem>
             </SelectContent>
@@ -103,7 +103,7 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
       </div>
 
       {/* ✅ CONTROLES DE NAVEGAÇÃO */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-end gap-2">
         {/* Primeira página */}
         <Button
           variant="outline"
@@ -129,13 +129,13 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
         </Button>
 
         {/* Indicador de página atual */}
-        <div className="mx-2 flex items-center gap-2 text-xs font-semibold">
+        <div className="mx-1 flex items-center gap-2 text-sm font-semibold sm:mx-2">
           <span className="text-muted-foreground">Página</span>
           <span className="rounded-lg bg-[#2563eb] px-2.5 py-0.5 text-sm font-bold text-white">
             {paginaAtual}
           </span>
           <span className="text-muted-foreground">de</span>
-          <span className="text-secondary text-xs font-bold">
+          <span className="text-secondary text-sm font-bold">
             {totalPaginas}
           </span>
         </div>

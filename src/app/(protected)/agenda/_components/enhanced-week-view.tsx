@@ -157,7 +157,7 @@ export function EnhancedWeekView({
           <Button variant="outline" size="sm" onClick={previousWeek}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-base font-semibold sm:text-lg">
             {format(weekStart, "d MMM", { locale: ptBR })} -{" "}
             {format(weekEnd, "d MMM yyyy", { locale: ptBR })}
           </h2>
@@ -223,7 +223,7 @@ export function EnhancedWeekView({
                 </div>
                 <div
                   className={cn(
-                    "text-lg",
+                    "text-base sm:text-lg",
                     isToday(day) &&
                       "bg-primary text-primary-foreground mx-auto flex h-8 w-8 items-center justify-center rounded-full"
                   )}
@@ -242,7 +242,7 @@ export function EnhancedWeekView({
                 className="grid min-h-[40px] grid-cols-8 border-b"
               >
                 {/* Coluna de horário */}
-                <div className="bg-muted/10 text-muted-foreground border-r p-2 text-right text-xs">
+                <div className="bg-muted/10 text-muted-foreground border-r p-2 text-right text-sm">
                   {timeSlot.endsWith(":00") ? timeSlot : ""}
                 </div>
 
@@ -273,7 +273,7 @@ export function EnhancedWeekView({
                           <div
                             key={event.id}
                             className={cn(
-                              "absolute right-1 left-1 z-20 cursor-pointer rounded border-l-4 p-1 text-xs shadow-sm",
+                              "absolute right-1 left-1 z-20 cursor-pointer rounded border-l-4 p-1 text-sm shadow-sm",
                               getStatusColor(event.status),
                               "transition-shadow hover:shadow-md"
                             )}
@@ -291,7 +291,7 @@ export function EnhancedWeekView({
                             <div className="truncate font-medium">
                               {event.title}
                             </div>
-                            <div className="truncate text-xs opacity-75">
+                            <div className="truncate text-sm opacity-75">
                               {format(event.start, "HH:mm")} -{" "}
                               {format(event.end, "HH:mm")}
                             </div>
@@ -314,7 +314,7 @@ export function EnhancedWeekView({
 
       {/* Legenda de status */}
       <div className="bg-card border-t p-3">
-        <div className="flex flex-wrap gap-2 text-xs">
+        <div className="flex flex-wrap gap-2 text-sm">
           <span className="text-muted-foreground">Status:</span>
           {[
             { status: "agendada", label: "Agendada" },
@@ -326,7 +326,7 @@ export function EnhancedWeekView({
           ].map(({ status, label }) => (
             <Badge
               key={status}
-              className={cn("text-xs", getStatusColor(status))}
+              className={cn("text-sm", getStatusColor(status))}
             >
               {label}
             </Badge>
