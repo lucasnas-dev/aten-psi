@@ -52,6 +52,7 @@ export function DayEventsList({
       case "em_andamento":
         return "bg-purple-100 text-purple-800 border-purple-200";
       case "realizada":
+        return "bg-purple-100 text-purple-800 border-purple-200";
       case "concluida":
         return "bg-gray-100 text-gray-800 border-gray-200";
       default:

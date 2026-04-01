@@ -179,7 +179,9 @@ async function resolveTenantId(client) {
     );
 
     if (result.rowCount === 0) {
-      throw new Error(`Nenhum usuário encontrado com o e-mail ${targetUserEmail}.`);
+      throw new Error(
+        `Nenhum usuário encontrado com o e-mail ${targetUserEmail}.`
+      );
     }
 
     if (!result.rows[0].tenant_id) {
