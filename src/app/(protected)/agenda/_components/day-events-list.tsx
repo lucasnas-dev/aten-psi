@@ -47,6 +47,11 @@ export function DayEventsList({
         return "bg-green-100 text-green-800 border-green-200";
       case "cancelada":
         return "bg-red-100 text-red-800 border-red-200";
+      case "faltou":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "em_andamento":
+        return "bg-purple-100 text-purple-800 border-purple-200";
+      case "realizada":
       case "concluida":
         return "bg-gray-100 text-gray-800 border-gray-200";
       default:
@@ -62,10 +67,16 @@ export function DayEventsList({
         return "Confirmada";
       case "cancelada":
         return "Cancelada";
+      case "faltou":
+        return "Faltou";
+      case "em_andamento":
+        return "Em andamento";
+      case "realizada":
+        return "Realizada";
       case "concluida":
         return "Concluída";
       default:
-        return "Desconhecido";
+        return status;
     }
   };
 

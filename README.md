@@ -16,6 +16,23 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Seed de pacientes
+
+Para recriar pacientes fictícios apenas para o tenant de uma usuária já cadastrada, execute:
+
+```bash
+npm run db:seed:patients
+```
+
+Se houver mais de uma usuária com tenant no banco, defina uma das variáveis abaixo antes de executar:
+
+```bash
+TARGET_USER_EMAIL=usuario@exemplo.com npm run db:seed:patients
+TARGET_TENANT_ID=uuid-do-tenant npm run db:seed:patients
+```
+
+O seed remove apenas os pacientes do tenant selecionado e recria uma lista nova de pacientes fictícios.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
