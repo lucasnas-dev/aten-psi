@@ -29,9 +29,9 @@ export function DayEventsList({
   onEventClick,
   workingHours = [],
 }: DayEventsListProps) {
-  const dayEvents = events.filter((event) =>
-    isSameDay(event.start, selectedDate)
-  );
+  const dayEvents = events
+    .filter((event) => isSameDay(event.start, selectedDate))
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
 
   // Verificar se o dia tem horário configurado
   const dayOfWeek = selectedDate.getDay();
@@ -83,14 +83,18 @@ export function DayEventsList({
 
   const getTipoLabel = (tipo: string) => {
     switch (tipo) {
+      case "triagem":
+        return "Triagem";
       case "avaliacao_inicial":
         return "Avaliação Inicial";
-      case "psicoterapia":
-        return "Psicoterapia";
-      case "retorno":
-        return "Retorno";
+      case "atendimento":
+        return "Atendimento";
+      case "avaliacao_psicologica":
+        return "Avaliação Psicológica";
+      case "devolutiva":
+        return "Devolutiva";
       default:
-        return "Consulta";
+        return tipo;
     }
   };
 
@@ -172,6 +176,9 @@ export function DayEventsList({
                 <span className="text-muted-foreground text-sm">
                   •{" "}
                   {event.modalidade === "presencial" ? "Presencial" : "Online"}
+                </span>
+                <span className="text-muted-foreground text-sm">
+                  • {format(event.start, "HH:mm")} - {format(event.end, "HH:mm")}
                 </span>
               </div>
               <Badge
