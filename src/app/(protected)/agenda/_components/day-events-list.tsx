@@ -178,7 +178,8 @@ export function DayEventsList({
                   {event.modalidade === "presencial" ? "Presencial" : "Online"}
                 </span>
                 <span className="text-muted-foreground text-sm">
-                  • {format(event.start, "HH:mm")} - {format(event.end, "HH:mm")}
+                  • {format(event.start, "HH:mm")} -{" "}
+                  {format(event.end, "HH:mm")}
                 </span>
               </div>
               <Badge
