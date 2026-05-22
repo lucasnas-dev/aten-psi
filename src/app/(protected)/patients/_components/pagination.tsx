@@ -131,11 +131,11 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
         {/* Indicador de página atual */}
         <div className="mx-1 flex items-center gap-2 text-sm font-semibold sm:mx-2">
           <span className="text-muted-foreground">Página</span>
-          <span className="rounded-lg bg-[#2563eb] px-2.5 py-0.5 text-sm font-bold text-white">
+          <span className="rounded-lg border border-[#2563eb] bg-transparent px-2.5 py-0.5 text-sm font-bold text-[#2563eb]">
             {paginaAtual}
           </span>
           <span className="text-muted-foreground">de</span>
-          <span className="text-secondary text-sm font-bold">
+          <span className="rounded-lg border border-[#2563eb] bg-transparent px-2.5 py-0.5 text-sm font-bold text-[#2563eb]">
             {totalPaginas}
           </span>
         </div>
