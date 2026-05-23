@@ -16,6 +16,7 @@ import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { MiniCalendar } from "./mini-calendar";
 import { cn } from "@/lib/utils";
 
 import { CalendarEvent } from "./types";
@@ -43,6 +44,7 @@ export function EnhancedWeekView({
 }: EnhancedWeekViewProps) {
   const [viewStartHour, setViewStartHour] = useState(8);
   const [viewEndHour, setViewEndHour] = useState(18);
+  const [showMiniCalendar, setShowMiniCalendar] = useState(false);
 
   // Calcular horários baseados nos workingHours
   useState(() => {
@@ -88,6 +90,8 @@ export function EnhancedWeekView({
   const nextWeek = () => {
     onDateChange(addWeeks(currentDate, 1));
   };
+
+  const toggleMiniCalendar = () => setShowMiniCalendar((s) => !s);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -152,12 +156,16 @@ export function EnhancedWeekView({
   return (
     <div className="bg-background flex h-full min-h-0 flex-col">
       {/* Header com navegação */}
-      <div className="bg-card flex flex-col gap-3 border-b p-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="bg-card relative flex flex-col gap-3 border-b p-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <Button variant="outline" size="sm" onClick={previousWeek}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-base font-semibold sm:text-lg">
+          <h2
+            className="cursor-pointer text-base font-semibold sm:text-lg"
+            onClick={toggleMiniCalendar}
+            title="Abrir calendário"
+          >
             {format(weekStart, "d MMM", { locale: ptBR })} -{" "}
             {format(weekEnd, "d MMM yyyy", { locale: ptBR })}
           </h2>
@@ -200,12 +208,28 @@ export function EnhancedWeekView({
         </div>
       </div>
 
+      {/* Mini calendar popover (hidden by default) */}
+      {showMiniCalendar && (
+        <div className="absolute top-[68px] left-4 z-50">
+          <MiniCalendar
+            currentDate={currentDate}
+            selectedDate={currentDate}
+            onDateSelect={(date) => {
+              setShowMiniCalendar(false);
+              onDateChange(date);
+            }}
+            onMonthChange={(date) => onDateChange(date)}
+            eventDates={events.map((e) => e.start)}
+          />
+        </div>
+      )}
+
       {/* Grid da semana */}
       <div className="flex-1 overflow-auto">
         <div className="min-h-full min-w-[900px]">
           {/* Header dos dias */}
-          <div className="bg-muted/30 sticky top-0 z-10 grid grid-cols-8 border-b">
-            <div className="border-r p-2 text-center text-sm font-medium">
+          <div className="bg-muted/30 sticky top-0 z-10 grid grid-cols-[80px_repeat(7,1fr)] border-b">
+            <div className="flex w-[80px] items-center justify-center border-r p-1 text-center text-sm font-medium">
               Horário
             </div>
             {daysInWeek.map((day, dayIndex) => (
@@ -239,10 +263,10 @@ export function EnhancedWeekView({
             {timeSlots.map((timeSlot) => (
               <div
                 key={timeSlot}
-                className="grid min-h-[40px] grid-cols-8 border-b"
+                className="grid min-h-[32px] grid-cols-[80px_repeat(7,1fr)] border-b"
               >
                 {/* Coluna de horário */}
-                <div className="bg-muted/10 text-muted-foreground border-r p-2 text-right text-sm">
+                <div className="bg-muted/10 text-muted-foreground flex w-[80px] items-center justify-center border-r p-1 text-sm">
                   {timeSlot.endsWith(":00") ? timeSlot : ""}
                 </div>
 

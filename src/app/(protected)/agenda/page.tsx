@@ -176,19 +176,8 @@ export default function AgendaPage() {
         );
       case "week":
         return (
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-            {/* Mini calendário lateral */}
-            <div className="lg:col-span-1">
-              <MiniCalendar
-                currentDate={currentDate}
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-                onMonthChange={setCurrentDate}
-                eventDates={filteredEvents.map((e) => e.start)}
-              />
-            </div>
-
-            {/* Visualização semanal melhorada */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {/* Visualização semanal melhorada (agora ocupa a largura inteira) */}
             <div className="lg:col-span-3">
               <EnhancedWeekView
                 currentDate={currentDate}
@@ -228,7 +217,7 @@ export default function AgendaPage() {
       default:
         return (
           <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
-            <h3 className="mb-2 text-base sm:text-lg font-medium">
+            <h3 className="mb-2 text-base font-medium sm:text-lg">
               Visualização em desenvolvimento
             </h3>
             <p className="text-muted-foreground">
