@@ -44,6 +44,9 @@ next-env.d.ts
 /logs
 *.log
 
+# drive upload temp files
+/.tmp.driveupload/
+
 # backup files
 *.backup
 *.bak

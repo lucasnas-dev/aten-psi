@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export function Header() {
   return (
-    <header className="bg-card border-border/50 sticky top-0 z-50 flex h-14 w-full items-center justify-between border-b px-4 shadow-sm sm:px-6">
+    <header className="sticky top-0 z-50 w-full bg-card flex h-14 items-center justify-between px-4 sm:px-6">
       {/* Left side with date */}
       <div className="flex items-center">
         <span className="text-foreground text-sm font-medium">
@@ -19,26 +19,8 @@ export function Header() {
         </span>
       </div>
 
-      {/* Right side buttons */}
-      <div className="flex items-center gap-1">
-        <ModeToggle />
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hover:bg-accent hover:text-accent-foreground h-8 w-8"
-        >
-          <Bell className="h-4 w-4" />
-          <span className="sr-only">Notificações</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hover:bg-accent hover:text-accent-foreground h-8 w-8"
-        >
-          <Settings className="h-4 w-4" />
-          <span className="sr-only">Configurações</span>
-        </Button>
-      </div>
+      {/* Right side intentionally empty — buttons moved to Sidebar */}
+      <div />
     </header>
   );
 }

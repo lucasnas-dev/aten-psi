@@ -7,12 +7,22 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
+  Bell,
+  MoreVertical,
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTheme } from "@/components/theme-provider";
 import { signOut, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +37,8 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { mode, toggleMode } = useTheme();
   const { data: session } = useSession();
 
   const handleLogout = async () => {
@@ -45,14 +57,63 @@ export function Sidebar() {
   return (
     <div className="sidebar-shell bg-sidebar sticky top-0 z-40 flex w-full flex-col border-b md:top-0 md:w-44 md:flex-shrink-0 md:border-r md:border-b-0">
       {/* Header */}
-      <div className="hidden h-14 items-center border-b px-3 md:flex">
-        <div className="flex items-center gap-2">
-          <div className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-lg text-sm font-bold shadow-sm">
-            A
+      <div className="hidden h-auto items-start border-b px-3 md:flex md:flex-col">
+        <div className="flex items-center justify-between gap-2 py-2 w-full">
+          <div className="flex items-center gap-2">
+            <div className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-lg text-sm font-bold">
+              A
+            </div>
+            <div className="text-foreground text-sm font-bold sm:text-base">
+              Aten<span className="text-primary">PSI</span>
+            </div>
           </div>
-          <div className="text-foreground text-sm font-bold sm:text-base">
-            Aten<span className="text-primary">PSI</span>
-          </div>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                aria-label="Abrir menu"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem
+                onSelect={(event) => {
+                  event.preventDefault();
+                  toggleMode();
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="relative flex h-4 w-4 items-center justify-center">
+                    {mode === "light" ? (
+                      <span className="h-2.5 w-2.5 rounded-full bg-foreground" />
+                    ) : (
+                      <span className="h-2.5 w-2.5 rounded-full border border-foreground" />
+                    )}
+                  </span>
+                  Alternar modo
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(event) => {
+                  event.preventDefault();
+                  router.push("/settings?tab=notifications");
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  <Bell className="h-4 w-4" />
+                  Notificações
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem disabled>
+                Configurações removido
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

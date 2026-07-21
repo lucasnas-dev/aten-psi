@@ -33,6 +33,16 @@ TARGET_TENANT_ID=uuid-do-tenant npm run db:seed:patients
 
 O seed remove apenas os pacientes do tenant selecionado e recria uma lista nova de pacientes fictícios.
 
+## Drizzle Studio
+
+Para abrir o Drizzle Studio com a configuração do projeto, use:
+
+```bash
+npm run db:studio
+```
+
+Esse é o modo recomendado porque usa o binário local do projeto e carrega explicitamente o arquivo [drizzle.config.ts](drizzle.config.ts).
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
