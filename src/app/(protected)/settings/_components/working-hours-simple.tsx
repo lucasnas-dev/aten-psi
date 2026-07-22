@@ -53,6 +53,7 @@ interface SettingsData {
 
 interface WorkingHoursSimpleProps {
   settings: SettingsData | null;
+  isFirstSetup?: boolean;
   onUpdate: (settings: Partial<SettingsData>) => void;
 }
 
@@ -83,6 +84,7 @@ const monthNames = [
 
 export function WorkingHoursSimple({
   settings,
+  isFirstSetup = false,
   onUpdate,
 }: WorkingHoursSimpleProps) {
   const currentDate = new Date();
@@ -91,7 +93,7 @@ export function WorkingHoursSimple({
   ); // 1-12
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
   const [isSaving, setIsSaving] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(isFirstSetup);
   const [editingDay, setEditingDay] = useState<number | null>(null);
   const [tempTimeSlots, setTempTimeSlots] = useState<TimeSlot[]>([]);
   const [tempWorkingHours, setTempWorkingHours] = useState<WorkingHour[]>([]);

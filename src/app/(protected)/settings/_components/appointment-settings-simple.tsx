@@ -43,14 +43,16 @@ interface SettingsData {
 
 interface AppointmentSettingsSimpleProps {
   settings: SettingsData | null;
+  isFirstSetup?: boolean;
   onUpdate: (settings: Partial<SettingsData>) => void;
 }
 
 export function AppointmentSettingsSimple({
   settings,
+  isFirstSetup = false,
   onUpdate,
 }: AppointmentSettingsSimpleProps) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(isFirstSetup);
   const [isSaving, setIsSaving] = useState(false);
   const [editValues, setEditValues] = useState<Partial<SettingsData>>({});
 

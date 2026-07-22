@@ -5,11 +5,32 @@ import {
   FileText,
   Users,
 } from "lucide-react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { db } from "@/db";
+import { userSettings } from "@/db/schema";
+import { auth } from "@/lib/auth";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    redirect("/authentication/login");
+  }
+
+  const settings = await db.query.userSettings.findFirst({
+    where: (fields, { eq }) => eq(fields.userId, session.user.id),
+  });
+
+  if (!settings) {
+    redirect("/settings");
+  }
+
   return (
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
@@ -34,7 +55,7 @@ export default function DashboardPage() {
             <Users className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-xl sm:text-2xl font-bold">42</div>
+            <div className="text-xl font-bold sm:text-2xl">42</div>
             <p className="text-muted-foreground text-sm">
               +2 desde o mês passado
             </p>
@@ -47,7 +68,7 @@ export default function DashboardPage() {
             <CalendarIcon className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-xl sm:text-2xl font-bold">12</div>
+            <div className="text-xl font-bold sm:text-2xl">12</div>
             <p className="text-muted-foreground text-sm">Próximos 7 dias</p>
           </div>
         </div>
@@ -58,7 +79,7 @@ export default function DashboardPage() {
             <Clock className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-xl sm:text-2xl font-bold">24,5</div>
+            <div className="text-xl font-bold sm:text-2xl">24,5</div>
             <p className="text-muted-foreground text-sm">Este mês</p>
           </div>
         </div>
@@ -69,7 +90,7 @@ export default function DashboardPage() {
             <FileText className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
-            <div className="text-xl sm:text-2xl font-bold">3</div>
+            <div className="text-xl font-bold sm:text-2xl">3</div>
             <p className="text-muted-foreground text-sm">
               Precisam ser concluídas
             </p>
@@ -87,7 +108,9 @@ export default function DashboardPage() {
 
         <TabsContent value="proximas" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-lg sm:text-xl font-semibold">Próximas Consultas</h3>
+            <h3 className="mb-2 text-lg font-semibold sm:text-xl">
+              Próximas Consultas
+            </h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Suas consultas agendadas para os próximos dias
             </p>
@@ -101,7 +124,9 @@ export default function DashboardPage() {
 
         <TabsContent value="pacientes" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-lg sm:text-xl font-semibold">Pacientes Recentes</h3>
+            <h3 className="mb-2 text-lg font-semibold sm:text-xl">
+              Pacientes Recentes
+            </h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Últimos pacientes atendidos
             </p>
@@ -115,7 +140,9 @@ export default function DashboardPage() {
 
         <TabsContent value="alertas" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-lg sm:text-xl font-semibold">Alertas e Lembretes</h3>
+            <h3 className="mb-2 text-lg font-semibold sm:text-xl">
+              Alertas e Lembretes
+            </h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Notificações importantes que requerem sua atenção
             </p>

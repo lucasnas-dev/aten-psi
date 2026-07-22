@@ -8,7 +8,7 @@ const protectedRoutes = [
   "/agenda",
   "/records",
   "/relatorios",
-  "/configuracoes",
+  "/settings",
 ];
 
 // Rotas de autenticação (não devem ser acessadas por usuários logados)

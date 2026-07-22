@@ -36,14 +36,16 @@ interface SettingsData {
 
 interface NotificationSettingsSimpleProps {
   settings: SettingsData | null;
+  isFirstSetup?: boolean;
   onUpdate: (settings: Partial<SettingsData>) => void;
 }
 
 export function NotificationSettingsSimple({
   settings,
+  isFirstSetup = false,
   onUpdate,
 }: NotificationSettingsSimpleProps) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(isFirstSetup);
   const [isSaving, setIsSaving] = useState(false);
   const [editValues, setEditValues] = useState<Partial<SettingsData>>({});
 

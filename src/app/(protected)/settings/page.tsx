@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { getSettings } from "@/actions/get-settings";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
@@ -45,12 +46,36 @@ interface SettingsData {
   }>;
 }
 
+const createDefaultWorkingHours = () =>
+  Array.from({ length: 7 }, (_, dayOfWeek) => ({
+    dayOfWeek,
+    enabled: false,
+    timeSlots: [],
+  }));
+
+const DEFAULT_SETTINGS: SettingsData = {
+  name: "",
+  email: "",
+  phone: "",
+  crp: "",
+  specialization: "",
+  defaultDuration: 50,
+  bufferTime: 10,
+  maxAdvanceBooking: 30,
+  allowSameDayBooking: false,
+  emailNotifications: true,
+  smsNotifications: false,
+  reminderTime: 60,
+  workingHours: createDefaultWorkingHours(),
+};
+
 export default function SettingsPage() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState(tabParam || "profile");
   const [isLoading, setIsLoading] = useState(true);
-  const [settings, setSettings] = useState<SettingsData | null>(null);
+  const [settings, setSettings] = useState<SettingsData>(DEFAULT_SETTINGS);
+  const [isFirstSetup, setIsFirstSetup] = useState(true);
 
   // Atualizar aba quando o parâmetro mudar
   useEffect(() => {
@@ -64,36 +89,60 @@ export default function SettingsPage() {
     const loadSettings = async () => {
       try {
         const result = await getSettings();
-        if (result?.data?.success && result.data.data.settings) {
+        if (result?.data?.success) {
           const settingsData = result.data.data.settings;
           const workingHoursData = result.data.data.workingHours;
 
-          setSettings({
-            name: settingsData.name || "",
-            email: settingsData.email || "",
-            phone: settingsData.phone || "",
-            crp: settingsData.crp || "",
-            specialization: settingsData.specialization || "",
-            defaultDuration: settingsData.defaultDuration || 50,
-            bufferTime: settingsData.bufferTime || 10,
-            maxAdvanceBooking: settingsData.maxAdvanceBooking || 30,
-            allowSameDayBooking: settingsData.allowSameDayBooking || false,
-            emailNotifications: settingsData.emailNotifications ?? true,
-            smsNotifications: settingsData.smsNotifications || false,
-            reminderTime: settingsData.reminderTime || 60,
-            workingHours: workingHoursData.map((wh) => ({
-              dayOfWeek: wh.dayOfWeek,
-              enabled: wh.enabled ?? false,
-              timeSlots:
-                typeof wh.timeSlots === "string"
-                  ? JSON.parse(wh.timeSlots)
-                  : wh.timeSlots || [],
-            })),
-          });
+          if (settingsData) {
+            setSettings({
+              name: settingsData.name || "",
+              email: settingsData.email || "",
+              phone: settingsData.phone || "",
+              crp: settingsData.crp || "",
+              specialization: settingsData.specialization || "",
+              defaultDuration: settingsData.defaultDuration || 50,
+              bufferTime: settingsData.bufferTime || 10,
+              maxAdvanceBooking: settingsData.maxAdvanceBooking || 30,
+              allowSameDayBooking: settingsData.allowSameDayBooking || false,
+              emailNotifications: settingsData.emailNotifications ?? true,
+              smsNotifications: settingsData.smsNotifications || false,
+              reminderTime: settingsData.reminderTime || 60,
+              workingHours:
+                workingHoursData.length > 0
+                  ? workingHoursData.map((wh) => ({
+                      dayOfWeek: wh.dayOfWeek,
+                      enabled: wh.enabled ?? false,
+                      timeSlots:
+                        typeof wh.timeSlots === "string"
+                          ? JSON.parse(wh.timeSlots)
+                          : wh.timeSlots || [],
+                    }))
+                  : createDefaultWorkingHours(),
+            });
+            setIsFirstSetup(false);
+          } else {
+            setSettings({
+              ...DEFAULT_SETTINGS,
+              workingHours:
+                workingHoursData.length > 0
+                  ? workingHoursData.map((wh) => ({
+                      dayOfWeek: wh.dayOfWeek,
+                      enabled: wh.enabled ?? false,
+                      timeSlots:
+                        typeof wh.timeSlots === "string"
+                          ? JSON.parse(wh.timeSlots)
+                          : wh.timeSlots || [],
+                    }))
+                  : createDefaultWorkingHours(),
+            });
+            setIsFirstSetup(true);
+          }
         }
       } catch (error) {
         console.error("Erro ao carregar configurações:", error);
         toast.error("Erro ao carregar configurações existentes");
+        setSettings(DEFAULT_SETTINGS);
+        setIsFirstSetup(true);
       } finally {
         setIsLoading(false);
       }
@@ -103,9 +152,7 @@ export default function SettingsPage() {
   }, []);
 
   const handleSettingsUpdate = (updatedSettings: Partial<SettingsData>) => {
-    if (settings) {
-      setSettings({ ...settings, ...updatedSettings });
-    }
+    setSettings((current) => ({ ...current, ...updatedSettings }));
   };
 
   if (isLoading) {
@@ -123,6 +170,17 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-4">
+      {isFirstSetup && (
+        <Alert className="border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+          <AlertTitle>Cadastro inicial pendente</AlertTitle>
+          <AlertDescription>
+            Preencha suas informações pessoais, horários e preferências para
+            liberar o painel e as demais áreas do sistema. Enquanto isso, você
+            será mantido nesta tela de configurações.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
@@ -162,6 +220,7 @@ export default function SettingsPage() {
         <TabsContent value="profile" className="mt-0 space-y-4">
           <ProfileSettingsSimple
             settings={settings}
+            isFirstSetup={isFirstSetup}
             onUpdate={handleSettingsUpdate}
           />
         </TabsContent>
@@ -169,6 +228,7 @@ export default function SettingsPage() {
         <TabsContent value="working-hours" className="mt-0 space-y-4">
           <WorkingHoursSimple
             settings={settings}
+            isFirstSetup={isFirstSetup}
             onUpdate={handleSettingsUpdate}
           />
         </TabsContent>
@@ -176,6 +236,7 @@ export default function SettingsPage() {
         <TabsContent value="appointments" className="mt-0 space-y-4">
           <AppointmentSettingsSimple
             settings={settings}
+            isFirstSetup={isFirstSetup}
             onUpdate={handleSettingsUpdate}
           />
         </TabsContent>
@@ -183,6 +244,7 @@ export default function SettingsPage() {
         <TabsContent value="notifications" className="mt-0 space-y-4">
           <NotificationSettingsSimple
             settings={settings}
+            isFirstSetup={isFirstSetup}
             onUpdate={handleSettingsUpdate}
           />
         </TabsContent>

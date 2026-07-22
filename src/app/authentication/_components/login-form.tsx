@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { signIn } from "@/lib/auth-client";
 import { translateAuthErrorMessage } from "@/lib/auth-errors";
+import { getSettings } from "@/actions/get-settings";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -41,9 +42,15 @@ export function LoginForm() {
   const { execute: executeEnsureTenant, isExecuting: isEnsuring } = useAction(
     ensureTenant,
     {
-      onSuccess: () => {
-        // Após garantir o tenant, redireciona para o dashboard
-        router.push("/dashboard");
+      onSuccess: async () => {
+        try {
+          const result = await getSettings();
+          const hasSettings = Boolean(result?.data?.data?.settings);
+
+          router.push(hasSettings ? "/dashboard" : "/settings");
+        } catch {
+          router.push("/settings");
+        }
       },
       onError: ({ error }) => {
         if (error.serverError) {
