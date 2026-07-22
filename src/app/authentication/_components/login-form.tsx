@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signIn } from "@/lib/auth-client";
+import { translateAuthErrorMessage } from "@/lib/auth-errors";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -72,7 +73,12 @@ export function LoginForm() {
       });
 
       if (loginError) {
-        setError("Erro ao fazer login. Verifique suas credenciais.");
+        setError(
+          translateAuthErrorMessage(
+            loginError.message,
+            "Erro ao fazer login. Verifique suas credenciais."
+          )
+        );
         setIsLoading(false);
       } else {
         // Garante que o usuário tenha tenant usando next-safe-action

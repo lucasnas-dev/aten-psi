@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
+import { translateAuthErrorMessage } from "@/lib/auth-errors";
+import { PASSWORD_MIN_LENGTH } from "@/lib/password-policy";
 
 // Schema Zod direto no client
 const signUpSchema = z.object({
@@ -27,7 +29,9 @@ const signUpSchema = z.object({
   password: z
     .string()
     .trim()
-    .min(6, { message: "A senha deve ter pelo menos 6 caracteres" }),
+    .min(PASSWORD_MIN_LENGTH, {
+      message: `A senha deve ter pelo menos ${PASSWORD_MIN_LENGTH} caracteres`,
+    }),
 });
 
 type SignUpFormValues = z.infer<typeof signUpSchema>;
@@ -58,7 +62,12 @@ export default function SignUpForm() {
       });
 
       if (signUpError) {
-        setError(signUpError.message || "Erro ao cadastrar. Tente novamente.");
+        setError(
+          translateAuthErrorMessage(
+            signUpError.message,
+            "Erro ao cadastrar. Tente novamente."
+          )
+        );
       } else {
         router.push("./login"); // Redirecione para login ou dashboard
       }
