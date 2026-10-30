@@ -31,13 +31,35 @@ export function ProtectedRouteGuard({
 
       try {
         const result = await getSettings();
-        const hasSettings = Boolean(result?.data?.data?.settings);
+        const settingsData = result?.data?.data?.settings || null;
+        const workingHours = result?.data?.data?.workingHours || [];
 
-        if (!hasSettings && !pathname.startsWith("/settings")) {
-          router.replace("/settings");
+        // If no settings at all, force to profile tab
+        if (!settingsData && !pathname.startsWith("/settings")) {
+          router.replace("/settings?tab=profile");
           return;
         }
-      } catch {
+
+        // If settings exist but no working hours configured (no enabled day with timeSlots), force to working-hours
+        const hasWorkingHours = Array.isArray(workingHours)
+          ? workingHours.some(
+              (wh: any) => wh.enabled && (wh.timeSlots || []).length > 0
+            )
+          : false;
+
+        if (!hasWorkingHours && !pathname.startsWith("/settings")) {
+          router.replace("/settings?tab=working-hours");
+          return;
+        }
+
+        // If working hours ok but appointment defaults missing (defaultDuration falsy), force to appointments
+        const hasAppointmentConfig = Boolean(settingsData?.defaultDuration);
+        if (!hasAppointmentConfig && !pathname.startsWith("/settings")) {
+          router.replace("/settings?tab=appointments");
+          return;
+        }
+      } catch (err) {
+        console.error("Erro ao verificar setup:", err);
         if (!pathname.startsWith("/settings")) {
           router.replace("/settings");
           return;

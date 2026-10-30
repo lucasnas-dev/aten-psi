@@ -37,7 +37,56 @@ interface ProfileSettingsSimpleProps {
   settings: SettingsData | null;
   isFirstSetup?: boolean;
   onUpdate: (settings: Partial<SettingsData>) => void;
+  onSaved?: () => void;
 }
+
+type FieldRowProps = {
+  label: string;
+  field: keyof SettingsData;
+  value: string;
+  icon: LucideIcon;
+  placeholder: string;
+  type?: string;
+  isEditing: boolean;
+  editValue?: string;
+  onChange: (field: keyof SettingsData, value: string) => void;
+  isSaving: boolean;
+};
+
+const FieldRow = ({
+  label,
+  field,
+  value,
+  icon: Icon,
+  placeholder,
+  type = "text",
+  isEditing,
+  editValue,
+  onChange,
+  isSaving,
+}: FieldRowProps) => {
+  return (
+    <div className="flex items-center gap-3 py-2">
+      <Icon className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+      <div className="min-w-0 flex-1">
+        <Label className="text-muted-foreground text-sm">{label}</Label>
+        {isEditing ? (
+          <Input
+            name={String(field)}
+            type={type}
+            value={editValue || ""}
+            onChange={(e) => onChange(field, e.target.value)}
+            placeholder={placeholder}
+            className="mt-1 h-8 text-sm"
+            disabled={isSaving}
+          />
+        ) : (
+          <p className="mt-1 text-sm">{value || "Não informado"}</p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export function ProfileSettingsSimple({
   settings,
@@ -54,7 +103,7 @@ export function ProfileSettingsSimple({
     field: keyof SettingsData,
     value: string | number | boolean
   ) => {
-    setEditValues({ ...editValues, [field]: value });
+    setEditValues((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSave = async () => {
@@ -72,6 +121,9 @@ export function ProfileSettingsSimple({
         setIsEditing(false);
         setEditValues({});
         toast.success("Configuração atualizada com sucesso!");
+        if (typeof (onSaved as any) === "function") {
+          onSaved?.();
+        }
       } else {
         throw new Error("Falha ao salvar configuração");
       }
@@ -82,41 +134,6 @@ export function ProfileSettingsSimple({
       setIsSaving(false);
     }
   };
-
-  const FieldRow = ({
-    label,
-    field,
-    value,
-    icon: Icon,
-    placeholder,
-    type = "text",
-  }: {
-    label: string;
-    field: keyof SettingsData;
-    value: string;
-    icon: LucideIcon;
-    placeholder: string;
-    type?: string;
-  }) => (
-    <div className="flex items-center gap-3 py-2">
-      <Icon className="text-muted-foreground h-4 w-4 flex-shrink-0" />
-      <div className="min-w-0 flex-1">
-        <Label className="text-muted-foreground text-sm">{label}</Label>
-        {isEditing ? (
-          <Input
-            type={type}
-            value={(editValues[field] as string) || ""}
-            onChange={(e) => handleInputChange(field, e.target.value)}
-            placeholder={placeholder}
-            className="mt-1 h-8 text-sm"
-            disabled={isSaving}
-          />
-        ) : (
-          <p className="mt-1 text-sm">{value || "Não informado"}</p>
-        )}
-      </div>
-    </div>
-  );
 
   return (
     <div className="space-y-6">
@@ -136,7 +153,10 @@ export function ProfileSettingsSimple({
             </div>
           ) : (
             <Button
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setEditValues({ ...settings });
+                setIsEditing(true);
+              }}
               variant="outline"
               size="sm"
             >
@@ -153,6 +173,10 @@ export function ProfileSettingsSimple({
             value={settings.name}
             icon={User}
             placeholder="Seu nome completo"
+            isEditing={isEditing}
+            editValue={editValues.name as string | undefined}
+            onChange={handleInputChange}
+            isSaving={isSaving}
           />
 
           <FieldRow
@@ -162,6 +186,10 @@ export function ProfileSettingsSimple({
             icon={Mail}
             placeholder="seu.email@exemplo.com"
             type="email"
+            isEditing={isEditing}
+            editValue={editValues.email as string | undefined}
+            onChange={handleInputChange}
+            isSaving={isSaving}
           />
 
           <FieldRow
@@ -170,6 +198,10 @@ export function ProfileSettingsSimple({
             value={settings.phone || ""}
             icon={Phone}
             placeholder="(11) 99999-9999"
+            isEditing={isEditing}
+            editValue={editValues.phone as string | undefined}
+            onChange={handleInputChange}
+            isSaving={isSaving}
           />
         </div>
       </div>
@@ -190,6 +222,10 @@ export function ProfileSettingsSimple({
             value={settings.crp || ""}
             icon={UserCheck}
             placeholder="CRP 01/12345"
+            isEditing={isEditing}
+            editValue={editValues.crp as string | undefined}
+            onChange={handleInputChange}
+            isSaving={isSaving}
           />
 
           <FieldRow
@@ -198,6 +234,10 @@ export function ProfileSettingsSimple({
             value={settings.specialization || ""}
             icon={UserCheck}
             placeholder="Sua área de especialização"
+            isEditing={isEditing}
+            editValue={editValues.specialization as string | undefined}
+            onChange={handleInputChange}
+            isSaving={isSaving}
           />
         </div>
       </div>

@@ -45,6 +45,7 @@ interface AppointmentSettingsSimpleProps {
   settings: SettingsData | null;
   isFirstSetup?: boolean;
   onUpdate: (settings: Partial<SettingsData>) => void;
+  onSaved?: () => void;
 }
 
 export function AppointmentSettingsSimple({
@@ -80,6 +81,7 @@ export function AppointmentSettingsSimple({
         setIsEditing(false);
         setEditValues({});
         toast.success("Configuração atualizada com sucesso!");
+        if (typeof onSaved === "function") onSaved();
       } else {
         throw new Error("Falha ao salvar configuração");
       }

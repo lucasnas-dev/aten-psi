@@ -222,6 +222,7 @@ export default function SettingsPage() {
             settings={settings}
             isFirstSetup={isFirstSetup}
             onUpdate={handleSettingsUpdate}
+            onSaved={() => setActiveTab("working-hours")}
           />
         </TabsContent>
 
@@ -230,6 +231,7 @@ export default function SettingsPage() {
             settings={settings}
             isFirstSetup={isFirstSetup}
             onUpdate={handleSettingsUpdate}
+            onSaved={() => setActiveTab("appointments")}
           />
         </TabsContent>
 
@@ -238,6 +240,10 @@ export default function SettingsPage() {
             settings={settings}
             isFirstSetup={isFirstSetup}
             onUpdate={handleSettingsUpdate}
+            onSaved={() => {
+              setIsFirstSetup(false);
+              setActiveTab("notifications");
+            }}
           />
         </TabsContent>
 

@@ -55,6 +55,7 @@ interface WorkingHoursSimpleProps {
   settings: SettingsData | null;
   isFirstSetup?: boolean;
   onUpdate: (settings: Partial<SettingsData>) => void;
+  onSaved?: () => void;
 }
 
 const dayNames = [
@@ -297,6 +298,7 @@ export function WorkingHoursSimple({
           setTempTimeSlots([]);
           setTempWorkingHours([]);
           toast.success("Horários padrão atualizados com sucesso!");
+          if (typeof onSaved === "function") onSaved();
         } else {
           throw new Error("Falha ao salvar horários");
         }
@@ -317,6 +319,7 @@ export function WorkingHoursSimple({
           toast.success(
             `Horários de ${monthNames[selectedMonth - 1]} salvos com sucesso!`
           );
+          if (typeof onSaved === "function") onSaved();
         } else {
           throw new Error("Falha ao salvar horários do mês");
         }
