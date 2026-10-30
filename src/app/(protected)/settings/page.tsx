@@ -175,8 +175,7 @@ export default function SettingsPage() {
           <AlertTitle>Cadastro inicial pendente</AlertTitle>
           <AlertDescription>
             Preencha suas informações pessoais, horários e preferências para
-            liberar o painel e as demais áreas do sistema. Enquanto isso, você
-            será mantido nesta tela de configurações.
+            habilitar os recursos que dependem dessas configurações.
           </AlertDescription>
         </Alert>
       )}

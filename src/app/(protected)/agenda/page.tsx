@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { getConsultations } from "@/actions/get-consultations";
 import { getSettings } from "@/actions/get-settings";
@@ -137,6 +138,17 @@ export default function AgendaPage() {
   };
 
   const handleTimeSlotClick = (date: Date) => {
+    const dayConfig = workingHours.find(
+      (workingHour) => workingHour.dayOfWeek === date.getDay()
+    );
+
+    if (!dayConfig?.enabled || dayConfig.timeSlots.length === 0) {
+      toast.error(
+        "Configure um horário de atendimento antes de agendar uma consulta."
+      );
+      return;
+    }
+
     setPreselectedDate(date);
     setPreselectedTime(format(date, "HH:mm"));
     setIsNovaConsultaModalOpen(true);

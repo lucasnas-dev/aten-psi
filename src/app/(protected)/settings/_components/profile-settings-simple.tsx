@@ -197,7 +197,7 @@ export function ProfileSettingsSimple({
             field="phone"
             value={settings.phone || ""}
             icon={Phone}
-            placeholder="(11) 99999-9999"
+            placeholder="(92) 99999-9999"
             isEditing={isEditing}
             editValue={editValues.phone as string | undefined}
             onChange={handleInputChange}

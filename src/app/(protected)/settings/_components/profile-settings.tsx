@@ -95,7 +95,7 @@ export function ProfileSettings({ form }: ProfileSettingsProps) {
                   Telefone
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="(11) 99999-9999" {...field} />
+                  <Input placeholder="(92) 99999-9999" {...field} />
                 </FormControl>
               </FormItem>
             )}

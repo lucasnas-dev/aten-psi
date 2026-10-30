@@ -1,8 +1,9 @@
 "use client";
 
-import { addHours, format, startOfDay } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Clock, MapPin, User, Video } from "lucide-react";
+import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,12 +37,7 @@ export function DayView({
   // Função para gerar time slots baseados nos horários de trabalho
   const generateTimeSlots = () => {
     if (!dayWorkingHours?.enabled || !dayWorkingHours.timeSlots.length) {
-      // Horários padrão se não houver configuração: 8h às 18h
-      return Array.from({ length: 20 }, (_, i) => {
-        const hour = 8 + Math.floor(i / 2);
-        const minute = i % 2 === 0 ? 0 : 30;
-        return addHours(startOfDay(selectedDate), hour + minute / 60);
-      });
+      return [];
     }
 
     const slots: Date[] = [];
@@ -151,9 +147,22 @@ export function DayView({
 
       {/* Timeline */}
       <div className="max-h-[600px] overflow-y-auto">
-        <div className="p-4">
-          <div className="space-y-1">
-            {timeSlots.map((timeSlot) => {
+        {timeSlots.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 p-8 text-center">
+            <Clock className="text-muted-foreground h-10 w-10" />
+            <p className="text-muted-foreground text-sm">
+              Não há horário de atendimento configurado para este dia.
+            </p>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/settings?tab=working-hours">
+                Configurar horários
+              </Link>
+            </Button>
+          </div>
+        ) : (
+          <div className="p-4">
+            <div className="space-y-1">
+              {timeSlots.map((timeSlot) => {
               const slotEvents = getEventsForTimeSlot(timeSlot);
               const isEmpty = slotEvents.length === 0;
 
@@ -237,9 +246,10 @@ export function DayView({
                   </div>
                 </div>
               );
-            })}
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

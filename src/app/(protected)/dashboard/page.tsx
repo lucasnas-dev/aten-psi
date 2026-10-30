@@ -10,8 +10,6 @@ import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { db } from "@/db";
-import { userSettings } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 export default async function DashboardPage() {
@@ -21,14 +19,6 @@ export default async function DashboardPage() {
 
   if (!session?.user?.id) {
     redirect("/authentication/login");
-  }
-
-  const settings = await db.query.userSettings.findFirst({
-    where: (fields, { eq }) => eq(fields.userId, session.user.id),
-  });
-
-  if (!settings) {
-    redirect("/settings");
   }
 
   return (
