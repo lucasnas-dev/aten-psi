@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 import { getPatientRecord } from "@/actions/get-patient-record";
+import { PatientStatusBadge } from "@/app/(protected)/patients/_components/patient-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -71,14 +72,6 @@ interface PatientRecord {
   createdAt: Date | null;
   updatedAt: Date | null;
 }
-
-// Status mapping for UI display (Portuguese interface)
-const statusDisplayMapping = {
-  active: "Ativo",
-  completed: "Concluído",
-  suspended: "Suspenso",
-  archived: "Arquivado",
-} as const;
 
 export default function PsychologicalRecordPage({
   params,
@@ -155,27 +148,6 @@ export default function PsychologicalRecordPage({
     }
 
     return age;
-  };
-
-  // Get status badge
-  const getStatusBadge = (status: string) => {
-    const statusColors = {
-      active:
-        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-      completed:
-        "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-      suspended:
-        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-      archived: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
-    };
-
-    const displayStatus =
-      statusDisplayMapping[status as keyof typeof statusDisplayMapping] ||
-      status;
-    const colorClass =
-      statusColors[status as keyof typeof statusColors] || statusColors.active;
-
-    return <Badge className={colorClass}>{displayStatus}</Badge>;
   };
 
   if (loading) {
@@ -283,8 +255,10 @@ export default function PsychologicalRecordPage({
           <div className="flex flex-col items-start gap-4 md:flex-row">
             <div className="flex-1 space-y-3">
               <div className="flex items-center gap-3">
-                <h2 className="text-xl sm:text-2xl font-bold">{patientData.name}</h2>
-                {getStatusBadge(patientData.status)}
+                <h2 className="text-xl font-bold sm:text-2xl">
+                  {patientData.name}
+                </h2>
+                <PatientStatusBadge status={patientData.status} />
               </div>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div className="space-y-1">
@@ -423,7 +397,7 @@ export default function PsychologicalRecordPage({
                       Status
                     </Label>
                     <div className="mt-1">
-                      {getStatusBadge(patientData.status)}
+                      <PatientStatusBadge status={patientData.status} />
                     </div>
                   </div>
                 </div>
@@ -431,7 +405,9 @@ export default function PsychologicalRecordPage({
 
               {/* Address Information */}
               <div className="border-t pt-6">
-                <h3 className="mb-4 text-base sm:text-lg font-semibold">Endereço</h3>
+                <h3 className="mb-4 text-base font-semibold sm:text-lg">
+                  Endereço
+                </h3>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div>
                     <Label className="text-muted-foreground text-sm font-medium">
@@ -486,7 +462,7 @@ export default function PsychologicalRecordPage({
 
               {/* Psychologist Information */}
               <div className="border-t pt-6">
-                <h3 className="mb-4 text-base sm:text-lg font-semibold">
+                <h3 className="mb-4 text-base font-semibold sm:text-lg">
                   Psicólogo Responsável
                 </h3>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

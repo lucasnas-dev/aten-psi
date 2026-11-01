@@ -1,49 +1,28 @@
 import { eq } from "drizzle-orm";
 import {
+  AlertCircle,
   Calendar,
+  CreditCard,
   Edit,
   FileText,
+  Hash,
   Mail,
   MapPin,
   Phone,
-  User,
 } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/db";
 import { patients, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
+import { PatientStatusBadge } from "../_components/patient-status-badge";
 import { ArchiveButton } from "./_components/archive-button";
 import { BackButton } from "./_components/back-button";
-
-// Tipagem do paciente baseada no schema do banco
-type Patient = {
-  id: string;
-  name: string;
-  email?: string | null;
-  phone?: string | null;
-  birth_date: string;
-  gender?: string | null;
-  address?: string | null;
-  house_number?: string | null;
-  city?: string | null;
-  state?: string | null;
-  neighborhood?: string | null;
-  cep?: string | null;
-  cpf?: string | null;
-  responsible_cpf?: string | null;
-  status: string;
-  notes?: string | null;
-  created_at?: Date | null;
-  updated_at?: Date | null;
-  tenant_id: string;
-};
 
 export default async function PatientDetailsPage({
   params,
@@ -95,28 +74,31 @@ export default async function PatientDetailsPage({
     return age;
   };
 
-  const formatGender = (gender?: string | null) => {
-    const genderMap = {
-      male: "Masculino",
-      female: "Feminino",
-      other: "Outro",
-      not_informed: "Não informado",
-    };
-    return gender
-      ? genderMap[gender as keyof typeof genderMap] || "Não informado"
-      : "Não informado";
-  };
+  const age = calculateAge(patient.birth_date);
+  const isFilled = (value?: string | null) => Boolean(value?.trim());
+  const requiredProfileFields: Array<string | null | undefined> = [
+    patient.name,
+    patient.email,
+    patient.phone,
+    patient.birth_date,
+    patient.cpf,
+    patient.cep,
+    patient.address,
+    patient.house_number,
+    patient.neighborhood,
+    patient.city,
+    patient.state,
+  ];
 
-  const formatAddress = (patient: Patient) => {
-    const parts = [
-      patient.address,
-      patient.house_number,
-      patient.neighborhood,
-      patient.city,
-      patient.state,
-    ].filter(Boolean);
-    return parts.join(", ") || null;
-  };
+  if (age < 18) {
+    requiredProfileFields.push(patient.responsible_cpf);
+  }
+
+  const completedProfileFields = requiredProfileFields.filter(isFilled).length;
+  const profileCompletion = Math.round(
+    (completedProfileFields / requiredProfileFields.length) * 100
+  );
+  const hasIncompleteProfile = profileCompletion < 100;
 
   return (
     <div className="space-y-6 p-6">
@@ -128,16 +110,7 @@ export default async function PatientDetailsPage({
               <h1 className="text-3xl font-bold tracking-tight">
                 {patient.name}
               </h1>
-              <Badge
-                variant={patient.status === "active" ? "default" : "secondary"}
-                className={
-                  patient.status === "active"
-                    ? "badge-status badge-status--active"
-                    : "badge-status badge-status--muted"
-                }
-              >
-                {patient.status === "active" ? "Ativo" : "Inativo"}
-              </Badge>
+              <PatientStatusBadge status={patient.status} />
             </div>
             <p className="text-muted-foreground">
               Cadastrado em{" "}
@@ -150,7 +123,7 @@ export default async function PatientDetailsPage({
         <div className="flex items-center gap-2">
           <BackButton />
           <Button variant="outline" size="sm" asChild>
-            <Link href={`/patients/${patient.id}/edit`}>
+            <Link href={`/patients/new?patientId=${patient.id}`}>
               <Edit className="mr-2 h-4 w-4" />
               Editar
             </Link>
@@ -169,9 +142,39 @@ export default async function PatientDetailsPage({
       </div>
 
       <div className="space-y-6">
+        {hasIncompleteProfile && (
+          <div
+            className="flex flex-col gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-950 sm:flex-row sm:items-center sm:justify-between"
+            role="status"
+          >
+            <div className="flex items-start gap-3">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+              <div className="space-y-1">
+                <p className="text-sm font-semibold">Cadastro incompleto</p>
+                <p className="text-sm text-amber-800">
+                  Faltam informações importantes neste prontuário para manter o
+                  cadastro completo.
+                </p>
+                <p className="text-xs font-medium text-amber-700">
+                  Perfil {profileCompletion}% completo
+                </p>
+              </div>
+            </div>
+            <Button
+              asChild
+              size="sm"
+              className="w-full shrink-0 bg-amber-600 text-white hover:bg-amber-700 sm:w-auto"
+            >
+              <Link href={`/patients/new?patientId=${patient.id}`}>
+                Completar Cadastro
+              </Link>
+            </Button>
+          </div>
+        )}
+
         {/* Informações Pessoais e Contato */}
         <div>
-          <h2 className="mb-3 text-lg sm:text-xl font-semibold">
+          <h2 className="mb-3 text-lg font-semibold sm:text-xl">
             Informações Pessoais e Contato
           </h2>
           <div className="space-y-3">
@@ -188,18 +191,28 @@ export default async function PatientDetailsPage({
                     </p>
                   </div>
                 </div>
-
-                <Separator />
-
-                <div className="flex items-center gap-3">
-                  <User className="text-muted-foreground h-4 w-4" />
-                  <div>
-                    <p className="text-sm font-medium">Gênero</p>
-                    <p className="text-muted-foreground text-sm">
-                      {formatGender(patient.gender)}
-                    </p>
+                {isFilled(patient.cpf) && (
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="text-muted-foreground h-4 w-4" />
+                    <div>
+                      <p className="text-sm font-medium">CPF</p>
+                      <p className="text-muted-foreground text-sm">
+                        {patient.cpf}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
+                {isFilled(patient.responsible_cpf) && (
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="text-muted-foreground h-4 w-4" />
+                    <div>
+                      <p className="text-sm font-medium">CPF do responsável</p>
+                      <p className="text-muted-foreground text-sm">
+                        {patient.responsible_cpf}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Coluna 2 - Informações de Contato */}
@@ -234,17 +247,83 @@ export default async function PatientDetailsPage({
             </div>
 
             {/* Endereço - Largura completa */}
-            {formatAddress(patient) && (
+            {[
+              patient.cep,
+              patient.address,
+              patient.house_number,
+              patient.neighborhood,
+              patient.city,
+              patient.state,
+            ].some(isFilled) && (
               <>
                 <Separator />
-                <div className="flex items-center gap-3">
-                  <MapPin className="text-muted-foreground h-4 w-4" />
-                  <div>
-                    <p className="text-sm font-medium">Endereço</p>
-                    <p className="text-muted-foreground text-sm">
-                      {formatAddress(patient)}
-                    </p>
-                  </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {isFilled(patient.cep) && (
+                    <div className="flex items-center gap-3">
+                      <Hash className="text-muted-foreground h-4 w-4" />
+                      <div>
+                        <p className="text-sm font-medium">CEP</p>
+                        <p className="text-muted-foreground text-sm">
+                          {patient.cep}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {isFilled(patient.address) && (
+                    <div className="flex items-center gap-3">
+                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <div>
+                        <p className="text-sm font-medium">Endereço</p>
+                        <p className="text-muted-foreground text-sm">
+                          {patient.address}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {isFilled(patient.house_number) && (
+                    <div className="flex items-center gap-3">
+                      <Hash className="text-muted-foreground h-4 w-4" />
+                      <div>
+                        <p className="text-sm font-medium">Número</p>
+                        <p className="text-muted-foreground text-sm">
+                          {patient.house_number}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {isFilled(patient.neighborhood) && (
+                    <div className="flex items-center gap-3">
+                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <div>
+                        <p className="text-sm font-medium">Bairro</p>
+                        <p className="text-muted-foreground text-sm">
+                          {patient.neighborhood}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {isFilled(patient.city) && (
+                    <div className="flex items-center gap-3">
+                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <div>
+                        <p className="text-sm font-medium">Cidade</p>
+                        <p className="text-muted-foreground text-sm">
+                          {patient.city}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {isFilled(patient.state) && (
+                    <div className="flex items-center gap-3">
+                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <div>
+                        <p className="text-sm font-medium">Estado</p>
+                        <p className="text-muted-foreground text-sm">
+                          {patient.state}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </>
             )}

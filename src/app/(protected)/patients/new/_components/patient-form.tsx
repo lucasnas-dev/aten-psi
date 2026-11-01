@@ -3,8 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -17,7 +18,31 @@ import { PatientFields } from "./patient-fields";
 
 type PatientFormValues = z.infer<typeof upsertPatientSchema>;
 
-export function PatientForm({ onSuccess }: { onSuccess: () => void }) {
+type InitialPatient = {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  birth_date: string;
+  gender: string | null;
+  cpf: string | null;
+  responsible_cpf: string | null;
+  cep: string | null;
+  address: string | null;
+  house_number: string | null;
+  city: string | null;
+  state: string | null;
+  neighborhood: string | null;
+  notes: string | null;
+  status: string;
+};
+
+export function PatientForm({
+  initialPatient,
+}: {
+  initialPatient?: InitialPatient;
+}) {
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<PatientFormValues>({
@@ -44,8 +69,37 @@ export function PatientForm({ onSuccess }: { onSuccess: () => void }) {
     },
   });
 
+  useEffect(() => {
+    if (!initialPatient) return;
+
+    form.reset({
+      id: initialPatient.id,
+      name: initialPatient.name,
+      useSocialName: false,
+      socialName: "",
+      email: initialPatient.email || "",
+      phone: initialPatient.phone || "",
+      birthDate: initialPatient.birth_date,
+      gender: initialPatient.gender || "",
+      cpf: initialPatient.cpf || "",
+      responsibleCpf: initialPatient.responsible_cpf || "",
+      responsibleName: "",
+      cep: initialPatient.cep || "",
+      address: initialPatient.address || "",
+      houseNumber: initialPatient.house_number || "",
+      city: initialPatient.city || "",
+      state: initialPatient.state || "",
+      neighborhood: initialPatient.neighborhood || "",
+      notes: initialPatient.notes || "",
+      status: initialPatient.status === "inactive" ? "inactive" : "active",
+    });
+  }, [form, initialPatient]);
+
   const { execute, isExecuting } = useAction(upsertPatient, {
-    onSuccess,
+    onSuccess: () => {
+      router.push("/patients");
+      router.refresh();
+    },
     onError: (err) => {
       console.error("Erro detalhado:", err);
       setError(

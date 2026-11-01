@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -31,6 +30,7 @@ import { formatDate } from "@/lib/utils";
 
 import { NewPatientConsultation } from "./new-patient-consultation";
 import { Pagination } from "./pagination";
+import { PatientStatusBadge } from "./patient-status-badge";
 import { Patient } from "./types";
 
 // Função para calcular idade
@@ -255,16 +255,7 @@ export function PatientsTablePure({
                   </TableCell>
 
                   <TableCell className="px-4 py-2">
-                    <Badge
-                      variant="outline"
-                      className={
-                        paciente.status === "active"
-                          ? "border-green-600 text-green-600"
-                          : "border-orange-500 text-orange-500"
-                      }
-                    >
-                      {paciente.status === "active" ? "Ativo" : "Arquivado"}
-                    </Badge>
+                    <PatientStatusBadge status={paciente.status} />
                   </TableCell>
 
                   <TableCell className="px-4 py-2">
