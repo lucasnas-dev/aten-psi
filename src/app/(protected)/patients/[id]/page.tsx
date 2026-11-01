@@ -1,23 +1,27 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import {
   AlertCircle,
+  Building2,
   Calendar,
   CreditCard,
   Edit,
   FileText,
-  Hash,
+  Flag,
+  House,
   Mail,
   MapPin,
+  MapPinHouse,
+  MapPinned,
   Phone,
 } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/db";
-import { patients, users } from "@/db/schema";
+import { consultations, patients, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import { PatientStatusBadge } from "../_components/patient-status-badge";
@@ -29,9 +33,16 @@ export default async function PatientDetailsPage({
 }: {
   params: { id: string };
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  let session;
+
+  try {
+    session = await auth.api.getSession({
+      headers: await headers(),
+    });
+  } catch (error) {
+    console.error("Sessão inválida ao carregar detalhes do paciente:", error);
+    redirect("/authentication/login");
+  }
 
   if (!session?.user?.id) {
     notFound();
@@ -57,6 +68,17 @@ export default async function PatientDetailsPage({
   if (!patient || patient.tenant_id !== user.tenant_id) {
     notFound();
   }
+
+  const consultationHistory = await db
+    .select()
+    .from(consultations)
+    .where(
+      and(
+        eq(consultations.patient_id, patient.id),
+        eq(consultations.tenant_id, user.tenant_id)
+      )
+    )
+    .orderBy(desc(consultations.date), desc(consultations.time));
 
   const calculateAge = (birthDate: string) => {
     const today = new Date();
@@ -99,6 +121,43 @@ export default async function PatientDetailsPage({
     (completedProfileFields / requiredProfileFields.length) * 100
   );
   const hasIncompleteProfile = profileCompletion < 100;
+  const consultationTypeLabels: Record<string, string> = {
+    triagem: "Triagem",
+    avaliacao_inicial: "Avaliação Inicial",
+    atendimento: "Psicoterapia",
+    avaliacao_psicologica: "Avaliação Psicológica",
+    devolutiva: "Devolutiva",
+  };
+  const consultationModalityLabels: Record<string, string> = {
+    presencial: "Presencial",
+    online: "Online",
+    telefone: "Telefone",
+  };
+  const consultationStatusLabels: Record<string, string> = {
+    agendada: "Agendada",
+    confirmada: "Confirmada",
+    em_andamento: "Em andamento",
+    concluida: "Concluída",
+    realizada: "Realizada",
+    cancelada: "Cancelada",
+    faltou: "Faltou",
+  };
+  const attendedConsultationStatuses = ["concluida", "realizada"];
+  const getConsultationStatusClass = (status: string) => {
+    if (attendedConsultationStatuses.includes(status)) {
+      return "border-green-200 bg-green-50 text-green-700";
+    }
+
+    if (status === "cancelada" || status === "faltou") {
+      return "border-red-200 bg-red-50 text-red-700";
+    }
+
+    return "border-blue-200 bg-blue-50 text-blue-700";
+  };
+  const formatConsultationDate = (date: string) => {
+    const [year, month, day] = date.split("-");
+    return year && month && day ? `${day}-${month}-${year}` : date;
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -260,7 +319,7 @@ export default async function PatientDetailsPage({
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {isFilled(patient.cep) && (
                     <div className="flex items-center gap-3">
-                      <Hash className="text-muted-foreground h-4 w-4" />
+                      <MapPinned className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">CEP</p>
                         <p className="text-muted-foreground text-sm">
@@ -282,7 +341,7 @@ export default async function PatientDetailsPage({
                   )}
                   {isFilled(patient.house_number) && (
                     <div className="flex items-center gap-3">
-                      <Hash className="text-muted-foreground h-4 w-4" />
+                      <House className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Número</p>
                         <p className="text-muted-foreground text-sm">
@@ -293,7 +352,7 @@ export default async function PatientDetailsPage({
                   )}
                   {isFilled(patient.neighborhood) && (
                     <div className="flex items-center gap-3">
-                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <MapPinHouse className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Bairro</p>
                         <p className="text-muted-foreground text-sm">
@@ -304,7 +363,7 @@ export default async function PatientDetailsPage({
                   )}
                   {isFilled(patient.city) && (
                     <div className="flex items-center gap-3">
-                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <Building2 className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Cidade</p>
                         <p className="text-muted-foreground text-sm">
@@ -315,7 +374,7 @@ export default async function PatientDetailsPage({
                   )}
                   {isFilled(patient.state) && (
                     <div className="flex items-center gap-3">
-                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <Flag className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Estado</p>
                         <p className="text-muted-foreground text-sm">
@@ -346,18 +405,45 @@ export default async function PatientDetailsPage({
           </div>
         </div>
 
-        {/* TODO: Implementar histórico de consultas */}
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-red-500" />
-            <p className="text-sm font-medium text-red-700">
-              🚨 IMPLEMENTAR HISTÓRICO DE CONSULTAS!!!!!!
-            </p>
-          </div>
-          <p className="mt-2 text-sm text-red-600">
-            Lembrete: Criar tabela de consultas no banco e implementar
-            funcionalidade de histórico
-          </p>
+        <div className="max-w-3xl">
+          <h2 className="mb-3 text-lg font-semibold sm:text-xl">
+            Histórico de consultas
+          </h2>
+          {consultationHistory.length === 0 ? (
+            <div className="text-muted-foreground rounded-lg border p-4 text-sm">
+              Nenhuma consulta registrada para este paciente.
+            </div>
+          ) : (
+            <div className="flex flex-col">
+              {consultationHistory.map((consultation) => (
+                <div
+                  key={consultation.id}
+                  className="border-slate-100 border-b py-2 last:border-b-0"
+                >
+                  <div className="flex items-center justify-start gap-2">
+                    <p className="text-muted-foreground text-xs sm:text-sm">
+                      {formatConsultationDate(consultation.date)} às {consultation.time}
+                    </p>
+                    <span
+                      className={`inline-flex w-fit shrink-0 rounded-md border px-1.5 py-0 text-[11px] font-medium ${getConsultationStatusClass(consultation.status)}`}
+                    >
+                      {consultationStatusLabels[consultation.status] || consultation.status}
+                    </span>
+                  </div>
+                  <p className="text-foreground mt-0.5 text-sm font-medium">
+                    {consultationTypeLabels[consultation.type] || consultation.type}
+                  </p>
+                  <div className="text-slate-500 mt-0.5 flex flex-wrap gap-x-3 gap-y-0 text-xs">
+                    <span>
+                      Modalidade: {consultationModalityLabels[consultation.modality] || consultation.modality}
+                    </span>
+                    <span>Duração: {consultation.duration} min</span>
+                    {consultation.value && <span>Valor: R$ {consultation.value}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

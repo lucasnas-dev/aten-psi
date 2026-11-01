@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { PatientForm } from "@/app/(protected)/patients/new/_components/patient-form";
 import { db } from "@/db";
@@ -16,9 +16,16 @@ export default async function NewPatientPage({
   let initialPatient;
 
   if (patientId) {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    let session;
+
+    try {
+      session = await auth.api.getSession({
+        headers: await headers(),
+      });
+    } catch (error) {
+      console.error("Sessão inválida ao carregar paciente:", error);
+      redirect("/authentication/login");
+    }
 
     if (!session?.user?.id) {
       notFound();
