@@ -1,3 +1,4 @@
+import { Info } from "lucide-react";
 import { useState } from "react";
 import { Control, useFormContext } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type PatientFormValues = z.infer<typeof upsertPatientSchema>;
 
@@ -26,8 +32,36 @@ export function PatientFields({
 }: {
   control: Control<PatientFormValues>;
 }) {
-  const { setValue } = useFormContext<PatientFormValues>();
+  const { setValue, watch } = useFormContext<PatientFormValues>();
   const [isLoadingCep, setIsLoadingCep] = useState(false);
+  const useSocialName = watch("useSocialName");
+  const birthDate = watch("birthDate");
+
+  const isMinor = (() => {
+    if (!birthDate) return false;
+
+    const [year, month, day] = birthDate.split("-").map(Number);
+    const birth = new Date(year, month - 1, day);
+
+    if (
+      Number.isNaN(birth.getTime()) ||
+      birth.getFullYear() !== year ||
+      birth.getMonth() !== month - 1 ||
+      birth.getDate() !== day
+    ) {
+      return false;
+    }
+
+    const today = new Date();
+    let age = today.getFullYear() - year;
+    const hasHadBirthday =
+      today.getMonth() > month - 1 ||
+      (today.getMonth() === month - 1 && today.getDate() >= day);
+
+    if (!hasHadBirthday) age -= 1;
+
+    return age < 18;
+  })();
 
   // Funções de formatação
   const formatCPF = (value: string) => {
@@ -146,37 +180,95 @@ export function PatientFields({
   };
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-4">
       {/* Seção: Informações Pessoais */}
-      <div className="space-y-1">
-        <h3 className="text-foreground border-b pb-1 text-sm sm:text-base font-semibold">
+      <div className="space-y-2">
+        <h3 className="text-foreground border-b pb-1 text-sm font-semibold sm:text-base">
           Informações Pessoais
         </h3>
-        <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <FormField
             control={control}
             name="name"
             render={({ field }) => (
-              <FormItem className="min-h-[75px]">
-                <FormLabel>Nome completo *</FormLabel>
+              <FormItem className="min-w-0 gap-1">
+                <FormLabel>Nome Completo *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Nome do paciente"
+                    placeholder="Nome completo"
                     className="form-input-enhanced"
                     {...field}
                     onChange={(e) => handleNameChange(e, field.onChange)}
                   />
                 </FormControl>
                 <FormMessage />
-                <div className="h-4"></div>
               </FormItem>
             )}
           />
+          <div className="grid min-w-0 grid-rows-[13px_auto] gap-1">
+            <FormField
+              control={control}
+              name="useSocialName"
+              render={({ field }) => (
+                <FormItem className="flex h-5 items-center gap-0">
+                  <div className="flex h-5 -translate-y-1 flex-wrap items-center gap-x-2 gap-y-1 leading-5">
+                    <FormControl>
+                      <input
+                        type="checkbox"
+                        checked={field.value ?? false}
+                        onChange={(event) =>
+                          field.onChange(event.currentTarget.checked)
+                        }
+                        className="border-input accent-primary h-3 w-3 rounded"
+                      />
+                    </FormControl>
+                    <FormLabel className="text-muted-foreground cursor-pointer text-sm font-normal">
+                      Usar como tratamento o nome social
+                    </FormLabel>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          aria-label="Informações sobre o nome social"
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          <Info className="h-3.5 w-3.5" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        Se preenchido, este será o nome usado na interface,
+                        agenda e comunicações com o paciente.
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="socialName"
+              render={({ field }) => (
+                <FormItem className="min-w-0 gap-1">
+                  <FormControl>
+                    <Input
+                      placeholder="Nome pelo qual deseja ser tratado"
+                      className="form-input-enhanced"
+                      disabled={!useSocialName}
+                      {...field}
+                      onChange={(e) => handleNameChange(e, field.onChange)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={control}
             name="email"
             render={({ field }) => (
-              <FormItem className="min-h-[85px]">
+              <FormItem className="min-w-0 gap-1">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
@@ -187,7 +279,6 @@ export function PatientFields({
                   />
                 </FormControl>
                 <FormMessage />
-                <div className="h-4"></div>
               </FormItem>
             )}
           />
@@ -195,8 +286,8 @@ export function PatientFields({
             control={control}
             name="phone"
             render={({ field }) => (
-              <FormItem className="min-h-[85px]">
-                <FormLabel>Telefone</FormLabel>
+              <FormItem className="gap-1">
+                <FormLabel>Telefone *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="(92) 99999-9999"
@@ -207,7 +298,6 @@ export function PatientFields({
                   />
                 </FormControl>
                 <FormMessage />
-                <div className="h-4"></div>
               </FormItem>
             )}
           />
@@ -215,7 +305,7 @@ export function PatientFields({
             control={control}
             name="birthDate"
             render={({ field }) => (
-              <FormItem className="min-h-[85px]">
+              <FormItem className="gap-1">
                 <FormLabel>Data de nascimento *</FormLabel>
                 <FormControl>
                   <Input
@@ -227,7 +317,6 @@ export function PatientFields({
                   />
                 </FormControl>
                 <FormMessage />
-                <div className="h-4"></div>
               </FormItem>
             )}
           />
@@ -235,7 +324,7 @@ export function PatientFields({
             control={control}
             name="cpf"
             render={({ field }) => (
-              <FormItem className="min-h-[85px]">
+              <FormItem className="gap-1">
                 <FormLabel>CPF</FormLabel>
                 <FormControl>
                   <Input
@@ -247,76 +336,66 @@ export function PatientFields({
                   />
                 </FormControl>
                 <FormMessage />
-                <div className="h-4"></div>
               </FormItem>
             )}
           />
-          <FormField
-            control={control}
-            name="responsibleCpf"
-            render={({ field }) => (
-              <FormItem className="min-h-[85px]">
-                <FormLabel>CPF do Responsável</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="000.000.000-00 (se menor de idade)"
-                    className="form-input-enhanced"
-                    value={formatCPF(field.value || "")}
-                    onChange={(e) => handleCpfChange(e, field.onChange)}
-                    maxLength={14}
-                  />
-                </FormControl>
-                <FormMessage />
-                <p className="text-muted-foreground text-sm">
-                  Preencher apenas se o paciente for menor de idade
-                </p>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="gender"
-            render={({ field }) => (
-              <FormItem className="min-h-[85px]">
-                <FormLabel>Gênero</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="form-select-enhanced">
-                      <SelectValue placeholder="Selecione um gênero" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="male">Masculino</SelectItem>
-                    <SelectItem value="female">Feminino</SelectItem>
-                    <SelectItem value="other">Outro</SelectItem>
-                    <SelectItem value="not_informed">
-                      Prefiro não informar
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-                {/* Espaçador para manter altura uniforme */}
-                <div className="h-4"></div>
-              </FormItem>
-            )}
-          />
+          {isMinor && (
+            <>
+              <FormField
+                control={control}
+                name="responsibleName"
+                render={({ field }) => (
+                  <FormItem className="gap-1">
+                    <FormLabel>Nome do Responsável</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Nome completo do responsável"
+                        className="form-input-enhanced"
+                        {...field}
+                        onChange={(e) =>
+                          handleNameChange(e, field.onChange)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="responsibleCpf"
+                render={({ field }) => (
+                  <FormItem className="gap-1">
+                    <FormLabel>CPF do Responsável</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="000.000.000-00"
+                        className="form-input-enhanced"
+                        value={formatCPF(field.value || "")}
+                        onChange={(e) => handleCpfChange(e, field.onChange)}
+                        maxLength={14}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
         </div>
       </div>
 
       {/* Seção: Endereço */}
-      <div className="space-y-1">
-        <h3 className="text-foreground border-b pb-1 text-sm sm:text-base font-semibold">
+      <div className="space-y-2">
+        <h3 className="text-foreground border-b pb-1 text-sm font-semibold sm:text-base">
           Endereço
         </h3>
-        <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
           <FormField
             control={control}
             name="cep"
             render={({ field }) => (
-              <FormItem className="min-h-[75px]">
+              <FormItem className="gap-1 md:col-span-1">
                 <FormLabel>CEP</FormLabel>
                 <FormControl>
                   <Input
@@ -333,16 +412,6 @@ export function PatientFields({
                   />
                 </FormControl>
                 <FormMessage />
-                {isLoadingCep ? (
-                  <p className="flex items-center gap-1 text-sm text-blue-600">
-                    <span className="animate-spin">⟳</span>
-                    Buscando endereço...
-                  </p>
-                ) : (
-                  <p className="text-muted-foreground text-sm">
-                    📍 Endereço preenchido automaticamente
-                  </p>
-                )}
               </FormItem>
             )}
           />
@@ -350,7 +419,7 @@ export function PatientFields({
             control={control}
             name="state"
             render={({ field }) => (
-              <FormItem className="min-h-[85px]">
+              <FormItem className="gap-1 md:col-span-1">
                 <FormLabel>Estado</FormLabel>
                 <FormControl>
                   <Input
@@ -361,13 +430,12 @@ export function PatientFields({
                   />
                 </FormControl>
                 <FormMessage />
-                <div className="h-4"></div>
               </FormItem>
             )}
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-4 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
           <FormField
             control={control}
             name="address"
@@ -457,7 +525,7 @@ export function PatientFields({
               <FormControl>
                 <Input
                   placeholder="Informações adicionais (máx. 10 palavras)"
-                  className={`form-input-enhanced mt-1 ${isOverLimit ? "border-red-500" : ""}`}
+                  className={`form-input-enhanced ${isOverLimit ? "border-red-500" : ""}`}
                   {...field}
                 />
               </FormControl>

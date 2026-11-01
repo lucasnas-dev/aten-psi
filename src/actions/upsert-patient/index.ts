@@ -34,7 +34,7 @@ export const upsertPatient = tenantActionClient
             .set({
               name: parsedInput.name,
               status: parsedInput.status,
-              birth_date: parsedInput.birthDate,
+              birth_date: parsedInput.birthDate || "",
               email: parsedInput.email,
               phone: parsedInput.phone,
               gender: parsedInput.gender,
@@ -55,7 +55,7 @@ export const upsertPatient = tenantActionClient
           await db.insert(patients).values({
             name: parsedInput.name,
             status: parsedInput.status,
-            birth_date: parsedInput.birthDate,
+            birth_date: parsedInput.birthDate || "",
             email: parsedInput.email,
             phone: parsedInput.phone,
             gender: parsedInput.gender,

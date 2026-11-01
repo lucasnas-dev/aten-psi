@@ -6,15 +6,19 @@ export const upsertPatientSchema = z.object({
     .string()
     .min(3, "Nome deve ter pelo menos 3 caracteres")
     .max(255, "Nome muito longo"),
+  useSocialName: z.boolean(),
+  socialName: z
+    .string()
+    .max(255, "Nome social muito longo")
+    .optional()
+    .or(z.literal("")),
   email: z.string().email("Email inválido").optional().or(z.literal("")),
   phone: z
     .string()
-    .regex(/^\d{10,11}$/, "Telefone deve ter 10 ou 11 dígitos")
-    .optional()
-    .or(z.literal("")),
+    .regex(/^\d{10,11}$/, "Telefone deve ter 10 ou 11 dígitos"),
   birthDate: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Data deve estar no formato DD/MM/AAAA"),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Data deve estar no formato AAAA-MM-DD"),
   gender: z
     .enum(["male", "female", "other", "not_informed"])
     .optional()
@@ -27,6 +31,11 @@ export const upsertPatientSchema = z.object({
   responsibleCpf: z
     .string()
     .regex(/^\d{11}$/, "CPF do responsável deve ter exatamente 11 dígitos")
+    .optional()
+    .or(z.literal("")),
+  responsibleName: z
+    .string()
+    .max(255, "Nome do responsável muito longo")
     .optional()
     .or(z.literal("")),
   cep: z
