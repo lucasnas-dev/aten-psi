@@ -39,6 +39,12 @@ export function PsychologistPrivateRecords({
     interpretations: "",
     symptoms: "",
   });
+  const [anamnesis, setAnamnesis] = useState({
+    familySocial: "",
+    healthMedications: "",
+    developmentRoutine: "",
+    triageObservations: "",
+  });
   const [sessionNotes, setSessionNotes] = useState<Record<string, string>>({});
   const [freeNotes, setFreeNotes] = useState<FreeNote[]>([]);
   const [files, setFiles] = useState<InstrumentFile[]>([]);
@@ -63,19 +69,31 @@ export function PsychologistPrivateRecords({
       <Tabs defaultValue="analysis" className="space-y-3">
         <TabsList
           aria-label="Seções dos registros do psicólogo"
-          className="grid h-auto w-full grid-cols-1 gap-1 lg:grid-cols-3"
+          className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-sm lg:grid-cols-4"
         >
-          <TabsTrigger value="analysis" className="text-sm whitespace-normal">
+          <TabsTrigger
+            value="analysis"
+            className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+          >
             Hipóteses e análise clínica
           </TabsTrigger>
-          <TabsTrigger value="notes" className="text-sm whitespace-normal">
+          <TabsTrigger
+            value="notes"
+            className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+          >
             Anotações privadas das sessões
           </TabsTrigger>
           <TabsTrigger
             value="instruments"
-            className="text-sm whitespace-normal"
+            className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
           >
             Testes e instrumentos (SATEPSI)
+          </TabsTrigger>
+          <TabsTrigger
+            value="anamnesis"
+            className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+          >
+            Anamnese e Triagem
           </TabsTrigger>
         </TabsList>
 
@@ -230,6 +248,80 @@ export function PsychologistPrivateRecords({
               />
             </section>
           ))}
+        </TabsContent>
+
+        <TabsContent value="anamnesis" className="mt-0 space-y-3">
+          <h2 className="text-base font-semibold">Anamnese e Triagem</h2>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div>
+              <Label htmlFor="anamnesis-family-social">
+                Histórico Familiar/Social
+              </Label>
+              <Textarea
+                id="anamnesis-family-social"
+                className="mt-1"
+                rows={5}
+                value={anamnesis.familySocial}
+                onChange={(event) =>
+                  setAnamnesis((current) => ({
+                    ...current,
+                    familySocial: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label htmlFor="anamnesis-health-medications">
+                Histórico de Saúde e Medicações
+              </Label>
+              <Textarea
+                id="anamnesis-health-medications"
+                className="mt-1"
+                rows={5}
+                value={anamnesis.healthMedications}
+                onChange={(event) =>
+                  setAnamnesis((current) => ({
+                    ...current,
+                    healthMedications: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label htmlFor="anamnesis-development-routine">
+                Desenvolvimento/Rotina
+              </Label>
+              <Textarea
+                id="anamnesis-development-routine"
+                className="mt-1"
+                rows={5}
+                value={anamnesis.developmentRoutine}
+                onChange={(event) =>
+                  setAnamnesis((current) => ({
+                    ...current,
+                    developmentRoutine: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label htmlFor="anamnesis-triage-observations">
+                Observações da Triagem
+              </Label>
+              <Textarea
+                id="anamnesis-triage-observations"
+                className="mt-1"
+                rows={5}
+                value={anamnesis.triageObservations}
+                onChange={(event) =>
+                  setAnamnesis((current) => ({
+                    ...current,
+                    triageObservations: event.target.value,
+                  }))
+                }
+              />
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="instruments" className="mt-0 space-y-3">

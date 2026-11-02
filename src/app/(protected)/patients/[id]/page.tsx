@@ -418,27 +418,34 @@ export default async function PatientDetailsPage({
               {consultationHistory.map((consultation) => (
                 <div
                   key={consultation.id}
-                  className="border-slate-100 border-b py-2 last:border-b-0"
+                  className="border-b border-slate-100 py-2 last:border-b-0"
                 >
                   <div className="flex items-center justify-start gap-2">
                     <p className="text-muted-foreground text-xs sm:text-sm">
-                      {formatConsultationDate(consultation.date)} às {consultation.time}
+                      {formatConsultationDate(consultation.date)} às{" "}
+                      {consultation.time}
                     </p>
                     <span
                       className={`inline-flex w-fit shrink-0 rounded-md border px-1.5 py-0 text-[11px] font-medium ${getConsultationStatusClass(consultation.status)}`}
                     >
-                      {consultationStatusLabels[consultation.status] || consultation.status}
+                      {consultationStatusLabels[consultation.status] ||
+                        consultation.status}
                     </span>
                   </div>
                   <p className="text-foreground mt-0.5 text-sm font-medium">
-                    {consultationTypeLabels[consultation.type] || consultation.type}
+                    {consultationTypeLabels[consultation.type] ||
+                      consultation.type}
                   </p>
-                  <div className="text-slate-500 mt-0.5 flex flex-wrap gap-x-3 gap-y-0 text-xs">
+                  <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0 text-xs text-slate-500">
                     <span>
-                      Modalidade: {consultationModalityLabels[consultation.modality] || consultation.modality}
+                      Modalidade:{" "}
+                      {consultationModalityLabels[consultation.modality] ||
+                        consultation.modality}
                     </span>
                     <span>Duração: {consultation.duration} min</span>
-                    {consultation.value && <span>Valor: R$ {consultation.value}</span>}
+                    {consultation.value && (
+                      <span>Valor: R$ {consultation.value}</span>
+                    )}
                   </div>
                 </div>
               ))}

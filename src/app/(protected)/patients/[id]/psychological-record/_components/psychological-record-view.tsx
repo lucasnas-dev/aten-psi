@@ -3,9 +3,12 @@
 import {
   AlertCircle,
   Download,
+  FileCheck2,
   FileText,
   Lock,
+  Plus,
   Printer,
+  Save,
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
@@ -16,6 +19,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -60,6 +70,15 @@ const documents = [
   "Laudo",
   "Parecer",
 ];
+const documentFields = [
+  "Solicitante",
+  "Finalidade",
+  "Descrição da Demanda",
+  "Procedimentos",
+  "Análise",
+  "Conclusão",
+  "Referências",
+];
 const ageOf = (value: string) => {
   const birth = new Date(value);
   const now = new Date();
@@ -69,6 +88,7 @@ const ageOf = (value: string) => {
   return age;
 };
 const value = (text?: string | null) => text?.trim() || "Não informado";
+const today = () => new Date().toISOString().slice(0, 10);
 
 export function PsychologicalRecordView({
   data,
@@ -78,6 +98,16 @@ export function PsychologicalRecordView({
   loadError?: string;
 }) {
   const [signed, setSigned] = useState<Record<string, boolean>>({});
+  const [drafts, setDrafts] = useState<Record<string, boolean>>({});
+  const [addenda, setAddenda] = useState<
+    Record<string, { date: string; text: string }>
+  >({});
+  const [showReferralForm, setShowReferralForm] = useState(false);
+  const [showNotificationForm, setShowNotificationForm] = useState(false);
+  const [documentFieldValues, setDocumentFieldValues] = useState<
+    Record<string, string>
+  >({});
+  const [cidAuthorized, setCidAuthorized] = useState(false);
   const [document, setDocument] = useState(documents[0]);
   if (!data)
     return (
@@ -122,13 +152,19 @@ export function PsychologicalRecordView({
       <Tabs defaultValue="official" className="space-y-3">
         <TabsList
           aria-label="Áreas do prontuário"
-          className="grid h-auto w-full grid-cols-1 gap-1 sm:grid-cols-2 print:hidden"
+          className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-sm sm:grid-cols-2 print:hidden"
         >
-          <TabsTrigger value="official" className="gap-2 px-3 py-2 text-sm">
+          <TabsTrigger
+            value="official"
+            className="gap-2 px-3 py-2 text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+          >
             <FileText className="h-4 w-4" aria-hidden="true" />
             Prontuário Psicológico
           </TabsTrigger>
-          <TabsTrigger value="private" className="gap-2 px-3 py-2 text-sm">
+          <TabsTrigger
+            value="private"
+            className="gap-2 px-3 py-2 text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+          >
             <Lock className="h-4 w-4" aria-hidden="true" />
             Registros do Psicólogo
           </TabsTrigger>
@@ -141,21 +177,36 @@ export function PsychologicalRecordView({
           <Tabs defaultValue="identification" className="space-y-3">
             <TabsList
               aria-label="Seções do prontuário oficial"
-              className="grid h-auto w-full grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-5 print:hidden"
+              className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-sm sm:grid-cols-2 lg:grid-cols-5 print:hidden"
             >
-              <TabsTrigger className="text-sm" value="identification">
+              <TabsTrigger
+                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+                value="identification"
+              >
                 1. Identificação
               </TabsTrigger>
-              <TabsTrigger className="text-sm" value="plan">
+              <TabsTrigger
+                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+                value="plan"
+              >
                 2. Demanda e plano
               </TabsTrigger>
-              <TabsTrigger className="text-sm" value="sessions">
+              <TabsTrigger
+                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+                value="sessions"
+              >
                 3. Evolução e sessões
               </TabsTrigger>
-              <TabsTrigger className="text-sm" value="closing">
+              <TabsTrigger
+                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+                value="closing"
+              >
                 4. Encerramento
               </TabsTrigger>
-              <TabsTrigger className="text-sm" value="documents">
+              <TabsTrigger
+                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+                value="documents"
+              >
                 5. Documentos
               </TabsTrigger>
             </TabsList>
@@ -188,6 +239,10 @@ export function PsychologicalRecordView({
                     </p>
                   </div>
                   <div>
+                    <Label>Gênero</Label>
+                    <p className="mt-1">{value(data.patient.gender)}</p>
+                  </div>
+                  <div>
                     <Label>CPF</Label>
                     <p className="mt-1">{value(data.patient.cpf)}</p>
                   </div>
@@ -195,6 +250,13 @@ export function PsychologicalRecordView({
                     <Label>Contato</Label>
                     <p className="mt-1">
                       {value(data.patient.phone)} · {value(data.patient.email)}
+                    </p>
+                  </div>
+                  <div>
+                    <Label>Psicólogo Responsável</Label>
+                    <p className="mt-1">{value(data.professional.name)}</p>
+                    <p className="text-muted-foreground text-sm">
+                      CRP: {value(data.professional.crp)}
                     </p>
                   </div>
                   <div className="sm:col-span-2">
@@ -207,6 +269,10 @@ export function PsychologicalRecordView({
                       <p className="text-sm">
                         CPF: {value(data.patient.responsibleCpf)}
                       </p>
+                      <Label className="mt-3 block">
+                        Nome do Responsável Legal
+                      </Label>
+                      <Input className="mt-1" placeholder="Nome completo" />
                       <Badge
                         className="mt-2"
                         variant={
@@ -224,6 +290,10 @@ export function PsychologicalRecordView({
                   <div className="sm:col-span-2">
                     <Label>Contato de emergência</Label>
                     <Input placeholder="Nome e telefone" />
+                    <Button className="mt-3" size="sm">
+                      <Save className="mr-2 h-4 w-4" />
+                      Salvar identificação
+                    </Button>
                   </div>
                 </div>
               </section>
@@ -256,6 +326,13 @@ export function PsychologicalRecordView({
                     <div>
                       <Label>Modalidade</Label>
                       <Input className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Frequência / Dias e horários</Label>
+                      <Input
+                        className="mt-1"
+                        placeholder="Ex.: semanal, terças às 14h"
+                      />
                     </div>
                     <div>
                       <Label>Previsão de duração</Label>
@@ -299,13 +376,9 @@ export function PsychologicalRecordView({
                           <Label>
                             Procedimentos técnico-científicos adotados
                           </Label>
-                          <Textarea
-                            className="mt-1"
-                            defaultValue={session.content}
-                            disabled={immutable}
-                          />
+                          <Textarea className="mt-1" disabled={immutable} />
                         </div>
-                        <Alert>
+                        <Alert className="print:hidden">
                           <AlertCircle />
                           <AlertDescription>
                             Evite transcrições literais; registre somente a
@@ -314,20 +387,94 @@ export function PsychologicalRecordView({
                         </Alert>
                         <div>
                           <Label>Síntese da evolução</Label>
-                          <Textarea className="mt-1" disabled={immutable} />
+                          <Textarea
+                            className="mt-1"
+                            defaultValue={session.content}
+                            disabled={immutable}
+                          />
                         </div>
                         <div className="flex flex-wrap justify-end gap-2">
                           {!immutable && (
-                            <Button
-                              onClick={() =>
-                                setSigned({ ...signed, [session.id]: true })
-                              }
-                            >
-                              <ShieldCheck className="mr-2 h-4 w-4" />
-                              Finalizar e assinar registro
-                            </Button>
+                            <>
+                              <Button
+                                variant="outline"
+                                onClick={() =>
+                                  setDrafts({ ...drafts, [session.id]: true })
+                                }
+                              >
+                                <Save className="mr-2 h-4 w-4" />
+                                Salvar rascunho
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  setSigned({ ...signed, [session.id]: true })
+                                }
+                              >
+                                <ShieldCheck className="mr-2 h-4 w-4" />
+                                Finalizar e assinar registro
+                              </Button>
+                            </>
                           )}
                         </div>
+                        {drafts[session.id] && !immutable && (
+                          <p className="text-muted-foreground text-right text-xs">
+                            Rascunho salvo nesta sessão.
+                          </p>
+                        )}
+                        {immutable && (
+                          <div className="space-y-3 border-t pt-3">
+                            <div className="text-muted-foreground text-xs">
+                              <p className="font-medium text-slate-700">
+                                Assinatura eletrônica
+                              </p>
+                              <p>Nome: {value(data.professional.name)}</p>
+                              <p>CRP: {value(data.professional.crp)}</p>
+                              <p>
+                                Data/Hora: {new Date().toLocaleString("pt-BR")}
+                              </p>
+                              <p>Hash: SHA256-{session.id.slice(0, 12)}</p>
+                            </div>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                setAddenda({
+                                  ...addenda,
+                                  [session.id]: {
+                                    date: today(),
+                                    text: addenda[session.id]?.text || "",
+                                  },
+                                })
+                              }
+                            >
+                              <Plus className="mr-2 h-4 w-4" />
+                              Adicionar adendo / errata
+                            </Button>
+                            {addenda[session.id] && (
+                              <div>
+                                <Label>
+                                  Adendo / errata ·{" "}
+                                  {formatDate(addenda[session.id].date)}
+                                </Label>
+                                <Textarea
+                                  className="mt-1"
+                                  value={addenda[session.id].text}
+                                  onChange={(event) =>
+                                    setAddenda({
+                                      ...addenda,
+                                      [session.id]: {
+                                        ...addenda[session.id],
+                                        text: event.target.value,
+                                      },
+                                    })
+                                  }
+                                  placeholder="Registre a correção ou informação complementar."
+                                />
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </section>
                   );
@@ -347,14 +494,56 @@ export function PsychologicalRecordView({
                 </div>
                 <div className="space-y-3">
                   <div className="flex gap-2">
-                    <Button variant="outline">Novo encaminhamento</Button>
-                    <Button variant="outline">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowReferralForm(!showReferralForm)}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Novo encaminhamento
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        setShowNotificationForm(!showNotificationForm)
+                      }
+                    >
+                      <FileCheck2 className="mr-2 h-4 w-4" />
                       Notificação compulsória (SINAN / Ofício)
                     </Button>
                   </div>
+                  {showReferralForm && (
+                    <div className="space-y-3 rounded border p-4">
+                      <Label>Destinatário do encaminhamento</Label>
+                      <Input placeholder="Profissional ou instituição" />
+                      <Label>Motivo e orientações</Label>
+                      <Textarea rows={3} />
+                      <Button size="sm">Salvar encaminhamento</Button>
+                    </div>
+                  )}
+                  {showNotificationForm && (
+                    <div className="space-y-3 rounded border p-4">
+                      <Label>Órgão destinatário</Label>
+                      <Input placeholder="SINAN, conselho ou instituição" />
+                      <Label>Descrição da notificação</Label>
+                      <Textarea rows={3} />
+                      <Button size="sm">Salvar notificação</Button>
+                    </div>
+                  )}
                   <div className="border-t pt-4">
                     <Label>Motivo</Label>
-                    <Input className="mt-1" />
+                    <Select>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Selecione o motivo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="alta">Alta / Conclusão</SelectItem>
+                        <SelectItem value="desistencia">Desistência</SelectItem>
+                        <SelectItem value="abandono">Abandono</SelectItem>
+                        <SelectItem value="transferencia">
+                          Transferência
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                     <Label className="mt-4 block">Data</Label>
                     <Input className="mt-1" type="date" />
                     <Label className="mt-4 block">Síntese final</Label>
@@ -376,34 +565,69 @@ export function PsychologicalRecordView({
                   </h2>
                 </div>
                 <div className="space-y-3">
-                  <div className="grid gap-2 sm:grid-cols-3">
-                    {documents.map((item) => (
-                      <Button
-                        key={item}
-                        variant="outline"
-                        onClick={() => setDocument(item)}
-                      >
-                        <FileText className="mr-2 h-4 w-4" />
-                        {item}
+                  <div className="space-y-3 print:hidden">
+                    <div className="grid gap-2 sm:grid-cols-3">
+                      {documents.map((item) => (
+                        <Button
+                          key={item}
+                          variant={document === item ? "default" : "outline"}
+                          onClick={() => setDocument(item)}
+                        >
+                          <FileText className="mr-2 h-4 w-4" />
+                          {item}
+                        </Button>
+                      ))}
+                    </div>
+                    <div className="rounded border p-4">
+                      <p className="font-medium">Emitir {document}</p>
+                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                        {documentFields.map((field) => (
+                          <div
+                            key={field}
+                            className={
+                              field === "Descrição da Demanda" ||
+                              field === "Procedimentos" ||
+                              field === "Análise" ||
+                              field === "Conclusão" ||
+                              field === "Referências"
+                                ? "sm:col-span-2"
+                                : ""
+                            }
+                          >
+                            <Label htmlFor={`document-${field}`}>{field}</Label>
+                            <Textarea
+                              id={`document-${field}`}
+                              className="mt-1"
+                              rows={field === "Solicitante" ? 2 : 3}
+                              value={documentFieldValues[field] || ""}
+                              onChange={(event) =>
+                                setDocumentFieldValues({
+                                  ...documentFieldValues,
+                                  [field]: event.target.value,
+                                })
+                              }
+                              required
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      {document === "Atestado" && (
+                        <label className="mt-3 flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={cidAuthorized}
+                            onChange={(event) =>
+                              setCidAuthorized(event.target.checked)
+                            }
+                          />
+                          Autorização do paciente para uso de CID
+                        </label>
+                      )}
+                      <Button className="mt-4">
+                        <FileCheck2 className="mr-2 h-4 w-4" />
+                        Emitir documento
                       </Button>
-                    ))}
-                  </div>
-                  <div className="rounded border p-4">
-                    <p className="font-medium">Emitir {document}</p>
-                    {document === "Declaração" && (
-                      <p className="text-muted-foreground text-sm">
-                        CID bloqueado para declarações.
-                      </p>
-                    )}
-                    {document === "Atestado" && (
-                      <>
-                        <Label className="mt-3 block">
-                          Prazo de validade obrigatório
-                        </Label>
-                        <Input className="mt-1" type="date" required />
-                      </>
-                    )}
-                    <Button className="mt-4">Emitir documento</Button>
+                    </div>
                   </div>
                   <table className="w-full text-left text-sm">
                     <thead>
