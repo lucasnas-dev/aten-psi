@@ -142,7 +142,6 @@ export const getPatientRecord = tenantActionClient
               attended: consultation.status === "realizada",
               content: consultation.notes || "",
               observations: "",
-              value: consultation.value,
               status: consultation.status,
             };
           }

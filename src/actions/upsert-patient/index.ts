@@ -33,6 +33,7 @@ export const upsertPatient = tenantActionClient
             .update(patients)
             .set({
               name: parsedInput.name,
+              social_name: parsedInput.useSocialName ? parsedInput.socialName || null : null,
               status: parsedInput.status,
               birth_date: parsedInput.birthDate || "",
               email: parsedInput.email,
@@ -54,6 +55,7 @@ export const upsertPatient = tenantActionClient
           // Insert new patient
           await db.insert(patients).values({
             name: parsedInput.name,
+            social_name: parsedInput.useSocialName ? parsedInput.socialName || null : null,
             status: parsedInput.status,
             birth_date: parsedInput.birthDate || "",
             email: parsedInput.email,

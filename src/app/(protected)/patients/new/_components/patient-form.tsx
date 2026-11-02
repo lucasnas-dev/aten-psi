@@ -50,7 +50,7 @@ export function PatientForm({
     defaultValues: {
       name: "",
       useSocialName: false,
-      socialName: "",
+      socialName: initialPatient?.socialName ?? "",
       email: "",
       phone: "",
       birthDate: "",

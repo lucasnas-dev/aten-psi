@@ -88,6 +88,7 @@ export const patients = pgTable("patients", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }).notNull(),
+  social_name: varchar("social_name", { length: 255 }),
   email: varchar("email", { length: 255 }),
   phone: varchar("phone", { length: 20 }),
   birth_date: varchar("birth_date", { length: 10 }).notNull(),
