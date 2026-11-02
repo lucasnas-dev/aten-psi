@@ -1,4 +1,4 @@
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,12 +19,6 @@ export default function ProntuarioLoading() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Voltar ao Paciente
             </Button>
-            <div className="flex items-center gap-3">
-              <FileText className="text-primary h-8 w-8" />
-              <h1 className="text-primary text-3xl font-bold tracking-tight">
-                Prontuário Psicológico
-              </h1>
-            </div>
           </div>
           <p className="text-muted-foreground text-base sm:text-lg">
             Carregando dados do prontuário...

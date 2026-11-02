@@ -1,0 +1,38 @@
+.officialPanel[data-state="inactive"],
+.officialSection[data-state="inactive"],
+.privatePanel[data-state="inactive"] {
+  display: none;
+}
+
+@media print {
+  .privatePanel {
+    display: none !important;
+  }
+
+  .officialPanel,
+  .officialSection {
+    display: block !important;
+  }
+
+  .officialSection {
+    margin-top: 1rem;
+  }
+
+  .officialPanel button,
+  .record [role="tablist"] {
+    display: none !important;
+  }
+
+  :global(body):has(.record) :global(.sidebar-shell) {
+    display: none !important;
+  }
+
+  :global(body):has(.record) :global(.app-shell),
+  :global(body):has(.record) :global(.app-shell) main {
+    display: block;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    background: white;
+  }
+}

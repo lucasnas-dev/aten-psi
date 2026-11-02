@@ -2,7 +2,6 @@
 
 import {
   AlertCircle,
-  ArrowLeft,
   Download,
   FileText,
   Lock,
@@ -15,12 +14,14 @@ import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+
+import styles from "./psychological-record-view.module.css";
+import { PsychologistPrivateRecords } from "./psychologist-private-records";
+import { formatDate } from "./record-utils";
 
 export type RecordData = {
   patient: {
@@ -76,7 +77,6 @@ export function PsychologicalRecordView({
   data: RecordData | null;
   loadError?: string;
 }) {
-  const [secret, setSecret] = useState(false);
   const [signed, setSigned] = useState<Record<string, boolean>>({});
   const [document, setDocument] = useState(documents[0]);
   if (!data)
@@ -92,318 +92,356 @@ export function PsychologicalRecordView({
     );
   const minor = ageOf(data.patient.birthDate) < 18;
   return (
-    <div className="container mx-auto space-y-6 p-6 print:p-0">
-      <header className="flex flex-col justify-between gap-4 sm:flex-row print:hidden">
-        <div>
-          <Button variant="outline" size="sm" asChild>
-            <Link href={`/patients/${data.patient.id}`}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar ao paciente
-            </Link>
-          </Button>
-          <h1 className="mt-3 text-3xl font-bold">Prontuário psicológico</h1>
-          <p className="text-muted-foreground">
-            Registro clínico conforme CFP e Lei nº 13.787/2018.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => window.print()}>
+    <div className={`${styles.record} space-y-3 print:p-0`}>
+      <header className="flex flex-wrap items-center justify-between gap-2 print:hidden">
+        <Button size="sm" variant="outline" asChild>
+          <Link href={`/patients/${data.patient.id}`}>
+            Detalhes do paciente
+          </Link>
+        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" variant="outline" onClick={() => window.print()}>
             <Printer className="mr-2 h-4 w-4" />
             Imprimir / PDF
           </Button>
-          <Button variant="outline" onClick={() => window.print()}>
+          <Button size="sm" variant="outline" onClick={() => window.print()}>
             <Download className="mr-2 h-4 w-4" />
             Exportar PDF
           </Button>
         </div>
       </header>
-      <Card>
-        <CardContent className="flex flex-col justify-between gap-3 p-5 sm:flex-row sm:items-center">
+      <section>
+        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
           <div>
-            <p className="text-muted-foreground text-sm">Paciente</p>
             <h2 className="text-xl font-semibold">
               {data.patient.socialName?.trim() || data.patient.name}
             </h2>
           </div>
-          <div className="flex items-center gap-2 rounded-lg border p-3">
-            <Lock className="h-4 w-4" />
-            <Label htmlFor="secret">Modo de sigilo</Label>
-            <Switch id="secret" checked={secret} onCheckedChange={setSecret} />
-          </div>
-        </CardContent>
-      </Card>
-      <Tabs defaultValue="identification">
-        <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-5">
-          <TabsTrigger value="identification">1. Identificação</TabsTrigger>
-          <TabsTrigger value="plan">2. Demanda e plano</TabsTrigger>
-          <TabsTrigger value="sessions">3. Evolução e sessões</TabsTrigger>
-          <TabsTrigger value="closing">4. Encerramento</TabsTrigger>
-          <TabsTrigger value="documents">5. Documentos</TabsTrigger>
+        </div>
+      </section>
+      <Tabs defaultValue="official" className="space-y-3">
+        <TabsList
+          aria-label="Áreas do prontuário"
+          className="grid h-auto w-full grid-cols-1 gap-1 sm:grid-cols-2 print:hidden"
+        >
+          <TabsTrigger value="official" className="gap-2 px-3 py-2 text-sm">
+            <FileText className="h-4 w-4" aria-hidden="true" />
+            Prontuário Psicológico
+          </TabsTrigger>
+          <TabsTrigger value="private" className="gap-2 px-3 py-2 text-sm">
+            <Lock className="h-4 w-4" aria-hidden="true" />
+            Registros do Psicólogo
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="identification">
-          <Card>
-            <CardHeader>
-              <CardTitle>Identificação</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <Label>Nome social</Label>
-                <p className="mt-1 text-lg font-semibold">
-                  {value(data.patient.socialName)}
-                </p>
-                <p className="text-muted-foreground text-sm">
-                  Nome civil: {data.patient.name}
-                </p>
-              </div>
-              <div>
-                <Label>Nascimento</Label>
-                <p className="mt-1">
-                  {data.patient.birthDate} ({ageOf(data.patient.birthDate)}{" "}
-                  anos)
-                </p>
-              </div>
-              <div>
-                <Label>CPF</Label>
-                <p className="mt-1">{value(data.patient.cpf)}</p>
-              </div>
-              <div>
-                <Label>Contato</Label>
-                <p className="mt-1">
-                  {value(data.patient.phone)} · {value(data.patient.email)}
-                </p>
-              </div>
-              <div className="sm:col-span-2">
-                <Label>Endereço</Label>
-                <p className="mt-1">{value(data.patient.address)}</p>
-              </div>
-              {minor && (
-                <div className="rounded border border-amber-200 bg-amber-50 p-4 sm:col-span-2">
-                  <p className="font-medium">Responsável legal</p>
-                  <p className="text-sm">
-                    CPF: {value(data.patient.responsibleCpf)}
-                  </p>
-                  <Badge
-                    className="mt-2"
-                    variant={
-                      data.patient.responsibleCpf ? "default" : "destructive"
-                    }
-                  >
-                    {data.patient.responsibleCpf
-                      ? "Termo de autorização: verificar assinatura"
-                      : "Termo de autorização pendente"}
-                  </Badge>
+        <TabsContent
+          value="official"
+          forceMount
+          className={`${styles.officialPanel} mt-0`}
+        >
+          <Tabs defaultValue="identification" className="space-y-3">
+            <TabsList
+              aria-label="Seções do prontuário oficial"
+              className="grid h-auto w-full grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-5 print:hidden"
+            >
+              <TabsTrigger className="text-sm" value="identification">
+                1. Identificação
+              </TabsTrigger>
+              <TabsTrigger className="text-sm" value="plan">
+                2. Demanda e plano
+              </TabsTrigger>
+              <TabsTrigger className="text-sm" value="sessions">
+                3. Evolução e sessões
+              </TabsTrigger>
+              <TabsTrigger className="text-sm" value="closing">
+                4. Encerramento
+              </TabsTrigger>
+              <TabsTrigger className="text-sm" value="documents">
+                5. Documentos
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="identification"
+              forceMount
+              className={`${styles.officialSection} mt-0`}
+            >
+              <section>
+                <div className="pb-2">
+                  <h2 className="text-base font-semibold">Identificação</h2>
                 </div>
-              )}
-              <div className="sm:col-span-2">
-                <Label>Contato de emergência</Label>
-                <Input placeholder="Nome e telefone" />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="plan">
-          <Card>
-            <CardHeader>
-              <CardTitle>Demanda e plano terapêutico</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Avaliação de demanda</Label>
-                <Textarea className="mt-1" rows={4} />
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <Label>Objetivos</Label>
-                  <Textarea className="mt-1" />
-                </div>
-                <div>
-                  <Label>Abordagem</Label>
-                  <Input className="mt-1" />
-                </div>
-                <div>
-                  <Label>Modalidade</Label>
-                  <Input className="mt-1" />
-                </div>
-                <div>
-                  <Label>Previsão de duração</Label>
-                  <Input className="mt-1" />
-                </div>
-              </div>
-              <Button>Salvar plano terapêutico</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="sessions">
-          <div className="space-y-4">
-            {data.sessions.length === 0 && (
-              <Card>
-                <CardContent className="text-muted-foreground p-6 text-center">
-                  Nenhuma sessão registrada.
-                </CardContent>
-              </Card>
-            )}
-            {data.sessions.map((session) => {
-              const immutable = signed[session.id] || session.signed;
-              return (
-                <Card key={session.id}>
-                  <CardHeader>
-                    <div className="flex justify-between gap-2">
-                      <CardTitle className="text-base">
-                        Sessão {session.sessionNumber} · {session.date} às{" "}
-                        {session.time}
-                      </CardTitle>
-                      <Badge variant={immutable ? "default" : "outline"}>
-                        {immutable ? "Assinada e imutável" : session.status}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <Label>Nome</Label>
+                    <p className="mt-1 text-lg font-semibold">
+                      {data.patient.socialName?.trim() || data.patient.name}
+                    </p>
+                    {data.patient.socialName?.trim() && (
+                      <p className="text-muted-foreground mt-1 text-sm">
+                        Nome civil: {data.patient.name}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <Label>Nascimento</Label>
+                    <p className="mt-1">
+                      {formatDate(data.patient.birthDate)} (
+                      {ageOf(data.patient.birthDate)} anos)
+                    </p>
+                  </div>
+                  <div>
+                    <Label>CPF</Label>
+                    <p className="mt-1">{value(data.patient.cpf)}</p>
+                  </div>
+                  <div>
+                    <Label>Contato</Label>
+                    <p className="mt-1">
+                      {value(data.patient.phone)} · {value(data.patient.email)}
+                    </p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <Label>Endereço</Label>
+                    <p className="mt-1">{value(data.patient.address)}</p>
+                  </div>
+                  {minor && (
+                    <div className="rounded border border-amber-200 bg-amber-50 p-4 sm:col-span-2">
+                      <p className="font-medium">Responsável legal</p>
+                      <p className="text-sm">
+                        CPF: {value(data.patient.responsibleCpf)}
+                      </p>
+                      <Badge
+                        className="mt-2"
+                        variant={
+                          data.patient.responsibleCpf
+                            ? "default"
+                            : "destructive"
+                        }
+                      >
+                        {data.patient.responsibleCpf
+                          ? "Termo de autorização: verificar assinatura"
+                          : "Termo de autorização pendente"}
                       </Badge>
                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label>Procedimentos técnico-científicos adotados</Label>
-                      <Textarea
-                        className="mt-1"
-                        defaultValue={session.content}
-                        disabled={immutable}
-                      />
-                    </div>
-                    <Alert>
-                      <AlertCircle />
-                      <AlertDescription>
-                        Evite transcrições literais; registre somente a síntese
-                        técnica necessária.
-                      </AlertDescription>
-                    </Alert>
-                    <div>
-                      <Label>Síntese da evolução</Label>
-                      <Textarea className="mt-1" disabled={immutable} />
-                    </div>
-                    {secret && (
-                      <div className="rounded border border-red-200 bg-red-50 p-4">
-                        <Label>Registro documental restrito</Label>
-                        <Textarea
-                          className="mt-1"
-                          placeholder="Hipóteses diagnósticas e anotações exclusivas"
-                          disabled={immutable}
-                        />
-                      </div>
-                    )}
-                    <div className="flex flex-wrap justify-between gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => setSecret(!secret)}
-                      >
-                        <Lock className="mr-2 h-4 w-4" />
-                        {secret
-                          ? "Ocultar sigilo"
-                          : "Revelar registro restrito"}
-                      </Button>
-                      {!immutable && (
-                        <Button
-                          onClick={() =>
-                            setSigned({ ...signed, [session.id]: true })
-                          }
-                        >
-                          <ShieldCheck className="mr-2 h-4 w-4" />
-                          Finalizar e assinar registro
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </TabsContent>
-        <TabsContent value="closing">
-          <Card>
-            <CardHeader>
-              <CardTitle>Encaminhamento e encerramento</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-2">
-                <Button variant="outline">Novo encaminhamento</Button>
-                <Button variant="outline">
-                  Notificação compulsória (SINAN / Ofício)
-                </Button>
-              </div>
-              <div className="border-t pt-4">
-                <Label>Motivo</Label>
-                <Input className="mt-1" />
-                <Label className="mt-4 block">Data</Label>
-                <Input className="mt-1" type="date" />
-                <Label className="mt-4 block">Síntese final</Label>
-                <Textarea className="mt-1" rows={5} />
-                <Button className="mt-4">Salvar encerramento</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="documents">
-          <Card>
-            <CardHeader>
-              <CardTitle>Documentos e arquivos</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-2 sm:grid-cols-3">
-                {documents.map((item) => (
-                  <Button
-                    key={item}
-                    variant="outline"
-                    onClick={() => setDocument(item)}
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    {item}
-                  </Button>
-                ))}
-              </div>
-              <div className="rounded border p-4">
-                <p className="font-medium">Emitir {document}</p>
-                {document === "Declaração" && (
-                  <p className="text-muted-foreground text-sm">
-                    CID bloqueado para declarações.
-                  </p>
-                )}
-                {document === "Atestado" && (
-                  <>
-                    <Label className="mt-3 block">
-                      Prazo de validade obrigatório
-                    </Label>
-                    <Input className="mt-1" type="date" required />
-                  </>
-                )}
-                <Button className="mt-4">Emitir documento</Button>
-              </div>
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="border-b">
-                    <th className="p-2">Data de emissão</th>
-                    <th className="p-2">Finalidade</th>
-                    <th className="p-2">Destinatário</th>
-                    <th className="p-2">Status de devolutiva</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="text-muted-foreground p-2" colSpan={4}>
-                      Nenhum documento emitido.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              {secret && (
-                <div className="rounded border border-red-200 bg-red-50 p-4">
-                  <Lock className="mr-2 inline h-4 w-4" />
-                  Pasta de acesso exclusivo (SATEPSI)
+                  )}
+                  <div className="sm:col-span-2">
+                    <Label>Contato de emergência</Label>
+                    <Input placeholder="Nome e telefone" />
+                  </div>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </section>
+            </TabsContent>
+            <TabsContent
+              value="plan"
+              forceMount
+              className={`${styles.officialSection} mt-0`}
+            >
+              <section>
+                <div className="pb-2">
+                  <h2 className="text-base font-semibold">
+                    Demanda e plano terapêutico
+                  </h2>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <Label>Avaliação de demanda</Label>
+                    <Textarea className="mt-1" rows={4} />
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <Label>Objetivos</Label>
+                      <Textarea className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Abordagem</Label>
+                      <Input className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Modalidade</Label>
+                      <Input className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Previsão de duração</Label>
+                      <Input className="mt-1" />
+                    </div>
+                  </div>
+                  <Button>Salvar plano terapêutico</Button>
+                </div>
+              </section>
+            </TabsContent>
+            <TabsContent
+              value="sessions"
+              forceMount
+              className={`${styles.officialSection} mt-0`}
+            >
+              <div className="space-y-4">
+                {data.sessions.length === 0 && (
+                  <section>
+                    <div className="text-muted-foreground py-6 text-center">
+                      Nenhuma sessão registrada.
+                    </div>
+                  </section>
+                )}
+                {data.sessions.map((session) => {
+                  const immutable = signed[session.id] || session.signed;
+                  return (
+                    <section key={session.id}>
+                      <div className="pb-2">
+                        <div className="flex justify-between gap-2">
+                          <h2 className="text-base font-semibold">
+                            Sessão {session.sessionNumber} ·{" "}
+                            {formatDate(session.date)} às {session.time}
+                          </h2>
+                          <Badge variant={immutable ? "default" : "outline"}>
+                            {immutable ? "Assinada e imutável" : session.status}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <Label>
+                            Procedimentos técnico-científicos adotados
+                          </Label>
+                          <Textarea
+                            className="mt-1"
+                            defaultValue={session.content}
+                            disabled={immutable}
+                          />
+                        </div>
+                        <Alert>
+                          <AlertCircle />
+                          <AlertDescription>
+                            Evite transcrições literais; registre somente a
+                            síntese técnica necessária.
+                          </AlertDescription>
+                        </Alert>
+                        <div>
+                          <Label>Síntese da evolução</Label>
+                          <Textarea className="mt-1" disabled={immutable} />
+                        </div>
+                        <div className="flex flex-wrap justify-end gap-2">
+                          {!immutable && (
+                            <Button
+                              onClick={() =>
+                                setSigned({ ...signed, [session.id]: true })
+                              }
+                            >
+                              <ShieldCheck className="mr-2 h-4 w-4" />
+                              Finalizar e assinar registro
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+            </TabsContent>
+            <TabsContent
+              value="closing"
+              forceMount
+              className={`${styles.officialSection} mt-0`}
+            >
+              <section>
+                <div className="pb-2">
+                  <h2 className="text-base font-semibold">
+                    Encaminhamento e encerramento
+                  </h2>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Button variant="outline">Novo encaminhamento</Button>
+                    <Button variant="outline">
+                      Notificação compulsória (SINAN / Ofício)
+                    </Button>
+                  </div>
+                  <div className="border-t pt-4">
+                    <Label>Motivo</Label>
+                    <Input className="mt-1" />
+                    <Label className="mt-4 block">Data</Label>
+                    <Input className="mt-1" type="date" />
+                    <Label className="mt-4 block">Síntese final</Label>
+                    <Textarea className="mt-1" rows={5} />
+                    <Button className="mt-4">Salvar encerramento</Button>
+                  </div>
+                </div>
+              </section>
+            </TabsContent>
+            <TabsContent
+              value="documents"
+              forceMount
+              className={`${styles.officialSection} mt-0`}
+            >
+              <section>
+                <div className="pb-2">
+                  <h2 className="text-base font-semibold">
+                    Documentos e arquivos
+                  </h2>
+                </div>
+                <div className="space-y-3">
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    {documents.map((item) => (
+                      <Button
+                        key={item}
+                        variant="outline"
+                        onClick={() => setDocument(item)}
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        {item}
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="rounded border p-4">
+                    <p className="font-medium">Emitir {document}</p>
+                    {document === "Declaração" && (
+                      <p className="text-muted-foreground text-sm">
+                        CID bloqueado para declarações.
+                      </p>
+                    )}
+                    {document === "Atestado" && (
+                      <>
+                        <Label className="mt-3 block">
+                          Prazo de validade obrigatório
+                        </Label>
+                        <Input className="mt-1" type="date" required />
+                      </>
+                    )}
+                    <Button className="mt-4">Emitir documento</Button>
+                  </div>
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="p-2">Data de emissão</th>
+                        <th className="p-2">Finalidade</th>
+                        <th className="p-2">Destinatário</th>
+                        <th className="p-2">Status de devolutiva</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="text-muted-foreground p-2" colSpan={4}>
+                          Nenhum documento emitido.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </TabsContent>
+          </Tabs>
+          <p className="text-muted-foreground hidden text-center text-xs print:block">
+            Profissional: {data.professional.name} · CRP:{" "}
+            {data.professional.crp} · Página 1
+          </p>
+        </TabsContent>
+        <TabsContent
+          value="private"
+          forceMount
+          className={`${styles.privatePanel} mt-0 print:hidden`}
+        >
+          <PsychologistPrivateRecords
+            key={data.patient.id}
+            sessions={data.sessions}
+          />
         </TabsContent>
       </Tabs>
-      <p className="text-muted-foreground hidden text-center text-xs print:block">
-        Profissional: {data.professional.name} · CRP: {data.professional.crp} ·
-        Página 1
-      </p>
     </div>
   );
 }
