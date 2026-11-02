@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Lock, Paperclip, Plus, X } from "lucide-react";
+import { ExternalLink, FileText, Lock, Paperclip, Plus, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -43,8 +43,8 @@ export function PsychologistPrivateRecords({
     familySocial: "",
     healthMedications: "",
     developmentRoutine: "",
-    triageObservations: "",
   });
+  const [triageObservations, setTriageObservations] = useState("");
   const [sessionNotes, setSessionNotes] = useState<Record<string, string>>({});
   const [freeNotes, setFreeNotes] = useState<FreeNote[]>([]);
   const [files, setFiles] = useState<InstrumentFile[]>([]);
@@ -66,11 +66,23 @@ export function PsychologistPrivateRecords({
         </p>
       </div>
 
-      <Tabs defaultValue="analysis" className="space-y-3">
+      <Tabs defaultValue="triage" className="space-y-3">
         <TabsList
           aria-label="Seções dos registros do psicólogo"
-          className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-sm lg:grid-cols-4"
+          className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-sm sm:grid-cols-2 xl:grid-cols-5"
         >
+          <TabsTrigger
+            value="triage"
+            className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+          >
+            Triagem
+          </TabsTrigger>
+          <TabsTrigger
+            value="anamnesis"
+            className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
+          >
+            Anamnese
+          </TabsTrigger>
           <TabsTrigger
             value="analysis"
             className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
@@ -89,69 +101,19 @@ export function PsychologistPrivateRecords({
           >
             Testes e instrumentos (SATEPSI)
           </TabsTrigger>
-          <TabsTrigger
-            value="anamnesis"
-            className="text-sm whitespace-normal text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-          >
-            Anamnese e Triagem
-          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="analysis" className="mt-0 space-y-3">
-          <h2 className="text-base font-semibold">
-            Hipóteses e análise clínica
-          </h2>
+        <TabsContent value="triage" className="mt-0 space-y-3">
+          <h2 className="text-base font-semibold">Triagem</h2>
           <div>
-            <Label htmlFor="private-hypotheses">Hipóteses diagnósticas</Label>
+            <Label htmlFor="triage-observations">Observações da Triagem</Label>
             <Textarea
-              id="private-hypotheses"
+              id="triage-observations"
               className="mt-1"
-              rows={4}
-              value={analysis.hypotheses}
-              onChange={(event) =>
-                setAnalysis((current) => ({
-                  ...current,
-                  hypotheses: event.target.value,
-                }))
-              }
-              placeholder="Registre hipóteses em investigação e elementos para avaliação."
+              rows={5}
+              value={triageObservations}
+              onChange={(event) => setTriageObservations(event.target.value)}
             />
-          </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            <div>
-              <Label htmlFor="private-interpretations">
-                Interpretações teórico-clínicas não compartilhadas
-              </Label>
-              <Textarea
-                id="private-interpretations"
-                className="mt-1"
-                rows={5}
-                value={analysis.interpretations}
-                onChange={(event) =>
-                  setAnalysis((current) => ({
-                    ...current,
-                    interpretations: event.target.value,
-                  }))
-                }
-                placeholder="Articulações teóricas e reflexões clínicas do profissional."
-              />
-            </div>
-            <div>
-              <Label htmlFor="private-symptoms">Análise de sintomas</Label>
-              <Textarea
-                id="private-symptoms"
-                className="mt-1"
-                rows={5}
-                value={analysis.symptoms}
-                onChange={(event) =>
-                  setAnalysis((current) => ({
-                    ...current,
-                    symptoms: event.target.value,
-                  }))
-                }
-                placeholder="Sintomas observados, contexto, frequência e possíveis relações."
-              />
-            </div>
           </div>
         </TabsContent>
 
@@ -251,7 +213,7 @@ export function PsychologistPrivateRecords({
         </TabsContent>
 
         <TabsContent value="anamnesis" className="mt-0 space-y-3">
-          <h2 className="text-base font-semibold">Anamnese e Triagem</h2>
+          <h2 className="text-base font-semibold">Anamnese</h2>
           <div className="grid gap-3 md:grid-cols-2">
             <div>
               <Label htmlFor="anamnesis-family-social">
@@ -304,30 +266,84 @@ export function PsychologistPrivateRecords({
                 }
               />
             </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="analysis" className="mt-0 space-y-3">
+          <h2 className="text-base font-semibold">
+            Hipóteses e análise clínica
+          </h2>
+          <div>
+            <Label htmlFor="private-hypotheses">Hipóteses diagnósticas</Label>
+            <Textarea
+              id="private-hypotheses"
+              className="mt-1"
+              rows={4}
+              value={analysis.hypotheses}
+              onChange={(event) =>
+                setAnalysis((current) => ({
+                  ...current,
+                  hypotheses: event.target.value,
+                }))
+              }
+              placeholder="Registre hipóteses em investigação e elementos para avaliação."
+            />
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
             <div>
-              <Label htmlFor="anamnesis-triage-observations">
-                Observações da Triagem
+              <Label htmlFor="private-interpretations">
+                Interpretações teórico-clínicas não compartilhadas
               </Label>
               <Textarea
-                id="anamnesis-triage-observations"
+                id="private-interpretations"
                 className="mt-1"
                 rows={5}
-                value={anamnesis.triageObservations}
+                value={analysis.interpretations}
                 onChange={(event) =>
-                  setAnamnesis((current) => ({
+                  setAnalysis((current) => ({
                     ...current,
-                    triageObservations: event.target.value,
+                    interpretations: event.target.value,
                   }))
                 }
+                placeholder="Articulações teóricas e reflexões clínicas do profissional."
+              />
+            </div>
+            <div>
+              <Label htmlFor="private-symptoms">Análise de sintomas</Label>
+              <Textarea
+                id="private-symptoms"
+                className="mt-1"
+                rows={5}
+                value={analysis.symptoms}
+                onChange={(event) =>
+                  setAnalysis((current) => ({
+                    ...current,
+                    symptoms: event.target.value,
+                  }))
+                }
+                placeholder="Sintomas observados, contexto, frequência e possíveis relações."
               />
             </div>
           </div>
         </TabsContent>
 
         <TabsContent value="instruments" className="mt-0 space-y-3">
-          <h2 className="text-base font-semibold">
-            Testes e instrumentos (SATEPSI)
-          </h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-base font-semibold">
+              Testes e instrumentos (SATEPSI)
+            </h2>
+            <Button size="sm" variant="outline" asChild>
+              <a
+                href="https://satepsi.cfp.org.br/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Consultar SATEPSI (abre em nova aba)"
+              >
+                <ExternalLink className="mr-2 h-4 w-4" aria-hidden="true" />
+                Consultar SATEPSI
+              </a>
+            </Button>
+          </div>
           <p className="text-muted-foreground">
             Folhas de respostas, escalas e materiais brutos de avaliação ficam
             separados dos documentos oficiais.
