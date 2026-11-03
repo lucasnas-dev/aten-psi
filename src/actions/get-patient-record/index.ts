@@ -158,6 +158,7 @@ export const getPatientRecord = tenantActionClient
           gender: patient.gender || "",
           cpf: patient.cpf || "",
           responsibleCpf: patient.responsible_cpf || "",
+          responsibleName: patient.responsible_name || "",
 
           // Address information
           address: patient.address || "",

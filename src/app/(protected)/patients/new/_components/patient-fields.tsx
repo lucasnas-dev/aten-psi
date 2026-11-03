@@ -13,13 +13,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -346,15 +339,13 @@ export function PatientFields({
                 name="responsibleName"
                 render={({ field }) => (
                   <FormItem className="gap-1">
-                    <FormLabel>Nome do Responsável</FormLabel>
+                    <FormLabel>Nome do responsável legal</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Nome completo do responsável"
                         className="form-input-enhanced"
                         {...field}
-                        onChange={(e) =>
-                          handleNameChange(e, field.onChange)
-                        }
+                        onChange={(e) => handleNameChange(e, field.onChange)}
                       />
                     </FormControl>
                     <FormMessage />

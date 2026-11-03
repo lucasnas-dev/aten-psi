@@ -95,6 +95,7 @@ export const patients = pgTable("patients", {
   gender: varchar("gender", { length: 20 }),
   cpf: varchar("cpf", { length: 14 }),
   responsible_cpf: varchar("responsible_cpf", { length: 14 }),
+  responsible_name: varchar("responsible_name", { length: 255 }),
   cep: varchar("cep", { length: 10 }),
   address: text("address"),
   house_number: varchar("house_number", { length: 20 }),

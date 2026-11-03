@@ -5,6 +5,7 @@ import {
   Download,
   FileCheck2,
   FileText,
+  Loader2,
   Lock,
   Plus,
   Printer,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -44,6 +46,8 @@ export type RecordData = {
     gender: string;
     cpf: string;
     responsibleCpf: string;
+    responsibleName?: string | null;
+    emergencyContact?: string | null;
     notes: string;
     address: string;
   };
@@ -79,16 +83,186 @@ const documentFields = [
   "Conclusão",
   "Referências",
 ];
-const ageOf = (value: string) => {
-  const birth = new Date(value);
+const value = (text?: string | null) => text?.trim() || "Não informado";
+const today = () => new Date().toISOString().slice(0, 10);
+
+const calculatePatientAge = (birthDate: string) => {
+  const [year, month, day] = birthDate.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const birth = new Date(year, month - 1, day);
   const now = new Date();
-  let age = now.getFullYear() - birth.getFullYear();
-  if (now < new Date(now.getFullYear(), birth.getMonth(), birth.getDate()))
+  if (
+    birth.getFullYear() !== year ||
+    birth.getMonth() !== month - 1 ||
+    birth.getDate() !== day ||
+    birth > now
+  )
+    return null;
+  let age = now.getFullYear() - year;
+  if (
+    now.getMonth() + 1 < month ||
+    (now.getMonth() + 1 === month && now.getDate() < day)
+  )
     age--;
   return age;
 };
-const value = (text?: string | null) => text?.trim() || "Não informado";
-const today = () => new Date().toISOString().slice(0, 10);
+
+function PatientIdentificationTab({
+  patient,
+  professional,
+}: {
+  patient: RecordData["patient"];
+  professional: RecordData["professional"];
+}) {
+  const [emergencyContact, setEmergencyContact] = useState(
+    patient.emergencyContact ?? ""
+  );
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const age = calculatePatientAge(patient.birthDate);
+  const minor = age !== null && age < 18;
+
+  const handleSaveIdentification = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    setSaveMessage("");
+    try {
+      // Simulação: o contato de emergência ainda não é persistido no banco.
+      await new Promise<void>((resolve) => setTimeout(resolve, 600));
+      setSaveMessage(
+        "Simulação concluída. Contato de emergência mantido apenas nesta tela, sem gravação no banco."
+      );
+      toast.success("Identificação salva em simulação", {
+        description: "O contato de emergência permanece apenas nesta tela.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <TabsContent
+      value="identification"
+      forceMount
+      className={`${styles.officialSection} mt-0`}
+    >
+      <section>
+        <div className="pb-2">
+          <h2 className="text-base font-semibold">Identificação</h2>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <Label>Nome</Label>
+            <p className="mt-1 text-lg font-semibold">
+              {patient.socialName?.trim() || patient.name}
+            </p>
+            {patient.socialName?.trim() && (
+              <p className="text-muted-foreground mt-1 text-sm">
+                Nome civil: {patient.name}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label>Nascimento</Label>
+            <p className="mt-1">
+              {formatDate(patient.birthDate)}
+              {age !== null && ` (${age} anos)`}
+            </p>
+          </div>
+          <div>
+            <Label>CPF</Label>
+            <p className="mt-1">{value(patient.cpf)}</p>
+          </div>
+          <div>
+            <Label>Contato</Label>
+            <p className="mt-1">
+              {value(patient.phone)} · {value(patient.email)}
+            </p>
+          </div>
+          <div>
+            <Label>Psicólogo Responsável</Label>
+            <p className="mt-1">{value(professional.name)}</p>
+            <p className="text-muted-foreground text-sm">
+              CRP: {value(professional.crp)}
+            </p>
+          </div>
+          <div className="sm:col-span-2">
+            <Label>Endereço</Label>
+            <p className="mt-1">{value(patient.address)}</p>
+          </div>
+          {minor && (
+            <div className="rounded border border-amber-200 bg-amber-50 p-4 sm:col-span-2">
+              <p className="font-medium">Responsável legal</p>
+              <div className="mt-1 grid gap-1 text-sm sm:grid-cols-2">
+                <p>Nome: {value(patient.responsibleName)}</p>
+                <p>CPF: {value(patient.responsibleCpf)}</p>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <Badge variant="outline">
+                  Termo de autorização: assinatura não verificada
+                </Badge>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    toast.info(
+                      "Geração do termo de autorização ainda não disponível."
+                    )
+                  }
+                >
+                  <Printer className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Imprimir Termo de Autorização
+                </Button>
+              </div>
+            </div>
+          )}
+          <div className="sm:col-span-2">
+            <Label htmlFor="identification-emergency-contact">
+              Contato de emergência
+            </Label>
+            <Input
+              id="identification-emergency-contact"
+              className="mt-1 h-8 text-sm"
+              placeholder="Nome e telefone"
+              value={emergencyContact}
+              disabled={isSaving}
+              onChange={(event) => {
+                setEmergencyContact(event.target.value);
+                setSaveMessage("");
+              }}
+            />
+            <Button
+              type="button"
+              className="mt-3"
+              size="sm"
+              disabled={isSaving}
+              aria-busy={isSaving}
+              onClick={handleSaveIdentification}
+            >
+              {isSaving ? (
+                <Loader2
+                  className="mr-2 h-4 w-4 animate-spin"
+                  aria-hidden="true"
+                />
+              ) : (
+                <Save className="mr-2 h-4 w-4" aria-hidden="true" />
+              )}
+              {isSaving ? "Salvando..." : "Salvar identificação"}
+            </Button>
+            <p
+              role="status"
+              aria-live="polite"
+              className="text-muted-foreground mt-2 text-xs print:hidden"
+            >
+              {saveMessage}
+            </p>
+          </div>
+        </div>
+      </section>
+    </TabsContent>
+  );
+}
 
 export function PsychologicalRecordView({
   data,
@@ -120,7 +294,6 @@ export function PsychologicalRecordView({
         </Alert>
       </div>
     );
-  const minor = ageOf(data.patient.birthDate) < 18;
   return (
     <div className={`${styles.record} space-y-3 print:p-0`}>
       <header className="flex flex-wrap items-center justify-between gap-2 print:hidden">
@@ -210,94 +383,11 @@ export function PsychologicalRecordView({
                 5. Documentos
               </TabsTrigger>
             </TabsList>
-            <TabsContent
-              value="identification"
-              forceMount
-              className={`${styles.officialSection} mt-0`}
-            >
-              <section>
-                <div className="pb-2">
-                  <h2 className="text-base font-semibold">Identificação</h2>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <Label>Nome</Label>
-                    <p className="mt-1 text-lg font-semibold">
-                      {data.patient.socialName?.trim() || data.patient.name}
-                    </p>
-                    {data.patient.socialName?.trim() && (
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        Nome civil: {data.patient.name}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Label>Nascimento</Label>
-                    <p className="mt-1">
-                      {formatDate(data.patient.birthDate)} (
-                      {ageOf(data.patient.birthDate)} anos)
-                    </p>
-                  </div>
-                  <div>
-                    <Label>Gênero</Label>
-                    <p className="mt-1">{value(data.patient.gender)}</p>
-                  </div>
-                  <div>
-                    <Label>CPF</Label>
-                    <p className="mt-1">{value(data.patient.cpf)}</p>
-                  </div>
-                  <div>
-                    <Label>Contato</Label>
-                    <p className="mt-1">
-                      {value(data.patient.phone)} · {value(data.patient.email)}
-                    </p>
-                  </div>
-                  <div>
-                    <Label>Psicólogo Responsável</Label>
-                    <p className="mt-1">{value(data.professional.name)}</p>
-                    <p className="text-muted-foreground text-sm">
-                      CRP: {value(data.professional.crp)}
-                    </p>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Label>Endereço</Label>
-                    <p className="mt-1">{value(data.patient.address)}</p>
-                  </div>
-                  {minor && (
-                    <div className="rounded border border-amber-200 bg-amber-50 p-4 sm:col-span-2">
-                      <p className="font-medium">Responsável legal</p>
-                      <p className="text-sm">
-                        CPF: {value(data.patient.responsibleCpf)}
-                      </p>
-                      <Label className="mt-3 block">
-                        Nome do Responsável Legal
-                      </Label>
-                      <Input className="mt-1" placeholder="Nome completo" />
-                      <Badge
-                        className="mt-2"
-                        variant={
-                          data.patient.responsibleCpf
-                            ? "default"
-                            : "destructive"
-                        }
-                      >
-                        {data.patient.responsibleCpf
-                          ? "Termo de autorização: verificar assinatura"
-                          : "Termo de autorização pendente"}
-                      </Badge>
-                    </div>
-                  )}
-                  <div className="sm:col-span-2">
-                    <Label>Contato de emergência</Label>
-                    <Input placeholder="Nome e telefone" />
-                    <Button className="mt-3" size="sm">
-                      <Save className="mr-2 h-4 w-4" />
-                      Salvar identificação
-                    </Button>
-                  </div>
-                </div>
-              </section>
-            </TabsContent>
+            <PatientIdentificationTab
+              key={data.patient.id}
+              patient={data.patient}
+              professional={data.professional}
+            />
             <TabsContent
               value="plan"
               forceMount

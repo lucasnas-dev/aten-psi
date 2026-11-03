@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
@@ -33,7 +33,9 @@ export const upsertPatient = tenantActionClient
             .update(patients)
             .set({
               name: parsedInput.name,
-              social_name: parsedInput.useSocialName ? parsedInput.socialName || null : null,
+              social_name: parsedInput.useSocialName
+                ? parsedInput.socialName || null
+                : null,
               status: parsedInput.status,
               birth_date: parsedInput.birthDate || "",
               email: parsedInput.email,
@@ -41,6 +43,10 @@ export const upsertPatient = tenantActionClient
               gender: parsedInput.gender,
               cpf: parsedInput.cpf,
               responsible_cpf: parsedInput.responsibleCpf,
+              responsible_name:
+                parsedInput.responsibleName === undefined
+                  ? undefined
+                  : parsedInput.responsibleName.trim() || null,
               cep: parsedInput.cep,
               address: parsedInput.address,
               house_number: parsedInput.houseNumber,
@@ -50,12 +56,19 @@ export const upsertPatient = tenantActionClient
               notes: parsedInput.notes,
               updated_at: new Date(),
             })
-            .where(eq(patients.id, parsedInput.id));
+            .where(
+              and(
+                eq(patients.id, parsedInput.id),
+                eq(patients.tenant_id, ctx.user.tenantId)
+              )
+            );
         } else {
           // Insert new patient
           await db.insert(patients).values({
             name: parsedInput.name,
-            social_name: parsedInput.useSocialName ? parsedInput.socialName || null : null,
+            social_name: parsedInput.useSocialName
+              ? parsedInput.socialName || null
+              : null,
             status: parsedInput.status,
             birth_date: parsedInput.birthDate || "",
             email: parsedInput.email,
@@ -63,6 +76,7 @@ export const upsertPatient = tenantActionClient
             gender: parsedInput.gender,
             cpf: parsedInput.cpf,
             responsible_cpf: parsedInput.responsibleCpf,
+            responsible_name: parsedInput.responsibleName?.trim() || null,
             cep: parsedInput.cep,
             address: parsedInput.address,
             house_number: parsedInput.houseNumber,
@@ -77,6 +91,7 @@ export const upsertPatient = tenantActionClient
         revalidatePath("/patients");
         if (parsedInput.id) {
           revalidatePath(`/patients/${parsedInput.id}`);
+          revalidatePath(`/patients/${parsedInput.id}/psychological-record`);
         }
 
         return { success: true };

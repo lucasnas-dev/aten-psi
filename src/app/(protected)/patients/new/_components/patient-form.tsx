@@ -21,12 +21,14 @@ type PatientFormValues = z.infer<typeof upsertPatientSchema>;
 type InitialPatient = {
   id: string;
   name: string;
+  social_name: string | null;
   email: string | null;
   phone: string | null;
   birth_date: string;
   gender: string | null;
   cpf: string | null;
   responsible_cpf: string | null;
+  responsible_name: string | null;
   cep: string | null;
   address: string | null;
   house_number: string | null;
@@ -50,7 +52,7 @@ export function PatientForm({
     defaultValues: {
       name: "",
       useSocialName: false,
-      socialName: initialPatient?.socialName ?? "",
+      socialName: "",
       email: "",
       phone: "",
       birthDate: "",
@@ -75,15 +77,21 @@ export function PatientForm({
     form.reset({
       id: initialPatient.id,
       name: initialPatient.name,
-      useSocialName: false,
-      socialName: "",
+      useSocialName: Boolean(initialPatient.social_name?.trim()),
+      socialName: initialPatient.social_name || "",
       email: initialPatient.email || "",
       phone: initialPatient.phone || "",
       birthDate: initialPatient.birth_date,
-      gender: initialPatient.gender || "",
+      gender:
+        initialPatient.gender === "male" ||
+        initialPatient.gender === "female" ||
+        initialPatient.gender === "other" ||
+        initialPatient.gender === "not_informed"
+          ? initialPatient.gender
+          : "",
       cpf: initialPatient.cpf || "",
       responsibleCpf: initialPatient.responsible_cpf || "",
-      responsibleName: "",
+      responsibleName: initialPatient.responsible_name || "",
       cep: initialPatient.cep || "",
       address: initialPatient.address || "",
       houseNumber: initialPatient.house_number || "",
@@ -112,7 +120,6 @@ export function PatientForm({
 
   async function onSubmit(data: PatientFormValues) {
     setError(null);
-    console.log("Dados sendo enviados:", data);
     execute(data);
   }
 
