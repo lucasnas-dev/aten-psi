@@ -50,7 +50,7 @@ export default async function NewPatientPage({
   }
 
   return (
-    <div className="space-y-2 p-3">
+    <div className="min-w-0 space-y-3">
       {/* Formulário direto */}
       <PatientForm initialPatient={initialPatient} />
     </div>

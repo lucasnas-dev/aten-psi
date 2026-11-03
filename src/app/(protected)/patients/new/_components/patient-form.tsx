@@ -133,7 +133,7 @@ export function PatientForm({
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-1 p-3">
+          <div className="space-y-1">
             {error && (
               <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
                 {error}
