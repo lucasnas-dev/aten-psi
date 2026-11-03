@@ -6,8 +6,8 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-auto">{children}</div>
+    <div className="flex w-full max-w-5xl min-w-0 flex-col">
+      <div className="min-w-0 flex-1">{children}</div>
     </div>
   );
 }

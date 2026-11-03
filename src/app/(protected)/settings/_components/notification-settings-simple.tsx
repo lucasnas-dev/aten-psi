@@ -144,7 +144,7 @@ export function NotificationSettingsSimple({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="max-w-2xl">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-sm font-semibold">

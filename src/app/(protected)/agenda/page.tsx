@@ -158,7 +158,7 @@ export default function AgendaPage() {
     switch (viewMode) {
       case "month":
         return (
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             {/* Calendário menor */}
             <div className="lg:col-span-1">
               <CalendarView
@@ -188,7 +188,7 @@ export default function AgendaPage() {
         );
       case "week":
         return (
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             {/* Visualização semanal melhorada (agora ocupa a largura inteira) */}
             <div className="lg:col-span-3">
               <EnhancedWeekView
@@ -242,7 +242,7 @@ export default function AgendaPage() {
   };
 
   return (
-    <div className="space-y-4 p-4 sm:space-y-6 sm:p-6">
+    <div className="min-w-0 space-y-3">
       {/* Filtros */}
       <Filters
         viewMode={viewMode}
@@ -255,7 +255,7 @@ export default function AgendaPage() {
 
       {/* Loading State */}
       {isLoading ? (
-        <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
+        <div className="bg-card rounded-lg border p-4 text-center shadow-sm">
           <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"></div>
           <p className="text-muted-foreground">Carregando consultas...</p>
         </div>

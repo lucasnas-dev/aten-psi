@@ -133,13 +133,13 @@ export function DayView({
   return (
     <div className="bg-card rounded-lg border shadow-sm">
       {/* Header */}
-      <div className="border-b p-6">
-        <h2 className="text-xl sm:text-2xl font-bold">
+      <div className="border-b p-4">
+        <h2 className="text-base font-semibold">
           {format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", {
             locale: ptBR,
           })}
         </h2>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-xs">
           {events.length} consulta{events.length !== 1 ? "s" : ""} agendada
           {events.length !== 1 ? "s" : ""}
         </p>
@@ -148,7 +148,7 @@ export function DayView({
       {/* Timeline */}
       <div className="max-h-[600px] overflow-y-auto">
         {timeSlots.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 p-8 text-center">
+          <div className="flex flex-col items-center gap-3 p-4 text-center">
             <Clock className="text-muted-foreground h-10 w-10" />
             <p className="text-muted-foreground text-sm">
               Não há horário de atendimento configurado para este dia.
@@ -163,89 +163,89 @@ export function DayView({
           <div className="p-4">
             <div className="space-y-1">
               {timeSlots.map((timeSlot) => {
-              const slotEvents = getEventsForTimeSlot(timeSlot);
-              const isEmpty = slotEvents.length === 0;
+                const slotEvents = getEventsForTimeSlot(timeSlot);
+                const isEmpty = slotEvents.length === 0;
 
-              return (
-                <div key={timeSlot.toISOString()} className="flex">
-                  {/* Time Label */}
-                  <div className="w-20 flex-shrink-0 py-3 pr-4">
-                    <span className="text-muted-foreground text-sm font-medium">
-                      {format(timeSlot, "HH:mm")}
-                    </span>
-                  </div>
+                return (
+                  <div key={timeSlot.toISOString()} className="flex">
+                    {/* Time Label */}
+                    <div className="w-20 flex-shrink-0 py-3 pr-4">
+                      <span className="text-muted-foreground text-sm font-medium">
+                        {format(timeSlot, "HH:mm")}
+                      </span>
+                    </div>
 
-                  {/* Event Area */}
-                  <div className="min-h-[60px] flex-1">
-                    {isEmpty ? (
-                      <Button
-                        variant="ghost"
-                        className="border-border hover:border-primary hover:bg-primary/5 h-full w-full justify-start border-2 border-dashed transition-all duration-200"
-                        onClick={() => onTimeSlotClick(timeSlot)}
-                      >
-                        <span className="text-muted-foreground text-sm">
-                          Clique para agendar
-                        </span>
-                      </Button>
-                    ) : (
-                      <div className="space-y-2">
-                        {slotEvents.map((event) => (
-                          <div
-                            key={event.id}
-                            className={cn(
-                              "cursor-pointer rounded-lg border-l-4 p-4 transition-all duration-200 hover:shadow-md",
-                              getStatusColor(event.status)
-                            )}
-                            onClick={() => onEventClick(event)}
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="mb-2 flex items-center gap-2">
-                                  <User className="h-4 w-4" />
-                                  <span className="font-medium">
-                                    {event.pacienteNome}
-                                  </span>
-                                  <Badge
-                                    className={getStatusBadgeColor(
-                                      event.status
-                                    )}
-                                  >
-                                    {getStatusText(event.status)}
-                                  </Badge>
-                                </div>
-
-                                <div className="text-muted-foreground flex items-center gap-4 text-sm">
-                                  <div className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3" />
-                                    {format(event.start, "HH:mm")} -{" "}
-                                    {format(event.end, "HH:mm")}
+                    {/* Event Area */}
+                    <div className="min-h-[60px] flex-1">
+                      {isEmpty ? (
+                        <Button
+                          variant="ghost"
+                          className="border-border hover:border-primary hover:bg-primary/5 h-full w-full justify-start border-2 border-dashed transition-all duration-200"
+                          onClick={() => onTimeSlotClick(timeSlot)}
+                        >
+                          <span className="text-muted-foreground text-sm">
+                            Clique para agendar
+                          </span>
+                        </Button>
+                      ) : (
+                        <div className="space-y-2">
+                          {slotEvents.map((event) => (
+                            <div
+                              key={event.id}
+                              className={cn(
+                                "cursor-pointer rounded-lg border-l-4 p-4 transition-all duration-200 hover:shadow-md",
+                                getStatusColor(event.status)
+                              )}
+                              onClick={() => onEventClick(event)}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="mb-2 flex items-center gap-2">
+                                    <User className="h-4 w-4" />
+                                    <span className="font-medium">
+                                      {event.pacienteNome}
+                                    </span>
+                                    <Badge
+                                      className={getStatusBadgeColor(
+                                        event.status
+                                      )}
+                                    >
+                                      {getStatusText(event.status)}
+                                    </Badge>
                                   </div>
-                                  <div className="flex items-center gap-1">
-                                    {event.modalidade === "online" ? (
-                                      <Video className="h-3 w-3" />
-                                    ) : (
-                                      <MapPin className="h-3 w-3" />
-                                    )}
-                                    {event.modalidade === "online"
-                                      ? "Online"
-                                      : "Presencial"}
-                                  </div>
-                                </div>
 
-                                {event.observacoes && (
-                                  <p className="text-muted-foreground mt-2 text-sm">
-                                    {event.observacoes}
-                                  </p>
-                                )}
+                                  <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                                    <div className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      {format(event.start, "HH:mm")} -{" "}
+                                      {format(event.end, "HH:mm")}
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      {event.modalidade === "online" ? (
+                                        <Video className="h-3 w-3" />
+                                      ) : (
+                                        <MapPin className="h-3 w-3" />
+                                      )}
+                                      {event.modalidade === "online"
+                                        ? "Online"
+                                        : "Presencial"}
+                                    </div>
+                                  </div>
+
+                                  {event.observacoes && (
+                                    <p className="text-muted-foreground mt-2 text-sm">
+                                      {event.observacoes}
+                                    </p>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
+                );
               })}
             </div>
           </div>

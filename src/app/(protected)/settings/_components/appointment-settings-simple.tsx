@@ -126,7 +126,7 @@ export function AppointmentSettingsSimple({
             max={max}
             disabled={isSaving}
           />
-          <span className="text-muted-foreground text-sm">{unit}</span>
+          <span className="text-muted-foreground text-xs">{unit}</span>
         </div>
       </div>
     </div>
@@ -150,7 +150,7 @@ export function AppointmentSettingsSimple({
         <Icon className="text-muted-foreground h-4 w-4" />
         <div>
           <Label className="text-sm">{label}</Label>
-          <p className="text-muted-foreground text-sm">{description}</p>
+          <p className="text-muted-foreground text-xs">{description}</p>
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export function AppointmentSettingsSimple({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Configurações de Consulta */}
       <div className="max-w-2xl">
         <div className="mb-4 flex items-center justify-between">
@@ -230,7 +230,7 @@ export function AppointmentSettingsSimple({
             <CalendarCheck className="h-4 w-4" />
             Preferências de Agendamento
           </h3>
-          <p className="text-muted-foreground mt-0.5 text-sm">
+          <p className="text-muted-foreground mt-0.5 text-xs">
             Configure as regras de agendamento
           </p>
         </div>

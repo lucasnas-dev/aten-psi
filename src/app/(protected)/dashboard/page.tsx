@@ -22,12 +22,12 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
+    <div className="min-w-0 space-y-3">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Painel</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-lg font-semibold">Painel</h1>
+          <p className="text-muted-foreground text-xs">
             Visão geral da sua prática psicológica
           </p>
         </div>
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Cards de estatísticas */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-2">
           <div className="flex flex-row items-center justify-between">
             <h3 className="text-sm font-medium">Total de Pacientes</h3>
@@ -98,9 +98,7 @@ export default async function DashboardPage() {
 
         <TabsContent value="proximas" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-lg font-semibold sm:text-xl">
-              Próximas Consultas
-            </h3>
+            <h3 className="mb-2 text-base font-semibold">Próximas Consultas</h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Suas consultas agendadas para os próximos dias
             </p>
@@ -114,9 +112,7 @@ export default async function DashboardPage() {
 
         <TabsContent value="pacientes" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-lg font-semibold sm:text-xl">
-              Pacientes Recentes
-            </h3>
+            <h3 className="mb-2 text-base font-semibold">Pacientes Recentes</h3>
             <p className="text-muted-foreground mb-4 text-sm">
               Últimos pacientes atendidos
             </p>
@@ -130,7 +126,7 @@ export default async function DashboardPage() {
 
         <TabsContent value="alertas" className="space-y-4">
           <div>
-            <h3 className="mb-2 text-lg font-semibold sm:text-xl">
+            <h3 className="mb-2 text-base font-semibold">
               Alertas e Lembretes
             </h3>
             <p className="text-muted-foreground mb-4 text-sm">

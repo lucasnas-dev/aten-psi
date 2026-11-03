@@ -185,7 +185,7 @@ export default function SettingsPage() {
         onValueChange={setActiveTab}
         className="space-y-4"
       >
-        <TabsList className="grid h-10 w-full grid-cols-4">
+        <TabsList className="grid h-9 w-full grid-cols-4">
           <TabsTrigger
             value="profile"
             className="flex items-center gap-2 text-sm"

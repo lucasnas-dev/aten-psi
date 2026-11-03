@@ -123,87 +123,97 @@ function PatientIdentificationTab({
       forceMount
       className={`${styles.officialSection} mt-0`}
     >
-      <section>
-        <div className="pb-2">
-          <h2 className="text-base font-semibold">Identificação</h2>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <Label>Nome</Label>
-            <p className="mt-1 text-lg font-semibold">
+      <section className="min-w-0 space-y-4">
+        <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+          <div className="min-w-0 space-y-1">
+            <dt className="text-muted-foreground">Nome</dt>
+            <dd className="text-foreground font-semibold break-words">
               {patient.socialName?.trim() || patient.name}
-            </p>
+            </dd>
             {patient.socialName?.trim() && (
-              <p className="text-muted-foreground mt-1 text-sm">
+              <dd className="text-muted-foreground break-words">
                 Nome civil: {patient.name}
-              </p>
+              </dd>
             )}
           </div>
-          <div>
-            <Label>Nascimento</Label>
-            <p className="mt-1">
+          <div className="min-w-0 space-y-1">
+            <dt className="text-muted-foreground">Nascimento</dt>
+            <dd>
               {formatDate(patient.birthDate)}
               {age !== null && ` (${age} anos)`}
-            </p>
+            </dd>
           </div>
-          <div>
-            <Label>CPF</Label>
-            <p className="mt-1">{value(patient.cpf)}</p>
+          <div className="min-w-0 space-y-1">
+            <dt className="text-muted-foreground">CPF</dt>
+            <dd>{value(patient.cpf)}</dd>
           </div>
-          <div>
-            <Label>Contato</Label>
-            <p className="mt-1">
-              {value(patient.phone)} · {value(patient.email)}
-            </p>
+          <div className="min-w-0 space-y-1">
+            <dt className="text-muted-foreground">Telefone</dt>
+            <dd className="break-words">{value(patient.phone)}</dd>
           </div>
-          <div>
-            <Label>Psicólogo Responsável</Label>
-            <p className="mt-1">{value(professional.name)}</p>
-            <p className="text-muted-foreground text-sm">
+          <div className="min-w-0 space-y-1">
+            <dt className="text-muted-foreground">E-mail</dt>
+            <dd className="break-words">{value(patient.email)}</dd>
+          </div>
+          <div className="min-w-0 space-y-1">
+            <dt className="text-muted-foreground">Psicólogo responsável</dt>
+            <dd className="break-words">{value(professional.name)}</dd>
+            <dd className="text-muted-foreground">
               CRP: {value(professional.crp)}
-            </p>
+            </dd>
           </div>
-          <div className="sm:col-span-2">
-            <Label>Endereço</Label>
-            <p className="mt-1">{value(patient.address)}</p>
+          <div className="min-w-0 space-y-1 sm:col-span-2 lg:col-span-3">
+            <dt className="text-muted-foreground">Endereço</dt>
+            <dd className="break-words">{value(patient.address)}</dd>
           </div>
-          {minor && (
-            <div className="rounded border border-amber-200 bg-amber-50 p-4 sm:col-span-2">
-              <p className="font-medium">Responsável legal</p>
-              <div className="mt-1 grid gap-1 text-sm sm:grid-cols-2">
-                <p>Nome: {value(patient.responsibleName)}</p>
-                <p>CPF: {value(patient.responsibleCpf)}</p>
+        </dl>
+        {minor && (
+          <section className="min-w-0 space-y-3 border-t pt-3">
+            <h3 className="text-foreground text-sm font-semibold">
+              Responsável legal
+            </h3>
+            <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+              <div className="min-w-0 space-y-1">
+                <dt className="text-muted-foreground">Nome</dt>
+                <dd className="break-words">
+                  {value(patient.responsibleName)}
+                </dd>
               </div>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <Badge variant="outline">
-                  Termo de autorização: assinatura não verificada
-                </Badge>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    toast.info(
-                      "Geração do termo de autorização ainda não disponível."
-                    )
-                  }
-                >
-                  <Printer className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Imprimir Termo de Autorização
-                </Button>
+              <div className="min-w-0 space-y-1">
+                <dt className="text-muted-foreground">CPF</dt>
+                <dd>{value(patient.responsibleCpf)}</dd>
               </div>
+            </dl>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline" className="max-w-full whitespace-normal">
+                Termo de autorização: assinatura não verificada
+              </Badge>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-auto min-h-8 max-w-full whitespace-normal print:hidden"
+                onClick={() =>
+                  toast.info(
+                    "Geração do termo de autorização ainda não disponível."
+                  )
+                }
+              >
+                <Printer className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+                Imprimir Termo de Autorização
+              </Button>
             </div>
-          )}
-          <div className="sm:col-span-2">
-            <Label>Contato de emergência</Label>
-            <div className="mt-1 grid gap-1 text-sm sm:grid-cols-2">
-              <p>Nome: {value(patient.emergencyContactName)}</p>
-              <p>Telefone: {value(patient.emergencyContactPhone)}</p>
-            </div>
+          </section>
+        )}
+        <section className="min-w-0 space-y-3 border-t pt-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="text-foreground text-sm font-semibold">
+              Contato de emergência
+            </h3>
             <Button
-              className="mt-2 print:hidden"
               variant="outline"
               size="sm"
+              className="print:hidden"
               asChild
             >
               <Link href={`/patients/new?patientId=${patient.id}`}>
@@ -211,7 +221,21 @@ function PatientIdentificationTab({
               </Link>
             </Button>
           </div>
-        </div>
+          <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+            <div className="min-w-0 space-y-1">
+              <dt className="text-muted-foreground">Nome</dt>
+              <dd className="break-words">
+                {value(patient.emergencyContactName)}
+              </dd>
+            </div>
+            <div className="min-w-0 space-y-1">
+              <dt className="text-muted-foreground">Telefone</dt>
+              <dd className="break-words">
+                {value(patient.emergencyContactPhone)}
+              </dd>
+            </div>
+          </dl>
+        </section>
       </section>
     </TabsContent>
   );
@@ -238,7 +262,7 @@ export function PsychologicalRecordView({
   const [document, setDocument] = useState(documents[0]);
   if (!data)
     return (
-      <div className="p-6">
+      <div className="min-w-0">
         <Alert variant="destructive">
           <AlertCircle />
           <AlertDescription>
@@ -248,7 +272,9 @@ export function PsychologicalRecordView({
       </div>
     );
   return (
-    <div className={`${styles.record} space-y-3 print:p-0`}>
+    <div
+      className={`${styles.record} w-full max-w-5xl min-w-0 space-y-3 print:max-w-none print:p-0`}
+    >
       <header className="flex flex-wrap items-center justify-between gap-2 print:hidden">
         <Button size="sm" variant="outline" asChild>
           <Link href={`/patients/${data.patient.id}`}>
@@ -269,7 +295,7 @@ export function PsychologicalRecordView({
       <section>
         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
           <div>
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-lg font-semibold">
               {data.patient.socialName?.trim() || data.patient.name}
             </h2>
           </div>

@@ -136,7 +136,7 @@ export function ProfileSettingsSimple({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Informações Pessoais */}
       <div className="max-w-2xl">
         <div className="mb-4 flex items-center justify-between">

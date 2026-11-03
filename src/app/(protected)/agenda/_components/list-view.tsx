@@ -99,12 +99,12 @@ export function ListView({
 
   if (events.length === 0) {
     return (
-      <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
+      <div className="bg-card rounded-lg border p-4 text-center shadow-sm">
         <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
         <h3 className="mb-2 text-base font-medium sm:text-lg">
           Nenhuma consulta encontrada
         </h3>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-muted-foreground mb-3 text-xs">
           Não há consultas agendadas para os filtros selecionados.
         </p>
         <Button>Nova Consulta</Button>
@@ -114,9 +114,9 @@ export function ListView({
 
   return (
     <div className="bg-card rounded-lg border shadow-sm">
-      <div className="border-b p-6">
-        <h2 className="text-xl font-bold sm:text-2xl">Lista de Consultas</h2>
-        <p className="text-muted-foreground mt-1">
+      <div className="border-b p-4">
+        <h2 className="text-base font-semibold">Lista de Consultas</h2>
+        <p className="text-muted-foreground mt-1 text-xs">
           {events.length} consulta{events.length !== 1 ? "s" : ""} encontrada
           {events.length !== 1 ? "s" : ""}
         </p>

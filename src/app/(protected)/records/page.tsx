@@ -199,7 +199,7 @@ export default function RecordsPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-7xl space-y-4 p-4 sm:space-y-5 sm:p-5">
+    <div className="min-w-0 space-y-3">
       {/* Header */}
       <div className="flex w-full flex-wrap items-center justify-start gap-2">
         <CodingSystemInfo />

@@ -160,18 +160,18 @@ export default async function PatientDetailsPage({
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="w-full max-w-5xl min-w-0 space-y-3">
       {/* Header com navegação */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-start gap-3">
           <div>
-            <div className="mb-1 flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight">
+            <div className="mb-1 flex flex-wrap items-center gap-2">
+              <h1 className="text-lg font-semibold break-words">
                 {patient.name}
               </h1>
               <PatientStatusBadge status={patient.status} />
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Cadastrado em{" "}
               {new Date(patient.created_at || new Date()).toLocaleDateString(
                 "pt-BR"
@@ -179,7 +179,7 @@ export default async function PatientDetailsPage({
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <BackButton />
           <Button variant="outline" size="sm" asChild>
             <Link href={`/patients/new?patientId=${patient.id}`}>
@@ -200,7 +200,7 @@ export default async function PatientDetailsPage({
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-3">
         {hasIncompleteProfile && (
           <div
             className="flex flex-col gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-950 sm:flex-row sm:items-center sm:justify-between"
@@ -233,11 +233,11 @@ export default async function PatientDetailsPage({
 
         {/* Informações Pessoais e Contato */}
         <div>
-          <h2 className="mb-3 text-lg font-semibold sm:text-xl">
+          <h2 className="mb-3 text-base font-semibold">
             Informações Pessoais e Contato
           </h2>
           <div className="space-y-3">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {/* Coluna 1 - Informações Pessoais */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
@@ -406,7 +406,7 @@ export default async function PatientDetailsPage({
         </div>
 
         <div className="max-w-3xl">
-          <h2 className="mb-3 text-lg font-semibold sm:text-xl">
+          <h2 className="mb-3 text-base font-semibold">
             Histórico de consultas
           </h2>
           {consultationHistory.length === 0 ? (
@@ -421,7 +421,7 @@ export default async function PatientDetailsPage({
                   className="border-b border-slate-100 py-2 last:border-b-0"
                 >
                   <div className="flex items-center justify-start gap-2">
-                    <p className="text-muted-foreground text-xs sm:text-sm">
+                    <p className="text-muted-foreground text-xs">
                       {formatConsultationDate(consultation.date)} às{" "}
                       {consultation.time}
                     </p>

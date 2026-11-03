@@ -333,12 +333,12 @@ export function WorkingHoursSimple({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         {/* Coluna esquerda: Horários de trabalho */}
         <div>
           {/* Seletor de Mês */}
-          <div className="mb-6 rounded-lg border p-4">
+          <div className="mb-3 rounded-lg border p-4">
             <div className="mb-4 flex items-center justify-between">
               <Label className="text-sm font-medium">
                 Configurar horários para:
