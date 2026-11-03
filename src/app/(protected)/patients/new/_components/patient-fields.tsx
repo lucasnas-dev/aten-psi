@@ -376,6 +376,54 @@ export function PatientFields({
         </div>
       </div>
 
+      <div className="space-y-2">
+        <h3 className="text-foreground border-b pb-1 text-sm font-semibold sm:text-base">
+          Contato de emergência
+        </h3>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <FormField
+            control={control}
+            name="emergencyContactName"
+            render={({ field }) => (
+              <FormItem className="gap-1">
+                <FormLabel>Nome do contato</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Nome completo do contato de emergência"
+                    className="form-input-enhanced"
+                    maxLength={255}
+                    {...field}
+                    onChange={(e) => handleNameChange(e, field.onChange)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="emergencyContactPhone"
+            render={({ field }) => (
+              <FormItem className="gap-1">
+                <FormLabel>Telefone do contato</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="(00) 00000-0000"
+                    className="form-input-enhanced"
+                    type="tel"
+                    maxLength={15}
+                    {...field}
+                    value={formatPhone(field.value || "")}
+                    onChange={(e) => handlePhoneChange(e, field.onChange)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+
       {/* Seção: Endereço */}
       <div className="space-y-2">
         <h3 className="text-foreground border-b pb-1 text-sm font-semibold sm:text-base">

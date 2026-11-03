@@ -29,6 +29,8 @@ type InitialPatient = {
   cpf: string | null;
   responsible_cpf: string | null;
   responsible_name: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
   cep: string | null;
   address: string | null;
   house_number: string | null;
@@ -60,6 +62,8 @@ export function PatientForm({
       cpf: "",
       responsibleCpf: "",
       responsibleName: "",
+      emergencyContactName: "",
+      emergencyContactPhone: "",
       cep: "",
       address: "",
       houseNumber: "",
@@ -92,6 +96,8 @@ export function PatientForm({
       cpf: initialPatient.cpf || "",
       responsibleCpf: initialPatient.responsible_cpf || "",
       responsibleName: initialPatient.responsible_name || "",
+      emergencyContactName: initialPatient.emergency_contact_name || "",
+      emergencyContactPhone: initialPatient.emergency_contact_phone || "",
       cep: initialPatient.cep || "",
       address: initialPatient.address || "",
       houseNumber: initialPatient.house_number || "",

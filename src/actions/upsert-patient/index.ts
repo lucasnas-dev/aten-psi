@@ -47,6 +47,14 @@ export const upsertPatient = tenantActionClient
                 parsedInput.responsibleName === undefined
                   ? undefined
                   : parsedInput.responsibleName.trim() || null,
+              emergency_contact_name:
+                parsedInput.emergencyContactName === undefined
+                  ? undefined
+                  : parsedInput.emergencyContactName.trim() || null,
+              emergency_contact_phone:
+                parsedInput.emergencyContactPhone === undefined
+                  ? undefined
+                  : parsedInput.emergencyContactPhone || null,
               cep: parsedInput.cep,
               address: parsedInput.address,
               house_number: parsedInput.houseNumber,
@@ -77,6 +85,9 @@ export const upsertPatient = tenantActionClient
             cpf: parsedInput.cpf,
             responsible_cpf: parsedInput.responsibleCpf,
             responsible_name: parsedInput.responsibleName?.trim() || null,
+            emergency_contact_name:
+              parsedInput.emergencyContactName?.trim() || null,
+            emergency_contact_phone: parsedInput.emergencyContactPhone || null,
             cep: parsedInput.cep,
             address: parsedInput.address,
             house_number: parsedInput.houseNumber,

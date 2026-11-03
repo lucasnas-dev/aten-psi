@@ -5,7 +5,6 @@ import {
   Download,
   FileCheck2,
   FileText,
-  Loader2,
   Lock,
   Plus,
   Printer,
@@ -47,7 +46,8 @@ export type RecordData = {
     cpf: string;
     responsibleCpf: string;
     responsibleName?: string | null;
-    emergencyContact?: string | null;
+    emergencyContactName: string;
+    emergencyContactPhone: string;
     notes: string;
     address: string;
   };
@@ -114,31 +114,8 @@ function PatientIdentificationTab({
   patient: RecordData["patient"];
   professional: RecordData["professional"];
 }) {
-  const [emergencyContact, setEmergencyContact] = useState(
-    patient.emergencyContact ?? ""
-  );
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState("");
   const age = calculatePatientAge(patient.birthDate);
   const minor = age !== null && age < 18;
-
-  const handleSaveIdentification = async () => {
-    if (isSaving) return;
-    setIsSaving(true);
-    setSaveMessage("");
-    try {
-      // Simulação: o contato de emergência ainda não é persistido no banco.
-      await new Promise<void>((resolve) => setTimeout(resolve, 600));
-      setSaveMessage(
-        "Simulação concluída. Contato de emergência mantido apenas nesta tela, sem gravação no banco."
-      );
-      toast.success("Identificação salva em simulação", {
-        description: "O contato de emergência permanece apenas nesta tela.",
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   return (
     <TabsContent
@@ -218,45 +195,21 @@ function PatientIdentificationTab({
             </div>
           )}
           <div className="sm:col-span-2">
-            <Label htmlFor="identification-emergency-contact">
-              Contato de emergência
-            </Label>
-            <Input
-              id="identification-emergency-contact"
-              className="mt-1 h-8 text-sm"
-              placeholder="Nome e telefone"
-              value={emergencyContact}
-              disabled={isSaving}
-              onChange={(event) => {
-                setEmergencyContact(event.target.value);
-                setSaveMessage("");
-              }}
-            />
+            <Label>Contato de emergência</Label>
+            <div className="mt-1 grid gap-1 text-sm sm:grid-cols-2">
+              <p>Nome: {value(patient.emergencyContactName)}</p>
+              <p>Telefone: {value(patient.emergencyContactPhone)}</p>
+            </div>
             <Button
-              type="button"
-              className="mt-3"
+              className="mt-2 print:hidden"
+              variant="outline"
               size="sm"
-              disabled={isSaving}
-              aria-busy={isSaving}
-              onClick={handleSaveIdentification}
+              asChild
             >
-              {isSaving ? (
-                <Loader2
-                  className="mr-2 h-4 w-4 animate-spin"
-                  aria-hidden="true"
-                />
-              ) : (
-                <Save className="mr-2 h-4 w-4" aria-hidden="true" />
-              )}
-              {isSaving ? "Salvando..." : "Salvar identificação"}
+              <Link href={`/patients/new?patientId=${patient.id}`}>
+                Editar contato no cadastro
+              </Link>
             </Button>
-            <p
-              role="status"
-              aria-live="polite"
-              className="text-muted-foreground mt-2 text-xs print:hidden"
-            >
-              {saveMessage}
-            </p>
           </div>
         </div>
       </section>
