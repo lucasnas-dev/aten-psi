@@ -146,7 +146,7 @@ export function NewConsultationModal({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="patient_id"
@@ -162,7 +162,7 @@ export function NewConsultationModal({
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="date"
@@ -173,6 +173,7 @@ export function NewConsultationModal({
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            size="sm"
                             variant="outline"
                             className="pl-3 text-left font-normal"
                             type="button"
@@ -221,7 +222,7 @@ export function NewConsultationModal({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="duration"
@@ -262,7 +263,7 @@ export function NewConsultationModal({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="type"
@@ -340,10 +341,15 @@ export function NewConsultationModal({
             />
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button
+                size="sm"
+                type="button"
+                variant="outline"
+                onClick={onClose}
+              >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={status === "executing"}>
+              <Button size="sm" type="submit" disabled={status === "executing"}>
                 {status === "executing" ? "Agendando..." : "Agendar Consulta"}
               </Button>
             </DialogFooter>

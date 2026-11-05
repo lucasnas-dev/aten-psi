@@ -138,25 +138,10 @@ export function CalendarView({
   };
 
   return (
-    <div
-      className={cn(
-        "bg-card rounded-lg border shadow-sm",
-        compact ? "p-4" : "p-6"
-      )}
-    >
+    <div className="bg-card rounded-lg border p-3 shadow-sm">
       {/* Header do Calendário */}
-      <div
-        className={cn(
-          "flex items-center justify-between",
-          compact ? "mb-4" : "mb-6"
-        )}
-      >
-        <h2
-          className={cn(
-            "font-bold",
-            compact ? "text-base sm:text-lg" : "text-lg sm:text-2xl"
-          )}
-        >
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-base font-semibold sm:text-lg">
           {format(currentDate, "MMMM yyyy", { locale: ptBR })}
         </h2>
         <div className="flex items-center gap-2">
@@ -164,7 +149,7 @@ export function CalendarView({
             variant="outline"
             size="sm"
             onClick={previousMonth}
-            className="h-9 w-9 p-0"
+            className="h-8 w-8 p-0"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -181,7 +166,7 @@ export function CalendarView({
             variant="outline"
             size="sm"
             onClick={nextMonth}
-            className="h-9 w-9 p-0"
+            className="h-8 w-8 p-0"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

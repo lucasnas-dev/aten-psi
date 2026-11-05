@@ -26,12 +26,12 @@ export default async function DashboardPage() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-lg font-semibold">Painel</h1>
+          <h1 className="text-base font-semibold sm:text-lg">Painel</h1>
           <p className="text-muted-foreground text-xs">
             Visão geral da sua prática psicológica
           </p>
         </div>
-        <Button>
+        <Button size="sm">
           <CalendarIcon className="mr-2 h-4 w-4" />
           Nova Consulta
         </Button>
@@ -41,12 +41,12 @@ export default async function DashboardPage() {
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-2">
           <div className="flex flex-row items-center justify-between">
-            <h3 className="text-sm font-medium">Total de Pacientes</h3>
+            <h3 className="text-sm font-semibold">Total de Pacientes</h3>
             <Users className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
             <div className="text-xl font-bold sm:text-2xl">42</div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-xs">
               +2 desde o mês passado
             </p>
           </div>
@@ -54,34 +54,34 @@ export default async function DashboardPage() {
 
         <div className="space-y-2">
           <div className="flex flex-row items-center justify-between">
-            <h3 className="text-sm font-medium">Consultas Agendadas</h3>
+            <h3 className="text-sm font-semibold">Consultas Agendadas</h3>
             <CalendarIcon className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
             <div className="text-xl font-bold sm:text-2xl">12</div>
-            <p className="text-muted-foreground text-sm">Próximos 7 dias</p>
+            <p className="text-muted-foreground text-xs">Próximos 7 dias</p>
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex flex-row items-center justify-between">
-            <h3 className="text-sm font-medium">Horas de Sessão</h3>
+            <h3 className="text-sm font-semibold">Horas de Sessão</h3>
             <Clock className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
             <div className="text-xl font-bold sm:text-2xl">24,5</div>
-            <p className="text-muted-foreground text-sm">Este mês</p>
+            <p className="text-muted-foreground text-xs">Este mês</p>
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex flex-row items-center justify-between">
-            <h3 className="text-sm font-medium">Anotações Pendentes</h3>
+            <h3 className="text-sm font-semibold">Anotações Pendentes</h3>
             <FileText className="text-muted-foreground h-4 w-4" />
           </div>
           <div>
             <div className="text-xl font-bold sm:text-2xl">3</div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-xs">
               Precisam ser concluídas
             </p>
           </div>
@@ -89,66 +89,64 @@ export default async function DashboardPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="proximas" className="space-y-4">
+      <Tabs defaultValue="proximas" className="space-y-3">
         <TabsList>
           <TabsTrigger value="proximas">Próximas Consultas</TabsTrigger>
           <TabsTrigger value="pacientes">Pacientes Recentes</TabsTrigger>
           <TabsTrigger value="alertas">Alertas</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="proximas" className="space-y-4">
+        <TabsContent value="proximas" className="space-y-3">
           <div>
-            <h3 className="mb-2 text-base font-semibold">Próximas Consultas</h3>
-            <p className="text-muted-foreground mb-4 text-sm">
+            <h3 className="mb-2 text-sm font-semibold">Próximas Consultas</h3>
+            <p className="text-muted-foreground mb-4 text-xs">
               Suas consultas agendadas para os próximos dias
             </p>
             <div>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-xs">
                 Nenhuma consulta agendada no momento.
               </p>
             </div>
           </div>
         </TabsContent>
 
-        <TabsContent value="pacientes" className="space-y-4">
+        <TabsContent value="pacientes" className="space-y-3">
           <div>
-            <h3 className="mb-2 text-base font-semibold">Pacientes Recentes</h3>
-            <p className="text-muted-foreground mb-4 text-sm">
+            <h3 className="mb-2 text-sm font-semibold">Pacientes Recentes</h3>
+            <p className="text-muted-foreground mb-4 text-xs">
               Últimos pacientes atendidos
             </p>
             <div>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-xs">
                 Nenhum paciente recente.
               </p>
             </div>
           </div>
         </TabsContent>
 
-        <TabsContent value="alertas" className="space-y-4">
+        <TabsContent value="alertas" className="space-y-3">
           <div>
-            <h3 className="mb-2 text-base font-semibold">
-              Alertas e Lembretes
-            </h3>
-            <p className="text-muted-foreground mb-4 text-sm">
+            <h3 className="mb-2 text-sm font-semibold">Alertas e Lembretes</h3>
+            <p className="text-muted-foreground mb-4 text-xs">
               Notificações importantes que requerem sua atenção
             </p>
             <div>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4 rounded-md border p-4">
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 rounded-md border p-4">
                   <AlertCircle className="mt-0.5 h-5 w-5 text-orange-500" />
                   <div>
                     <p className="font-medium">Anotações de sessão pendentes</p>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-xs">
                       3 anotações de sessão da semana passada precisam ser
                       concluídas
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4 rounded-md border p-4">
+                <div className="flex items-start gap-3 rounded-md border p-4">
                   <AlertCircle className="mt-0.5 h-5 w-5 text-blue-500" />
                   <div>
                     <p className="font-medium">Acompanhamento de paciente</p>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-xs">
                       Maria Silva não agendou uma consulta de acompanhamento
                     </p>
                   </div>

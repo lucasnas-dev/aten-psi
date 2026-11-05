@@ -6,9 +6,7 @@ import {
   Calendar,
   Clock,
   Edit,
-  Mail,
   MapPin,
-  Phone,
   Trash2,
   User,
   Video,
@@ -24,7 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 
 import { CalendarEvent } from "./types";
 
@@ -101,13 +98,13 @@ export function ListView({
     return (
       <div className="bg-card rounded-lg border p-4 text-center shadow-sm">
         <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-        <h3 className="mb-2 text-base font-medium sm:text-lg">
+        <h3 className="mb-2 text-sm font-semibold">
           Nenhuma consulta encontrada
         </h3>
         <p className="text-muted-foreground mb-3 text-xs">
           Não há consultas agendadas para os filtros selecionados.
         </p>
-        <Button>Nova Consulta</Button>
+        <Button size="sm">Nova Consulta</Button>
       </div>
     );
   }
@@ -115,7 +112,7 @@ export function ListView({
   return (
     <div className="bg-card rounded-lg border shadow-sm">
       <div className="border-b p-4">
-        <h2 className="text-base font-semibold">Lista de Consultas</h2>
+        <h2 className="text-sm font-semibold">Lista de Consultas</h2>
         <p className="text-muted-foreground mt-1 text-xs">
           {events.length} consulta{events.length !== 1 ? "s" : ""} encontrada
           {events.length !== 1 ? "s" : ""}

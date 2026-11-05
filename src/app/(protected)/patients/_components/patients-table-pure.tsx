@@ -192,7 +192,7 @@ export function PatientsTablePure({
           ) : pacientes.length === 0 ? (
             <TableRow className="bg-card">
               <TableCell colSpan={7} className="bg-card py-12 text-center">
-                <div className="flex flex-col items-center gap-4">
+                <div className="flex flex-col items-center gap-3">
                   {termoBusca || filtroStatus !== "all" ? (
                     <div className="text-muted-foreground">
                       <Search className="mx-auto mb-4 h-12 w-12 opacity-50" />

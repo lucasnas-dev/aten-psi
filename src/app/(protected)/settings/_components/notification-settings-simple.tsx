@@ -102,7 +102,7 @@ export function NotificationSettingsSimple({
         <Icon className="text-muted-foreground h-4 w-4" />
         <div>
           <Label className="text-sm">{label}</Label>
-          <p className="text-muted-foreground text-sm">{description}</p>
+          <p className="text-muted-foreground text-xs">{description}</p>
         </div>
       </div>
 

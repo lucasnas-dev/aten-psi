@@ -106,7 +106,7 @@ export function DayEventsList({
     <Card className="h-full">
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <CardTitle className="text-base sm:text-lg">
+          <CardTitle className="text-sm">
             Agenda do dia{" "}
             {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
           </CardTitle>
@@ -167,7 +167,7 @@ export function DayEventsList({
             >
               <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                 <User className="text-muted-foreground h-4 w-4" />
-                <span className="truncate text-sm font-medium sm:text-base">
+                <span className="truncate text-sm font-medium">
                   {event.pacienteNome}
                 </span>
                 <span className="text-muted-foreground text-sm">

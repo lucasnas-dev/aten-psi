@@ -79,17 +79,17 @@ export function RecordLocator({ archivalCode }: RecordLocatorProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-3">
           {/* Código decodificado */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base sm:text-lg">Código de Arquivamento</CardTitle>
-              <div className="rounded-lg bg-gray-50 p-3 text-center font-mono text-base sm:text-lg dark:bg-gray-800">
+              <CardTitle className="text-sm">Código de Arquivamento</CardTitle>
+              <div className="rounded-lg bg-gray-50 p-3 text-center font-mono text-sm dark:bg-gray-800">
                 {archivalCode}
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 <div className="text-center">
                   <Badge
                     variant="outline"
@@ -155,16 +155,16 @@ export function RecordLocator({ archivalCode }: RecordLocatorProps) {
               <CardTitle>Instruções de Localização</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
                     1
                   </div>
                   <div>
-                    <h4 className="font-semibold">
+                    <h4 className="text-sm font-semibold">
                       Dirija-se ao Setor {codeInfo.sector}
                     </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-muted-foreground text-xs">
                       {getSectorDescription(codeInfo.sector)}
                     </p>
                   </div>
@@ -175,10 +175,10 @@ export function RecordLocator({ archivalCode }: RecordLocatorProps) {
                     2
                   </div>
                   <div>
-                    <h4 className="font-semibold">
+                    <h4 className="text-sm font-semibold">
                       Localize o Armário {codeInfo.cabinet}
                     </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-muted-foreground text-xs">
                       Os armários estão numerados e organizados sequencialmente
                       no setor.
                     </p>
@@ -190,10 +190,10 @@ export function RecordLocator({ archivalCode }: RecordLocatorProps) {
                     3
                   </div>
                   <div>
-                    <h4 className="font-semibold">
+                    <h4 className="text-sm font-semibold">
                       Encontre a Prateleira {codeInfo.shelf}
                     </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-muted-foreground text-xs">
                       As prateleiras são numeradas de cima para baixo (1 =
                       superior, 5 = inferior).
                     </p>
@@ -205,10 +205,10 @@ export function RecordLocator({ archivalCode }: RecordLocatorProps) {
                     4
                   </div>
                   <div>
-                    <h4 className="font-semibold">
+                    <h4 className="text-sm font-semibold">
                       Busque a Posição {codeInfo.position}
                     </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-muted-foreground text-xs">
                       Os prontuários estão organizados numericamente da esquerda
                       para a direita na prateleira.
                     </p>
@@ -221,7 +221,7 @@ export function RecordLocator({ archivalCode }: RecordLocatorProps) {
           {/* Informações adicionais */}
           <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20">
             <CardContent className="p-4">
-              <h4 className="mb-2 font-semibold text-yellow-800 dark:text-yellow-200">
+              <h4 className="mb-2 text-sm font-semibold text-yellow-800 dark:text-yellow-200">
                 ⚠️ Lembrete Importante
               </h4>
               <ul className="space-y-1 text-sm text-yellow-700 dark:text-yellow-300">
@@ -238,10 +238,10 @@ export function RecordLocator({ archivalCode }: RecordLocatorProps) {
           {/* Resumo da localização */}
           <Card className="border-green-200 bg-green-50 dark:bg-green-900/20">
             <CardContent className="p-4">
-              <h4 className="mb-2 font-semibold text-green-800 dark:text-green-200">
+              <h4 className="mb-2 text-sm font-semibold text-green-800 dark:text-green-200">
                 📍 Localização Resumida
               </h4>
-              <p className="text-base sm:text-lg font-medium text-green-700 dark:text-green-300">
+              <p className="text-base font-medium text-green-700 sm:text-lg dark:text-green-300">
                 Setor {codeInfo.sector} → Armário {codeInfo.cabinet} →
                 Prateleira {codeInfo.shelf} → Posição {codeInfo.position}
               </p>

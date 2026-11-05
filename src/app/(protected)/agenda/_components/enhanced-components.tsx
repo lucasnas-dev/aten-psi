@@ -49,7 +49,7 @@ export function EventTooltip({ event, position, visible }: EventTooltipProps) {
       <div className="space-y-3">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="text-sm sm:text-base font-semibold">{event.title}</h3>
+          <h3 className="text-sm font-semibold">{event.title}</h3>
           <Badge className={cn("text-sm", getStatusColor(event.status))}>
             {event.status.replace("_", " ")}
           </Badge>

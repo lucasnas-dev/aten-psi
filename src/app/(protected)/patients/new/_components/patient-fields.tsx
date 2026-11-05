@@ -173,10 +173,10 @@ export function PatientFields({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Seção: Informações Pessoais */}
       <div className="space-y-2">
-        <h3 className="text-foreground border-b pb-1 text-sm font-semibold sm:text-base">
+        <h3 className="text-foreground border-b pb-1 text-sm font-semibold">
           Informações Pessoais
         </h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -377,7 +377,7 @@ export function PatientFields({
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-foreground border-b pb-1 text-sm font-semibold sm:text-base">
+        <h3 className="text-foreground border-b pb-1 text-sm font-semibold">
           Contato de emergência
         </h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -426,7 +426,7 @@ export function PatientFields({
 
       {/* Seção: Endereço */}
       <div className="space-y-2">
-        <h3 className="text-foreground border-b pb-1 text-sm font-semibold sm:text-base">
+        <h3 className="text-foreground border-b pb-1 text-sm font-semibold">
           Endereço
         </h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-4">

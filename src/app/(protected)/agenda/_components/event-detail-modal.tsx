@@ -99,13 +99,13 @@ export function EventDetailModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+          <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
             <Calendar className="h-5 w-5" />
             Detalhes da Consulta
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-3">
           {/* Status Badge */}
           <div className="flex justify-center">
             <Badge
@@ -122,8 +122,8 @@ export function EventDetailModal({
                 <User className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-semibold">{event.pacienteNome}</h3>
-                <p className="text-muted-foreground text-sm">Paciente</p>
+                <h3 className="text-sm font-semibold">{event.pacienteNome}</h3>
+                <p className="text-muted-foreground text-xs">Paciente</p>
               </div>
             </div>
           </div>
@@ -132,11 +132,11 @@ export function EventDetailModal({
 
           {/* Data e Hora */}
           <div className="space-y-3">
-            <h4 className="flex items-center gap-2 font-medium">
+            <h4 className="flex items-center gap-2 text-sm font-semibold">
               <Clock className="h-4 w-4" />
               Data e Horário
             </h4>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <p className="text-muted-foreground">Data</p>
                 <p className="font-medium">
@@ -156,8 +156,8 @@ export function EventDetailModal({
 
           {/* Tipo e Modalidade */}
           <div className="space-y-3">
-            <h4 className="font-medium">Informações da Consulta</h4>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <h4 className="text-sm font-semibold">Informações da Consulta</h4>
+            <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <p className="text-muted-foreground">Tipo</p>
                 <p className="font-medium">{getTipoText(event.tipo)}</p>
@@ -183,8 +183,8 @@ export function EventDetailModal({
             <>
               <Separator />
               <div className="space-y-2">
-                <h4 className="font-medium">Observações</h4>
-                <p className="text-muted-foreground text-sm leading-relaxed">
+                <h4 className="text-sm font-semibold">Observações</h4>
+                <p className="text-muted-foreground text-xs leading-relaxed">
                   {event.observacoes}
                 </p>
               </div>
@@ -195,7 +195,7 @@ export function EventDetailModal({
 
           {/* Ações Rápidas */}
           <div className="space-y-3">
-            <h4 className="text-sm font-medium">Ações Rápidas</h4>
+            <h4 className="text-sm font-semibold">Ações Rápidas</h4>
             <QuickActions
               event={event}
               onSuccess={() => {
@@ -210,6 +210,7 @@ export function EventDetailModal({
           {/* Ações */}
           <div className="flex justify-end gap-3">
             <Button
+              size="sm"
               variant="outline"
               onClick={() => onEdit(event)}
               className="flex items-center gap-2"
@@ -218,6 +219,7 @@ export function EventDetailModal({
               Editar
             </Button>
             <Button
+              size="sm"
               variant="destructive"
               onClick={() => onDelete(event)}
               className="flex items-center gap-2"

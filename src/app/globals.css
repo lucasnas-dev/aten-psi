@@ -124,11 +124,20 @@
   }
   html {
     height: 100%;
-    font-size: 100%;
+    font-size: 87.5%;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  html[data-font-scale="compact"] {
+    font-size: 81.25%;
+  }
+  html[data-font-scale="default"] {
+    font-size: 87.5%;
+  }
+  html[data-font-scale="large"] {
+    font-size: 100%;
   }
   body {
     @apply text-sm;
@@ -143,6 +152,12 @@
     min-height: -webkit-fill-available;
     overflow-x: hidden;
     min-height: 100dvh;
+  }
+}
+
+@media print {
+  html[data-font-scale] {
+    font-size: 100%;
   }
 }
 

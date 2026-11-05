@@ -87,6 +87,7 @@ export function WorkingHoursSimple({
   settings,
   isFirstSetup = false,
   onUpdate,
+  onSaved,
 }: WorkingHoursSimpleProps) {
   const currentDate = new Date();
   const [selectedMonth, setSelectedMonth] = useState(
@@ -625,13 +626,13 @@ export function WorkingHoursSimple({
                           workingHour.timeSlots.map((slot, index) => (
                             <p
                               key={index}
-                              className="text-muted-foreground text-sm"
+                              className="text-muted-foreground text-xs"
                             >
                               {slot.start} às {slot.end}
                             </p>
                           ))
                         ) : (
-                          <p className="text-muted-foreground text-sm italic">
+                          <p className="text-muted-foreground text-xs italic">
                             Nenhum horário configurado
                           </p>
                         )}

@@ -1,6 +1,6 @@
 export default function AgendaLoading() {
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-3 p-6">
       {/* Header */}
       <div className="space-y-2">
         <div className="bg-muted h-8 w-32 animate-pulse rounded-md"></div>
@@ -8,8 +8,8 @@ export default function AgendaLoading() {
       </div>
 
       {/* Filtros */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="bg-muted h-10 w-36 animate-pulse rounded-md"></div>
           <div className="bg-muted h-10 w-40 animate-pulse rounded-md"></div>
           <div className="bg-muted h-10 w-44 animate-pulse rounded-md"></div>

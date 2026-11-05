@@ -122,36 +122,36 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-3">
           {/* General Summary */}
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <Card>
               <CardContent className="p-4 text-center">
                 <FileText className="mx-auto mb-2 h-8 w-8 text-blue-500" />
-                <div className="text-xl sm:text-2xl font-bold">{stats.totalRecords}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Total
+                <div className="text-xl font-bold sm:text-2xl">
+                  {stats.totalRecords}
                 </div>
+                <div className="text-muted-foreground text-xs">Total</div>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-4 text-center">
                 <Users className="mx-auto mb-2 h-8 w-8 text-green-500" />
-                <div className="text-xl sm:text-2xl font-bold">{stats.activeRecords}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Ativos
+                <div className="text-xl font-bold sm:text-2xl">
+                  {stats.activeRecords}
                 </div>
+                <div className="text-muted-foreground text-xs">Ativos</div>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-4 text-center">
                 <TrendingUp className="mx-auto mb-2 h-8 w-8 text-purple-500" />
-                <div className="text-xl sm:text-2xl font-bold">
+                <div className="text-xl font-bold sm:text-2xl">
                   {stats.averageConsultations}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-muted-foreground text-xs">
                   Média Consultas
                 </div>
               </CardContent>
@@ -160,11 +160,11 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
             <Card>
               <CardContent className="p-4 text-center">
                 <Calendar className="mx-auto mb-2 h-8 w-8 text-orange-500" />
-                <div className="text-xl sm:text-2xl font-bold">
+                <div className="text-xl font-bold sm:text-2xl">
                   {Math.round((stats.activeRecords / stats.totalRecords) * 100)}
                   %
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-muted-foreground text-xs">
                   Taxa Atividade
                 </div>
               </CardContent>
@@ -261,7 +261,7 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {Object.entries(stats.sectorOccupancy).map(([sector, info]) => (
                   <div key={sector} className="space-y-2">
                     <div className="flex justify-between">
@@ -293,7 +293,7 @@ export function ArchiveStatistics({ records }: ArchiveStatisticsProps) {
             <CardContent>
               <div className="space-y-3">
                 {stats.byMonth.map((month, index) => (
-                  <div key={index} className="flex items-center gap-4">
+                  <div key={index} className="flex items-center gap-3">
                     <div className="w-16 text-sm font-medium">
                       {month.month}
                     </div>

@@ -41,18 +41,18 @@ export function CodingSystemInfo() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-3">
           {/* Estrutura do Código */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base sm:text-lg">Estrutura do Código</CardTitle>
+              <CardTitle className="text-sm">Estrutura do Código</CardTitle>
               <CardDescription>
                 Cada prontuário recebe um código único seguindo o padrão
                 internacional
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 rounded-lg bg-gray-50 p-4 text-center font-mono text-base sm:text-lg dark:bg-gray-800">
+              <div className="mb-4 rounded-lg bg-gray-50 p-4 text-center font-mono text-sm dark:bg-gray-800">
                 <span className="text-blue-600">PSI</span>-
                 <span className="text-green-600">2025</span>-
                 <span className="text-purple-600">001</span>-
@@ -61,7 +61,7 @@ export function CodingSystemInfo() {
                 <span className="text-indigo-600">001</span>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
                 <div className="space-y-2">
                   <Badge
                     variant="outline"
@@ -69,8 +69,10 @@ export function CodingSystemInfo() {
                   >
                     PSI
                   </Badge>
-                  <h4 className="font-semibold">Identificação da Área</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm font-semibold">
+                    Identificação da Área
+                  </h4>
+                  <p className="text-muted-foreground text-xs">
                     Código fixo para Psicologia. Identifica a especialidade
                     médica/terapêutica.
                   </p>
@@ -83,8 +85,8 @@ export function CodingSystemInfo() {
                   >
                     2025
                   </Badge>
-                  <h4 className="font-semibold">Ano de Abertura</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm font-semibold">Ano de Abertura</h4>
+                  <p className="text-muted-foreground text-xs">
                     Ano em que o prontuário foi criado. Facilita a organização
                     temporal.
                   </p>
@@ -97,8 +99,8 @@ export function CodingSystemInfo() {
                   >
                     001
                   </Badge>
-                  <h4 className="font-semibold">Número Sequencial</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm font-semibold">Número Sequencial</h4>
+                  <p className="text-muted-foreground text-xs">
                     Numeração sequencial do prontuário no ano (001-999).
                   </p>
                 </div>
@@ -110,8 +112,8 @@ export function CodingSystemInfo() {
                   >
                     A1
                   </Badge>
-                  <h4 className="font-semibold">Setor e Armário</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm font-semibold">Setor e Armário</h4>
+                  <p className="text-muted-foreground text-xs">
                     Letra do setor (A-Z) + número do armário (1-9).
                   </p>
                 </div>
@@ -123,8 +125,8 @@ export function CodingSystemInfo() {
                   >
                     P1
                   </Badge>
-                  <h4 className="font-semibold">Prateleira</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm font-semibold">Prateleira</h4>
+                  <p className="text-muted-foreground text-xs">
                     P + número da prateleira no armário (1-5).
                   </p>
                 </div>
@@ -136,8 +138,8 @@ export function CodingSystemInfo() {
                   >
                     001
                   </Badge>
-                  <h4 className="font-semibold">Posição no Arquivo</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm font-semibold">Posição no Arquivo</h4>
+                  <p className="text-muted-foreground text-xs">
                     Posição específica na prateleira (001-999).
                   </p>
                 </div>
@@ -154,9 +156,9 @@ export function CodingSystemInfo() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div>
-                  <h4 className="mb-3 font-semibold">Setores</h4>
+                  <h4 className="mb-3 text-sm font-semibold">Setores</h4>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Badge variant="default">A-B</Badge>
@@ -178,7 +180,9 @@ export function CodingSystemInfo() {
                 </div>
 
                 <div>
-                  <h4 className="mb-3 font-semibold">Estrutura por Armário</h4>
+                  <h4 className="mb-3 text-sm font-semibold">
+                    Estrutura por Armário
+                  </h4>
                   <div className="space-y-2 text-sm">
                     <div className="rounded bg-gray-50 p-2 dark:bg-gray-800">
                       <strong>Prateleira 1:</strong> Casos recentes
@@ -207,42 +211,42 @@ export function CodingSystemInfo() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
-                  <h4 className="font-semibold text-green-700 dark:text-green-400">
+                  <h4 className="text-sm font-semibold text-green-700 dark:text-green-400">
                     ✓ Resolução CFP nº 001/2009
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Normas de atuação para os psicólogos em relação ao
                     preconceito e à discriminação.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-green-700 dark:text-green-400">
+                  <h4 className="text-sm font-semibold text-green-700 dark:text-green-400">
                     ✓ Lei Geral de Proteção de Dados (LGPD)
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Sistema de códigos preserva a privacidade e permite controle
                     de acesso adequado.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-green-700 dark:text-green-400">
+                  <h4 className="text-sm font-semibold text-green-700 dark:text-green-400">
                     ✓ Código de Ética Profissional do Psicólogo
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Garante sigilo e confidencialidade através de acesso
                     controlado.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-green-700 dark:text-green-400">
+                  <h4 className="text-sm font-semibold text-green-700 dark:text-green-400">
                     ✓ Normas ISO 15489 (Gestão de Documentos)
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Padrão internacional para gestão de informações e
                     documentos.
                   </p>
@@ -257,9 +261,9 @@ export function CodingSystemInfo() {
               <CardTitle>Exemplos Práticos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-                  <div className="mb-2 font-mono text-base sm:text-lg">
+                  <div className="mb-2 font-mono text-sm">
                     PSI-2025-001-A1-P1-001
                   </div>
                   <p className="text-sm">
@@ -269,7 +273,7 @@ export function CodingSystemInfo() {
                 </div>
 
                 <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
-                  <div className="mb-2 font-mono text-base sm:text-lg">
+                  <div className="mb-2 font-mono text-sm">
                     PSI-2024-125-C2-P3-078
                   </div>
                   <p className="text-sm">
@@ -279,7 +283,7 @@ export function CodingSystemInfo() {
                 </div>
 
                 <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
-                  <div className="mb-2 font-mono text-base sm:text-lg">
+                  <div className="mb-2 font-mono text-sm">
                     PSI-2023-456-D1-P5-234
                   </div>
                   <p className="text-sm">
@@ -297,40 +301,40 @@ export function CodingSystemInfo() {
               <CardTitle>Benefícios do Sistema</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-blue-600">
+                  <h4 className="text-sm font-semibold text-blue-600">
                     🔍 Busca Rápida
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Localização imediata de qualquer prontuário através do
                     código.
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-green-600">
+                  <h4 className="text-sm font-semibold text-green-600">
                     📊 Controle de Acesso
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Rastreabilidade completa de quem acessa cada prontuário.
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-purple-600">
+                  <h4 className="text-sm font-semibold text-purple-600">
                     ⚡ Eficiência
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Reduz tempo de busca e organização do arquivo físico.
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-orange-600">
+                  <h4 className="text-sm font-semibold text-orange-600">
                     🛡️ Conformidade
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-muted-foreground text-xs">
                     Atende normas profissionais e regulamentações de
                     privacidade.
                   </p>

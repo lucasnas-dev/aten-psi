@@ -221,8 +221,8 @@ export function EditConsultationModal({
           </div>
         ) : (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
                   name="date"
@@ -236,6 +236,7 @@ export function EditConsultationModal({
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
+                              size="sm"
                               variant="outline"
                               className="pl-3 text-left font-normal"
                               type="button"
@@ -284,7 +285,7 @@ export function EditConsultationModal({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
                   name="duration"
@@ -325,7 +326,7 @@ export function EditConsultationModal({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
                   name="type"
@@ -433,10 +434,19 @@ export function EditConsultationModal({
               />
 
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={onClose}>
+                <Button
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                >
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={updateStatus === "executing"}>
+                <Button
+                  size="sm"
+                  type="submit"
+                  disabled={updateStatus === "executing"}
+                >
                   {updateStatus === "executing"
                     ? "Salvando..."
                     : "Salvar Alterações"}

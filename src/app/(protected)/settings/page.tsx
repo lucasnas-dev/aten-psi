@@ -160,7 +160,7 @@ export default function SettingsPage() {
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
           <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-b-2"></div>
-          <p className="text-muted-foreground mt-2 text-sm">
+          <p className="text-muted-foreground mt-2 text-xs">
             Carregando configurações...
           </p>
         </div>
@@ -169,7 +169,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {isFirstSetup && (
         <Alert className="border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
           <AlertTitle>Cadastro inicial pendente</AlertTitle>
@@ -183,11 +183,12 @@ export default function SettingsPage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="space-y-4"
+        className="space-y-3"
       >
-        <TabsList className="grid h-9 w-full grid-cols-4">
+        <TabsList className="grid h-auto w-full grid-cols-4">
           <TabsTrigger
             value="profile"
+            aria-label="Perfil"
             className="flex items-center gap-2 text-sm"
           >
             <User className="h-4 w-4" />
@@ -195,6 +196,7 @@ export default function SettingsPage() {
           </TabsTrigger>
           <TabsTrigger
             value="working-hours"
+            aria-label="Horários"
             className="flex items-center gap-2 text-sm"
           >
             <Clock className="h-4 w-4" />
@@ -202,6 +204,7 @@ export default function SettingsPage() {
           </TabsTrigger>
           <TabsTrigger
             value="appointments"
+            aria-label="Consultas"
             className="flex items-center gap-2 text-sm"
           >
             <Calendar className="h-4 w-4" />
@@ -209,6 +212,7 @@ export default function SettingsPage() {
           </TabsTrigger>
           <TabsTrigger
             value="notifications"
+            aria-label="Notificações"
             className="flex items-center gap-2 text-sm"
           >
             <Bell className="h-4 w-4" />
@@ -216,7 +220,7 @@ export default function SettingsPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile" className="mt-0 space-y-4">
+        <TabsContent value="profile" className="mt-0 space-y-3">
           <ProfileSettingsSimple
             settings={settings}
             isFirstSetup={isFirstSetup}
@@ -225,7 +229,7 @@ export default function SettingsPage() {
           />
         </TabsContent>
 
-        <TabsContent value="working-hours" className="mt-0 space-y-4">
+        <TabsContent value="working-hours" className="mt-0 space-y-3">
           <WorkingHoursSimple
             settings={settings}
             isFirstSetup={isFirstSetup}
@@ -234,7 +238,7 @@ export default function SettingsPage() {
           />
         </TabsContent>
 
-        <TabsContent value="appointments" className="mt-0 space-y-4">
+        <TabsContent value="appointments" className="mt-0 space-y-3">
           <AppointmentSettingsSimple
             settings={settings}
             isFirstSetup={isFirstSetup}
@@ -246,7 +250,7 @@ export default function SettingsPage() {
           />
         </TabsContent>
 
-        <TabsContent value="notifications" className="mt-0 space-y-4">
+        <TabsContent value="notifications" className="mt-0 space-y-3">
           <NotificationSettingsSimple
             settings={settings}
             isFirstSetup={isFirstSetup}

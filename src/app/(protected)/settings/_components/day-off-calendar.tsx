@@ -150,7 +150,7 @@ export function DayOffCalendar({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="rounded-lg border p-4">
         <div className="mb-3 flex items-center justify-between">
           <Label className="text-sm font-medium">
@@ -314,7 +314,7 @@ export function DayOffCalendar({
                 })}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-3 py-4">
             <div className="space-y-2">
               <Label htmlFor="reason">Motivo (opcional)</Label>
               <Input
@@ -326,10 +326,16 @@ export function DayOffCalendar({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setDialogOpen(false)}
+            >
               Cancelar
             </Button>
-            <Button onClick={handleSaveReason}>Salvar</Button>
+            <Button size="sm" onClick={handleSaveReason}>
+              Salvar
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

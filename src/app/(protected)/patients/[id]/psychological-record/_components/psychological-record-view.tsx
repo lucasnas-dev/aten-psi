@@ -123,15 +123,15 @@ function PatientIdentificationTab({
       forceMount
       className={`${styles.officialSection} mt-0`}
     >
-      <section className="min-w-0 space-y-4">
-        <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+      <section className="min-w-0 space-y-2">
+        <dl className="grid grid-cols-1 gap-2.5 text-sm sm:grid-cols-2 lg:grid-cols-3">
           <div className="min-w-0 space-y-1">
             <dt className="text-muted-foreground">Nome</dt>
             <dd className="text-foreground font-semibold break-words">
               {patient.socialName?.trim() || patient.name}
             </dd>
             {patient.socialName?.trim() && (
-              <dd className="text-muted-foreground break-words">
+              <dd className="text-muted-foreground text-xs break-words">
                 Nome civil: {patient.name}
               </dd>
             )}
@@ -158,7 +158,7 @@ function PatientIdentificationTab({
           <div className="min-w-0 space-y-1">
             <dt className="text-muted-foreground">Psicólogo responsável</dt>
             <dd className="break-words">{value(professional.name)}</dd>
-            <dd className="text-muted-foreground">
+            <dd className="text-muted-foreground text-xs">
               CRP: {value(professional.crp)}
             </dd>
           </div>
@@ -168,11 +168,11 @@ function PatientIdentificationTab({
           </div>
         </dl>
         {minor && (
-          <section className="min-w-0 space-y-3 border-t pt-3">
+          <section className="bg-muted/40 min-w-0 space-y-2 rounded-md border p-3">
             <h3 className="text-foreground text-sm font-semibold">
               Responsável legal
             </h3>
-            <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+            <dl className="grid grid-cols-1 gap-2.5 text-sm sm:grid-cols-2 lg:grid-cols-3">
               <div className="min-w-0 space-y-1">
                 <dt className="text-muted-foreground">Nome</dt>
                 <dd className="break-words">
@@ -205,7 +205,7 @@ function PatientIdentificationTab({
             </div>
           </section>
         )}
-        <section className="min-w-0 space-y-3 border-t pt-3">
+        <section className="min-w-0 space-y-2 border-t pt-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-foreground text-sm font-semibold">
               Contato de emergência
@@ -221,7 +221,7 @@ function PatientIdentificationTab({
               </Link>
             </Button>
           </div>
-          <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+          <dl className="grid grid-cols-1 gap-2.5 text-sm sm:grid-cols-2 lg:grid-cols-3">
             <div className="min-w-0 space-y-1">
               <dt className="text-muted-foreground">Nome</dt>
               <dd className="break-words">
@@ -276,11 +276,16 @@ export function PsychologicalRecordView({
       className={`${styles.record} w-full max-w-5xl min-w-0 space-y-3 print:max-w-none print:p-0`}
     >
       <header className="flex flex-wrap items-center justify-between gap-2 print:hidden">
-        <Button size="sm" variant="outline" asChild>
-          <Link href={`/patients/${data.patient.id}`}>
-            Detalhes do paciente
-          </Link>
-        </Button>
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <h2 className="text-base font-semibold sm:text-lg">
+            {data.patient.socialName?.trim() || data.patient.name}
+          </h2>
+          <Button size="sm" variant="outline" asChild>
+            <Link href={`/patients/${data.patient.id}`}>
+              Detalhes do paciente
+            </Link>
+          </Button>
+        </div>
         <div className="flex flex-wrap gap-2">
           <Button size="sm" variant="outline" onClick={() => window.print()}>
             <Printer className="mr-2 h-4 w-4" />
@@ -292,31 +297,16 @@ export function PsychologicalRecordView({
           </Button>
         </div>
       </header>
-      <section>
-        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="text-lg font-semibold">
-              {data.patient.socialName?.trim() || data.patient.name}
-            </h2>
-          </div>
-        </div>
-      </section>
       <Tabs defaultValue="official" className="space-y-3">
         <TabsList
           aria-label="Áreas do prontuário"
-          className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-sm sm:grid-cols-2 print:hidden"
+          className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 print:hidden"
         >
-          <TabsTrigger
-            value="official"
-            className="gap-2 px-3 py-2 text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-          >
+          <TabsTrigger value="official" className="gap-2 px-3 py-1 text-sm">
             <FileText className="h-4 w-4" aria-hidden="true" />
             Prontuário Psicológico
           </TabsTrigger>
-          <TabsTrigger
-            value="private"
-            className="gap-2 px-3 py-2 text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-          >
+          <TabsTrigger value="private" className="gap-2 px-3 py-1 text-sm">
             <Lock className="h-4 w-4" aria-hidden="true" />
             Registros do Psicólogo
           </TabsTrigger>
@@ -329,36 +319,21 @@ export function PsychologicalRecordView({
           <Tabs defaultValue="identification" className="space-y-3">
             <TabsList
               aria-label="Seções do prontuário oficial"
-              className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 shadow-sm sm:grid-cols-2 lg:grid-cols-5 print:hidden"
+              className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 lg:grid-cols-5 print:hidden"
             >
-              <TabsTrigger
-                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-                value="identification"
-              >
+              <TabsTrigger className="py-1 text-sm" value="identification">
                 1. Identificação
               </TabsTrigger>
-              <TabsTrigger
-                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-                value="plan"
-              >
+              <TabsTrigger className="py-1 text-sm" value="plan">
                 2. Demanda e plano
               </TabsTrigger>
-              <TabsTrigger
-                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-                value="sessions"
-              >
+              <TabsTrigger className="py-1 text-sm" value="sessions">
                 3. Evolução e sessões
               </TabsTrigger>
-              <TabsTrigger
-                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-                value="closing"
-              >
+              <TabsTrigger className="py-1 text-sm" value="closing">
                 4. Encerramento
               </TabsTrigger>
-              <TabsTrigger
-                className="text-sm text-slate-600 transition data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-slate-950 data-[state=active]:shadow-sm"
-                value="documents"
-              >
+              <TabsTrigger className="py-1 text-sm" value="documents">
                 5. Documentos
               </TabsTrigger>
             </TabsList>
@@ -373,17 +348,12 @@ export function PsychologicalRecordView({
               className={`${styles.officialSection} mt-0`}
             >
               <section>
-                <div className="pb-2">
-                  <h2 className="text-base font-semibold">
-                    Demanda e plano terapêutico
-                  </h2>
-                </div>
                 <div className="space-y-3">
                   <div>
                     <Label>Avaliação de demanda</Label>
                     <Textarea className="mt-1" rows={4} />
                   </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     <div>
                       <Label>Objetivos</Label>
                       <Textarea className="mt-1" />
@@ -408,7 +378,7 @@ export function PsychologicalRecordView({
                       <Input className="mt-1" />
                     </div>
                   </div>
-                  <Button>Salvar plano terapêutico</Button>
+                  <Button size="sm">Salvar plano terapêutico</Button>
                 </div>
               </section>
             </TabsContent>
@@ -417,7 +387,7 @@ export function PsychologicalRecordView({
               forceMount
               className={`${styles.officialSection} mt-0`}
             >
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {data.sessions.length === 0 && (
                   <section>
                     <div className="text-muted-foreground py-6 text-center">
@@ -431,7 +401,7 @@ export function PsychologicalRecordView({
                     <section key={session.id}>
                       <div className="pb-2">
                         <div className="flex justify-between gap-2">
-                          <h2 className="text-base font-semibold">
+                          <h2 className="text-sm font-semibold">
                             Sessão {session.sessionNumber} ·{" "}
                             {formatDate(session.date)} às {session.time}
                           </h2>
@@ -466,6 +436,7 @@ export function PsychologicalRecordView({
                           {!immutable && (
                             <>
                               <Button
+                                size="sm"
                                 variant="outline"
                                 onClick={() =>
                                   setDrafts({ ...drafts, [session.id]: true })
@@ -475,6 +446,7 @@ export function PsychologicalRecordView({
                                 Salvar rascunho
                               </Button>
                               <Button
+                                size="sm"
                                 onClick={() =>
                                   setSigned({ ...signed, [session.id]: true })
                                 }
@@ -493,7 +465,7 @@ export function PsychologicalRecordView({
                         {immutable && (
                           <div className="space-y-3 border-t pt-3">
                             <div className="text-muted-foreground text-xs">
-                              <p className="font-medium text-slate-700">
+                              <p className="text-foreground font-medium">
                                 Assinatura eletrônica
                               </p>
                               <p>Nome: {value(data.professional.name)}</p>
@@ -556,14 +528,10 @@ export function PsychologicalRecordView({
               className={`${styles.officialSection} mt-0`}
             >
               <section>
-                <div className="pb-2">
-                  <h2 className="text-base font-semibold">
-                    Encaminhamento e encerramento
-                  </h2>
-                </div>
                 <div className="space-y-3">
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
+                      size="sm"
                       variant="outline"
                       onClick={() => setShowReferralForm(!showReferralForm)}
                     >
@@ -571,10 +539,12 @@ export function PsychologicalRecordView({
                       Novo encaminhamento
                     </Button>
                     <Button
+                      size="sm"
                       variant="outline"
                       onClick={() =>
                         setShowNotificationForm(!showNotificationForm)
                       }
+                      className="h-auto min-h-8 max-w-full whitespace-normal"
                     >
                       <FileCheck2 className="mr-2 h-4 w-4" />
                       Notificação compulsória (SINAN / Ofício)
@@ -598,7 +568,7 @@ export function PsychologicalRecordView({
                       <Button size="sm">Salvar notificação</Button>
                     </div>
                   )}
-                  <div className="border-t pt-4">
+                  <div className="border-t pt-3">
                     <Label>Motivo</Label>
                     <Select>
                       <SelectTrigger className="mt-1">
@@ -613,11 +583,13 @@ export function PsychologicalRecordView({
                         </SelectItem>
                       </SelectContent>
                     </Select>
-                    <Label className="mt-4 block">Data</Label>
+                    <Label className="mt-3 block">Data</Label>
                     <Input className="mt-1" type="date" />
-                    <Label className="mt-4 block">Síntese final</Label>
+                    <Label className="mt-3 block">Síntese final</Label>
                     <Textarea className="mt-1" rows={5} />
-                    <Button className="mt-4">Salvar encerramento</Button>
+                    <Button size="sm" className="mt-3">
+                      Salvar encerramento
+                    </Button>
                   </div>
                 </div>
               </section>
@@ -628,19 +600,16 @@ export function PsychologicalRecordView({
               className={`${styles.officialSection} mt-0`}
             >
               <section>
-                <div className="pb-2">
-                  <h2 className="text-base font-semibold">
-                    Documentos e arquivos
-                  </h2>
-                </div>
                 <div className="space-y-3">
                   <div className="space-y-3 print:hidden">
                     <div className="grid gap-2 sm:grid-cols-3">
                       {documents.map((item) => (
                         <Button
+                          size="sm"
                           key={item}
                           variant={document === item ? "default" : "outline"}
                           onClick={() => setDocument(item)}
+                          className="h-auto min-h-8 min-w-0 whitespace-normal"
                         >
                           <FileText className="mr-2 h-4 w-4" />
                           {item}
@@ -692,7 +661,7 @@ export function PsychologicalRecordView({
                           Autorização do paciente para uso de CID
                         </label>
                       )}
-                      <Button className="mt-4">
+                      <Button size="sm" className="mt-3">
                         <FileCheck2 className="mr-2 h-4 w-4" />
                         Emitir documento
                       </Button>

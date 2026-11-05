@@ -92,6 +92,7 @@ export function ProfileSettingsSimple({
   settings,
   isFirstSetup = false,
   onUpdate,
+  onSaved,
 }: ProfileSettingsSimpleProps) {
   const [isEditing, setIsEditing] = useState(isFirstSetup);
   const [isSaving, setIsSaving] = useState(false);
@@ -121,7 +122,7 @@ export function ProfileSettingsSimple({
         setIsEditing(false);
         setEditValues({});
         toast.success("Configuração atualizada com sucesso!");
-        if (typeof (onSaved as any) === "function") {
+        if (typeof onSaved === "function") {
           onSaved?.();
         }
       } else {

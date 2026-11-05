@@ -174,8 +174,8 @@ export default function PatientsPage() {
   // Estado de loading
   if (isExecuting && !result.data) {
     return (
-      <div className="space-y-8 p-6">
-        <div className="flex items-center justify-center py-20">
+      <div className="space-y-3">
+        <div className="flex items-center justify-center py-8">
           <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
           <span className="text-muted-foreground ml-2">
             Carregando pacientes...
@@ -188,10 +188,11 @@ export default function PatientsPage() {
   // Estado de erro
   if (result?.serverError) {
     return (
-      <div className="space-y-8 p-6">
-        <div className="flex flex-col items-center justify-center space-y-4 py-20">
+      <div className="space-y-3">
+        <div className="flex flex-col items-center justify-center space-y-3 py-8">
           <p className="text-red-600">Erro ao carregar pacientes</p>
           <Button
+            size="sm"
             onClick={() =>
               buscarPacientes({
                 search: debouncedTermoBusca || undefined,

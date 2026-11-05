@@ -23,7 +23,6 @@ import {
   ViewMode,
 } from "./_components";
 import { EnhancedWeekView } from "./_components/enhanced-week-view";
-import { MiniCalendar } from "./_components/mini-calendar";
 
 export default function AgendaPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
@@ -229,7 +228,7 @@ export default function AgendaPage() {
       default:
         return (
           <div className="bg-card rounded-lg border p-12 text-center shadow-sm">
-            <h3 className="mb-2 text-base font-medium sm:text-lg">
+            <h3 className="mb-2 text-sm font-semibold">
               Visualização em desenvolvimento
             </h3>
             <p className="text-muted-foreground">

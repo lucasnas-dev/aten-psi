@@ -217,13 +217,13 @@ export default function RecordsPage() {
       {/* Search and Filters */}
       <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <CardTitle className="flex items-center gap-2 text-sm">
             <Search className="h-5 w-5" />
             Busca e Filtros
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
             {/* Search field */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Buscar</label>
@@ -308,7 +308,7 @@ export default function RecordsPage() {
       </Card>
 
       {/* Statistics cards */}
-      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:gap-3 md:grid-cols-4">
         <Card className="shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -317,7 +317,7 @@ export default function RecordsPage() {
                 <p className="text-xl font-bold sm:text-2xl">
                   {displayRecords.length}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-muted-foreground text-xs">
                   Total de Prontuários
                 </p>
               </div>
@@ -333,9 +333,7 @@ export default function RecordsPage() {
                 <p className="text-xl font-bold sm:text-2xl">
                   {displayRecords.filter((r) => r.status === "ativo").length}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Ativos
-                </p>
+                <p className="text-muted-foreground text-xs">Ativos</p>
               </div>
             </div>
           </CardContent>
@@ -352,9 +350,7 @@ export default function RecordsPage() {
                       .length
                   }
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Concluídos
-                </p>
+                <p className="text-muted-foreground text-xs">Concluídos</p>
               </div>
             </div>
           </CardContent>
@@ -368,9 +364,7 @@ export default function RecordsPage() {
                 <p className="text-xl font-bold sm:text-2xl">
                   {new Set(displayRecords.map((r) => r.sector)).size}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Setores
-                </p>
+                <p className="text-muted-foreground text-xs">Setores</p>
               </div>
             </div>
           </CardContent>
@@ -388,7 +382,7 @@ export default function RecordsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {loading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -397,11 +391,12 @@ export default function RecordsPage() {
             ) : error ? (
               <div className="py-8 text-center">
                 <FileText className="mx-auto mb-4 h-12 w-12 text-red-400" />
-                <h3 className="mb-2 text-base font-medium text-red-900 sm:text-lg dark:text-red-100">
+                <h3 className="mb-2 text-sm font-semibold text-red-900 dark:text-red-100">
                   Erro ao carregar prontuários
                 </h3>
                 <p className="text-red-600 dark:text-red-400">{error}</p>
                 <Button
+                  size="sm"
                   onClick={fetchRecords}
                   variant="outline"
                   className="mt-4"
@@ -412,7 +407,7 @@ export default function RecordsPage() {
             ) : filteredRecords.length === 0 ? (
               <div className="py-8 text-center">
                 <FileText className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-                <h3 className="mb-2 text-base font-medium text-gray-900 sm:text-lg dark:text-gray-100">
+                <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
                   Nenhum prontuário encontrado
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -429,7 +424,7 @@ export default function RecordsPage() {
                   key={record.id}
                   className="bg-card rounded-lg border border-l-4 border-l-blue-500 p-4"
                 >
-                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
                     {/* Main information */}
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
@@ -438,20 +433,20 @@ export default function RecordsPage() {
                           {record.archivalCode}
                         </span>
                       </div>
-                      <h3 className="text-base font-semibold sm:text-lg">
+                      <h3 className="text-sm font-semibold">
                         {record.patientName}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-muted-foreground text-xs">
                         CPF: {record.patientCpf || "Não informado"}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-muted-foreground text-xs">
                         Prontuário: {record.recordNumber}
                       </p>
                     </div>
 
                     {/* Physical location */}
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                         Localização Física
                       </h4>
                       <div className="grid grid-cols-3 gap-2 text-sm">
@@ -474,7 +469,7 @@ export default function RecordsPage() {
                           </span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-muted-foreground text-xs">
                         Psicólogo: {record.psychologist} (
                         {record.psychologistCrp})
                       </p>
@@ -489,7 +484,7 @@ export default function RecordsPage() {
                         </span>
                       </div>
 
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                      <div className="text-muted-foreground text-xs">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
                           Início:{" "}

@@ -56,7 +56,7 @@ export function Pagination({ paginacao, controles }: PaginationProps) {
   return (
     <div className="bg-card flex flex-col gap-3 rounded-xl px-3 py-2 text-sm shadow-md backdrop-blur-sm transition-all duration-300 sm:flex-row sm:items-center sm:justify-between sm:py-1.5">
       {/* ✅ INFORMAÇÕES DA PAGINAÇÃO */}
-      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm sm:gap-4">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm sm:gap-3">
         <div className="text-sm font-semibold">
           Total de{" "}
           <span className="text-primary align-middle text-sm font-medium">

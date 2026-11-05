@@ -166,7 +166,7 @@ export default async function PatientDetailsPage({
         <div className="flex items-start gap-3">
           <div>
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <h1 className="text-lg font-semibold break-words">
+              <h1 className="text-base font-semibold break-words sm:text-lg">
                 {patient.name}
               </h1>
               <PatientStatusBadge status={patient.status} />
@@ -203,7 +203,7 @@ export default async function PatientDetailsPage({
       <div className="space-y-3">
         {hasIncompleteProfile && (
           <div
-            className="flex flex-col gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-950 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-950 sm:flex-row sm:items-center sm:justify-between"
             role="status"
           >
             <div className="flex items-start gap-3">
@@ -233,7 +233,7 @@ export default async function PatientDetailsPage({
 
         {/* Informações Pessoais e Contato */}
         <div>
-          <h2 className="mb-3 text-base font-semibold">
+          <h2 className="mb-3 text-sm font-semibold">
             Informações Pessoais e Contato
           </h2>
           <div className="space-y-3">
@@ -244,7 +244,7 @@ export default async function PatientDetailsPage({
                   <Calendar className="text-muted-foreground h-4 w-4" />
                   <div>
                     <p className="text-sm font-medium">Data de Nascimento</p>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-xs">
                       {new Date(patient.birth_date).toLocaleDateString("pt-BR")}{" "}
                       ({calculateAge(patient.birth_date)} anos)
                     </p>
@@ -255,7 +255,7 @@ export default async function PatientDetailsPage({
                     <CreditCard className="text-muted-foreground h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">CPF</p>
-                      <p className="text-muted-foreground text-sm">
+                      <p className="text-muted-foreground text-xs">
                         {patient.cpf}
                       </p>
                     </div>
@@ -266,7 +266,7 @@ export default async function PatientDetailsPage({
                     <CreditCard className="text-muted-foreground h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">CPF do responsável</p>
-                      <p className="text-muted-foreground text-sm">
+                      <p className="text-muted-foreground text-xs">
                         {patient.responsible_cpf}
                       </p>
                     </div>
@@ -281,7 +281,7 @@ export default async function PatientDetailsPage({
                     <Mail className="text-muted-foreground h-4 w-4" />
                     <div>
                       <p className="text-sm font-medium">Email</p>
-                      <p className="text-muted-foreground text-sm">
+                      <p className="text-muted-foreground text-xs">
                         {patient.email}
                       </p>
                     </div>
@@ -295,7 +295,7 @@ export default async function PatientDetailsPage({
                       <Phone className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Telefone</p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs">
                           {patient.phone}
                         </p>
                       </div>
@@ -322,7 +322,7 @@ export default async function PatientDetailsPage({
                       <MapPinned className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">CEP</p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs">
                           {patient.cep}
                         </p>
                       </div>
@@ -333,7 +333,7 @@ export default async function PatientDetailsPage({
                       <MapPin className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Endereço</p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs">
                           {patient.address}
                         </p>
                       </div>
@@ -344,7 +344,7 @@ export default async function PatientDetailsPage({
                       <House className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Número</p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs">
                           {patient.house_number}
                         </p>
                       </div>
@@ -355,7 +355,7 @@ export default async function PatientDetailsPage({
                       <MapPinHouse className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Bairro</p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs">
                           {patient.neighborhood}
                         </p>
                       </div>
@@ -366,7 +366,7 @@ export default async function PatientDetailsPage({
                       <Building2 className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Cidade</p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs">
                           {patient.city}
                         </p>
                       </div>
@@ -377,7 +377,7 @@ export default async function PatientDetailsPage({
                       <Flag className="text-muted-foreground h-4 w-4" />
                       <div>
                         <p className="text-sm font-medium">Estado</p>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs">
                           {patient.state}
                         </p>
                       </div>
@@ -395,7 +395,7 @@ export default async function PatientDetailsPage({
                   <FileText className="text-muted-foreground mt-0.5 h-4 w-4" />
                   <div className="flex-1">
                     <p className="text-sm font-medium">Observações</p>
-                    <p className="text-muted-foreground mt-1 text-sm whitespace-pre-wrap">
+                    <p className="text-muted-foreground mt-1 text-xs whitespace-pre-wrap">
                       {patient.notes}
                     </p>
                   </div>
@@ -406,9 +406,7 @@ export default async function PatientDetailsPage({
         </div>
 
         <div className="max-w-3xl">
-          <h2 className="mb-3 text-base font-semibold">
-            Histórico de consultas
-          </h2>
+          <h2 className="mb-3 text-sm font-semibold">Histórico de consultas</h2>
           {consultationHistory.length === 0 ? (
             <div className="text-muted-foreground rounded-lg border p-4 text-sm">
               Nenhuma consulta registrada para este paciente.

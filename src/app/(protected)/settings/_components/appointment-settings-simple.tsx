@@ -52,6 +52,7 @@ export function AppointmentSettingsSimple({
   settings,
   isFirstSetup = false,
   onUpdate,
+  onSaved,
 }: AppointmentSettingsSimpleProps) {
   const [isEditing, setIsEditing] = useState(isFirstSetup);
   const [isSaving, setIsSaving] = useState(false);

@@ -3,6 +3,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Mode = "light" | "dark";
+export type FontScale = "compact" | "default" | "large";
+
+const DEFAULT_FONT_SCALE: FontScale = "default";
+
+const FONT_SCALE_STORAGE_KEY = "aten-psi-font-scale";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -14,15 +19,13 @@ type ThemeProviderState = {
   mode: Mode;
   setMode: (mode: Mode) => void;
   toggleMode: () => void;
+  fontScale: FontScale;
+  setFontScale: (scale: FontScale) => void;
 };
 
-const initialState: ThemeProviderState = {
-  mode: "light",
-  setMode: () => null,
-  toggleMode: () => null,
-};
-
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+const ThemeProviderContext = createContext<ThemeProviderState | undefined>(
+  undefined
+);
 
 export function ThemeProvider({
   children,
@@ -31,20 +34,45 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [mode, setMode] = useState<Mode>(defaultMode);
+  const [fontScale, setFontScale] = useState<FontScale>(DEFAULT_FONT_SCALE);
+  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   useEffect(() => {
+    try {
+      const storedMode = localStorage.getItem(storageKey);
+      const storedScale = localStorage.getItem(FONT_SCALE_STORAGE_KEY);
+
+      if (storedMode === "light" || storedMode === "dark") {
+        setMode(storedMode);
+      }
+      if (
+        storedScale === "compact" ||
+        storedScale === "default" ||
+        storedScale === "large"
+      ) {
+        setFontScale(storedScale);
+      }
+    } catch {
+      // As preferências continuam disponíveis quando o armazenamento é bloqueado.
+    }
+    setPreferencesLoaded(true);
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (!preferencesLoaded) return;
+
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(mode);
-    localStorage.setItem(storageKey, mode);
-  }, [mode, storageKey]);
+    root.dataset.fontScale = fontScale;
 
-  useEffect(() => {
-    const storedMode = localStorage.getItem(storageKey) as Mode;
-    if (storedMode) {
-      setMode(storedMode);
+    try {
+      localStorage.setItem(storageKey, mode);
+      localStorage.setItem(FONT_SCALE_STORAGE_KEY, fontScale);
+    } catch {
+      // Não impedir a alteração visual se o navegador não permitir persistência.
     }
-  }, [storageKey]);
+  }, [mode, fontScale, storageKey, preferencesLoaded]);
 
   const value = {
     mode,
@@ -52,8 +80,10 @@ export function ThemeProvider({
       setMode(mode);
     },
     toggleMode: () => {
-      setMode(mode === "light" ? "dark" : "light");
+      setMode((current) => (current === "light" ? "dark" : "light"));
     },
+    fontScale,
+    setFontScale,
   };
 
   return (

@@ -134,7 +134,7 @@ export function DayView({
     <div className="bg-card rounded-lg border shadow-sm">
       {/* Header */}
       <div className="border-b p-4">
-        <h2 className="text-base font-semibold">
+        <h2 className="text-sm font-semibold">
           {format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", {
             locale: ptBR,
           })}
@@ -150,7 +150,7 @@ export function DayView({
         {timeSlots.length === 0 ? (
           <div className="flex flex-col items-center gap-3 p-4 text-center">
             <Clock className="text-muted-foreground h-10 w-10" />
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-xs">
               Não há horário de atendimento configurado para este dia.
             </p>
             <Button asChild variant="outline" size="sm">
@@ -179,6 +179,7 @@ export function DayView({
                     <div className="min-h-[60px] flex-1">
                       {isEmpty ? (
                         <Button
+                          size="sm"
                           variant="ghost"
                           className="border-border hover:border-primary hover:bg-primary/5 h-full w-full justify-start border-2 border-dashed transition-all duration-200"
                           onClick={() => onTimeSlotClick(timeSlot)}
@@ -214,7 +215,7 @@ export function DayView({
                                     </Badge>
                                   </div>
 
-                                  <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                                  <div className="text-muted-foreground flex items-center gap-3 text-sm">
                                     <div className="flex items-center gap-1">
                                       <Clock className="h-3 w-3" />
                                       {format(event.start, "HH:mm")} -{" "}
@@ -233,7 +234,7 @@ export function DayView({
                                   </div>
 
                                   {event.observacoes && (
-                                    <p className="text-muted-foreground mt-2 text-sm">
+                                    <p className="text-muted-foreground mt-2 text-xs">
                                       {event.observacoes}
                                     </p>
                                   )}

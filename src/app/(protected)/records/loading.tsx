@@ -3,9 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function RecordsLoading() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <Skeleton className="h-8 w-48" />
           <Skeleton className="mt-2 h-4 w-64" />
@@ -19,22 +19,22 @@ export default function RecordsLoading() {
 
       {/* Filters */}
       <Card>
-        <CardContent className="p-6">
-          <div className="grid gap-4 md:grid-cols-4">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
+        <CardContent className="p-3">
+          <div className="grid gap-3 md:grid-cols-4">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
           </div>
         </CardContent>
       </Card>
 
       {/* Records List */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
           <Card key={i}>
-            <CardContent className="p-6">
-              <div className="grid gap-4 md:grid-cols-6">
+            <CardContent className="p-3">
+              <div className="grid gap-3 md:grid-cols-6">
                 <div className="space-y-2">
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-6 w-32" />

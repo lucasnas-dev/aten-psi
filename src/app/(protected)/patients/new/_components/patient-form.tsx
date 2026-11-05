@@ -142,13 +142,19 @@ export function PatientForm({
             <PatientFields control={form.control} />
 
             <div className="flex justify-end gap-3 pt-2">
-              <Button variant="outline" asChild className="min-w-[100px]">
+              <Button
+                size="sm"
+                variant="outline"
+                asChild
+                className="min-w-[100px]"
+              >
                 <Link href="/patients" className="flex items-center gap-2">
                   <ArrowLeft className="h-4 w-4" />
                   Voltar
                 </Link>
               </Button>
               <Button
+                size="sm"
                 type="submit"
                 variant="outline"
                 disabled={isExecuting}

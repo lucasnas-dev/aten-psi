@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, Filter } from "lucide-react";
+import { Calendar, Filter } from "lucide-react";
 
 import {
   Select,
@@ -30,8 +30,8 @@ export function Filters({
   onTipoFilterChange,
 }: FiltersProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         {/* Filtros de Visualização */}
         <div className="flex items-center gap-2">
           <Calendar className="text-primary h-5 w-5" />

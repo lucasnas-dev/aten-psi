@@ -16,9 +16,9 @@ import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MiniCalendar } from "./mini-calendar";
 import { cn } from "@/lib/utils";
 
+import { MiniCalendar } from "./mini-calendar";
 import { CalendarEvent } from "./types";
 
 interface EnhancedWeekViewProps {
@@ -162,7 +162,7 @@ export function EnhancedWeekView({
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <h2
-            className="cursor-pointer text-base font-semibold sm:text-lg"
+            className="cursor-pointer text-sm font-semibold"
             onClick={toggleMiniCalendar}
             title="Abrir calendário"
           >
