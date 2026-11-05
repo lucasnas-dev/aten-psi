@@ -6,13 +6,11 @@ import {
   FileCheck2,
   FileText,
   Lock,
-  Plus,
   Printer,
   Save,
-  ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -20,19 +18,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
 import styles from "./psychological-record-view.module.css";
 import { PsychologistPrivateRecords } from "./psychologist-private-records";
+import { RecordClosingTab } from "./record-closing-tab";
 import { formatDate } from "./record-utils";
+import { SessionEvolutionTab } from "./session-evolution-tab";
 
 export type RecordData = {
   patient: {
@@ -84,7 +77,70 @@ const documentFields = [
   "Referências",
 ];
 const value = (text?: string | null) => text?.trim() || "Não informado";
-const today = () => new Date().toISOString().slice(0, 10);
+
+const therapeuticPlanFields = [
+  {
+    key: "demandOrigin",
+    label: "Origem da demanda",
+    placeholder: "Selecione ou digite a origem",
+    suggestions: [
+      "Demanda espontânea",
+      "Encaminhamento médico",
+      "Escolar",
+      "Judicial",
+      "Familiar",
+    ],
+  },
+  {
+    key: "serviceType",
+    label: "Tipo de serviço",
+    placeholder: "Selecione ou digite o serviço",
+    suggestions: [
+      "Psicoterapia Individual",
+      "Psicoterapia Infantil/Adolescente",
+      "Avaliação Psicológica",
+      "Terapia de Casal/Família",
+      "Orientação Parental",
+    ],
+  },
+  {
+    key: "modality",
+    label: "Modalidade",
+    placeholder: "Selecione ou digite a modalidade",
+    suggestions: ["Presencial", "Online / Síncrono", "Híbrido"],
+  },
+  {
+    key: "theoreticalApproach",
+    label: "Abordagem teórica",
+    placeholder: "Selecione ou digite a abordagem",
+    suggestions: [
+      "Terapia Cognitivo-Comportamental",
+      "Psicanálise",
+      "Análise do Comportamento",
+      "Humanista / Fenomenológica",
+      "Gestalt-terapia",
+      "Sistêmica",
+      "Psicologia Analítica",
+    ],
+  },
+  {
+    key: "frequency",
+    label: "Frequência / Dias e horários",
+    placeholder: "Ex.: Semanal, terças às 14h",
+    suggestions: [],
+  },
+  {
+    key: "durationReview",
+    label: "Previsão de duração / Reavaliação",
+    placeholder: "Selecione ou digite a previsão",
+    suggestions: [
+      "Prazo indeterminado",
+      "Reavaliação trimestral",
+      "Reavaliação semestral",
+      "Prazo determinado / Focal",
+    ],
+  },
+] as const;
 
 const calculatePatientAge = (birthDate: string) => {
   const [year, month, day] = birthDate.split("-").map(Number);
@@ -248,18 +304,32 @@ export function PsychologicalRecordView({
   data: RecordData | null;
   loadError?: string;
 }) {
-  const [signed, setSigned] = useState<Record<string, boolean>>({});
-  const [drafts, setDrafts] = useState<Record<string, boolean>>({});
-  const [addenda, setAddenda] = useState<
-    Record<string, { date: string; text: string }>
-  >({});
-  const [showReferralForm, setShowReferralForm] = useState(false);
-  const [showNotificationForm, setShowNotificationForm] = useState(false);
   const [documentFieldValues, setDocumentFieldValues] = useState<
     Record<string, string>
   >({});
   const [cidAuthorized, setCidAuthorized] = useState(false);
   const [document, setDocument] = useState(documents[0]);
+  const planId = useId();
+  const [therapeuticPlan, setTherapeuticPlan] = useState({
+    demandOrigin: "",
+    serviceType: "",
+    modality: "",
+    theoreticalApproach: "",
+    frequency: "",
+    durationReview: "",
+    demandAssessment: "",
+    objectivesAndPlan: "",
+  });
+  const [planUpdatedAt, setPlanUpdatedAt] = useState<Date | null>(null);
+
+  const updateTherapeuticPlan = (
+    field: keyof typeof therapeuticPlan,
+    value: string
+  ) => {
+    setTherapeuticPlan((current) => ({ ...current, [field]: value }));
+    setPlanUpdatedAt(null);
+  };
+
   if (!data)
     return (
       <div className="min-w-0">
@@ -347,253 +417,150 @@ export function PsychologicalRecordView({
               forceMount
               className={`${styles.officialSection} mt-0`}
             >
-              <section>
-                <div className="space-y-3">
-                  <div>
-                    <Label>Avaliação de demanda</Label>
-                    <Textarea className="mt-1" rows={4} />
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div>
-                      <Label>Objetivos</Label>
-                      <Textarea className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>Abordagem</Label>
-                      <Input className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>Modalidade</Label>
-                      <Input className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>Frequência / Dias e horários</Label>
-                      <Input
-                        className="mt-1"
-                        placeholder="Ex.: semanal, terças às 14h"
-                      />
-                    </div>
-                    <div>
-                      <Label>Previsão de duração</Label>
-                      <Input className="mt-1" />
-                    </div>
-                  </div>
-                  <Button size="sm">Salvar plano terapêutico</Button>
-                </div>
-              </section>
-            </TabsContent>
-            <TabsContent
-              value="sessions"
-              forceMount
-              className={`${styles.officialSection} mt-0`}
-            >
-              <div className="space-y-3">
-                {data.sessions.length === 0 && (
-                  <section>
-                    <div className="text-muted-foreground py-6 text-center">
-                      Nenhuma sessão registrada.
-                    </div>
-                  </section>
-                )}
-                {data.sessions.map((session) => {
-                  const immutable = signed[session.id] || session.signed;
-                  return (
-                    <section key={session.id}>
-                      <div className="pb-2">
-                        <div className="flex justify-between gap-2">
-                          <h2 className="text-sm font-semibold">
-                            Sessão {session.sessionNumber} ·{" "}
-                            {formatDate(session.date)} às {session.time}
-                          </h2>
-                          <Badge variant={immutable ? "default" : "outline"}>
-                            {immutable ? "Assinada e imutável" : session.status}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>
-                            Procedimentos técnico-científicos adotados
+              <form
+                className="min-w-0 space-y-3"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  setPlanUpdatedAt(new Date());
+                }}
+              >
+                <section
+                  className="min-w-0 space-y-3"
+                  aria-labelledby={`${planId}-framework`}
+                >
+                  <h3
+                    id={`${planId}-framework`}
+                    className="text-sm font-semibold"
+                  >
+                    Enquadre Terapêutico
+                  </h3>
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                    {therapeuticPlanFields.map((field) => {
+                      const fieldId = `${planId}-${field.key}`;
+                      const listId = `${fieldId}-suggestions`;
+                      return (
+                        <div key={field.key} className="min-w-0 space-y-1">
+                          <Label
+                            htmlFor={fieldId}
+                            className="text-muted-foreground text-sm"
+                          >
+                            {field.label}
                           </Label>
-                          <Textarea className="mt-1" disabled={immutable} />
-                        </div>
-                        <Alert className="print:hidden">
-                          <AlertCircle />
-                          <AlertDescription>
-                            Evite transcrições literais; registre somente a
-                            síntese técnica necessária.
-                          </AlertDescription>
-                        </Alert>
-                        <div>
-                          <Label>Síntese da evolução</Label>
-                          <Textarea
-                            className="mt-1"
-                            defaultValue={session.content}
-                            disabled={immutable}
+                          <Input
+                            id={fieldId}
+                            name={field.key}
+                            list={field.suggestions.length ? listId : undefined}
+                            autoComplete="off"
+                            placeholder={field.placeholder}
+                            value={therapeuticPlan[field.key]}
+                            onChange={(event) =>
+                              updateTherapeuticPlan(
+                                field.key,
+                                event.target.value
+                              )
+                            }
                           />
-                        </div>
-                        <div className="flex flex-wrap justify-end gap-2">
-                          {!immutable && (
-                            <>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() =>
-                                  setDrafts({ ...drafts, [session.id]: true })
-                                }
-                              >
-                                <Save className="mr-2 h-4 w-4" />
-                                Salvar rascunho
-                              </Button>
-                              <Button
-                                size="sm"
-                                onClick={() =>
-                                  setSigned({ ...signed, [session.id]: true })
-                                }
-                              >
-                                <ShieldCheck className="mr-2 h-4 w-4" />
-                                Finalizar e assinar registro
-                              </Button>
-                            </>
+                          {field.suggestions.length > 0 && (
+                            <datalist id={listId}>
+                              {field.suggestions.map((suggestion) => (
+                                <option key={suggestion} value={suggestion} />
+                              ))}
+                            </datalist>
                           )}
                         </div>
-                        {drafts[session.id] && !immutable && (
-                          <p className="text-muted-foreground text-right text-xs">
-                            Rascunho salvo nesta sessão.
-                          </p>
-                        )}
-                        {immutable && (
-                          <div className="space-y-3 border-t pt-3">
-                            <div className="text-muted-foreground text-xs">
-                              <p className="text-foreground font-medium">
-                                Assinatura eletrônica
-                              </p>
-                              <p>Nome: {value(data.professional.name)}</p>
-                              <p>CRP: {value(data.professional.crp)}</p>
-                              <p>
-                                Data/Hora: {new Date().toLocaleString("pt-BR")}
-                              </p>
-                              <p>Hash: SHA256-{session.id.slice(0, 12)}</p>
-                            </div>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                setAddenda({
-                                  ...addenda,
-                                  [session.id]: {
-                                    date: today(),
-                                    text: addenda[session.id]?.text || "",
-                                  },
-                                })
-                              }
-                            >
-                              <Plus className="mr-2 h-4 w-4" />
-                              Adicionar adendo / errata
-                            </Button>
-                            {addenda[session.id] && (
-                              <div>
-                                <Label>
-                                  Adendo / errata ·{" "}
-                                  {formatDate(addenda[session.id].date)}
-                                </Label>
-                                <Textarea
-                                  className="mt-1"
-                                  value={addenda[session.id].text}
-                                  onChange={(event) =>
-                                    setAddenda({
-                                      ...addenda,
-                                      [session.id]: {
-                                        ...addenda[session.id],
-                                        text: event.target.value,
-                                      },
-                                    })
-                                  }
-                                  placeholder="Registre a correção ou informação complementar."
-                                />
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            </TabsContent>
-            <TabsContent
-              value="closing"
-              forceMount
-              className={`${styles.officialSection} mt-0`}
-            >
-              <section>
-                <div className="space-y-3">
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setShowReferralForm(!showReferralForm)}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Novo encaminhamento
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() =>
-                        setShowNotificationForm(!showNotificationForm)
-                      }
-                      className="h-auto min-h-8 max-w-full whitespace-normal"
-                    >
-                      <FileCheck2 className="mr-2 h-4 w-4" />
-                      Notificação compulsória (SINAN / Ofício)
-                    </Button>
+                      );
+                    })}
                   </div>
-                  {showReferralForm && (
-                    <div className="space-y-3 rounded border p-4">
-                      <Label>Destinatário do encaminhamento</Label>
-                      <Input placeholder="Profissional ou instituição" />
-                      <Label>Motivo e orientações</Label>
-                      <Textarea rows={3} />
-                      <Button size="sm">Salvar encaminhamento</Button>
+                </section>
+                <section
+                  className="min-w-0 space-y-3"
+                  aria-labelledby={`${planId}-narrative`}
+                >
+                  <h3
+                    id={`${planId}-narrative`}
+                    className="text-sm font-semibold"
+                  >
+                    Narrativa Clínica
+                  </h3>
+                  <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                    <div className="min-w-0 space-y-1">
+                      <Label
+                        htmlFor={`${planId}-assessment`}
+                        className="text-muted-foreground text-sm"
+                      >
+                        Avaliação de demanda
+                      </Label>
+                      <Textarea
+                        id={`${planId}-assessment`}
+                        name="demandAssessment"
+                        className="field-sizing-fixed"
+                        rows={5}
+                        placeholder="Sintetize tecnicamente o motivo da procura, a demanda identificada e o contexto relevante ao atendimento. Registre apenas as informações necessárias ao prontuário oficial, sem transcrições literais."
+                        value={therapeuticPlan.demandAssessment}
+                        onChange={(event) =>
+                          updateTherapeuticPlan(
+                            "demandAssessment",
+                            event.target.value
+                          )
+                        }
+                      />
                     </div>
-                  )}
-                  {showNotificationForm && (
-                    <div className="space-y-3 rounded border p-4">
-                      <Label>Órgão destinatário</Label>
-                      <Input placeholder="SINAN, conselho ou instituição" />
-                      <Label>Descrição da notificação</Label>
-                      <Textarea rows={3} />
-                      <Button size="sm">Salvar notificação</Button>
+                    <div className="min-w-0 space-y-1">
+                      <Label
+                        htmlFor={`${planId}-objectives`}
+                        className="text-muted-foreground text-sm"
+                      >
+                        Objetivos e plano terapêutico
+                      </Label>
+                      <Textarea
+                        id={`${planId}-objectives`}
+                        name="objectivesAndPlan"
+                        className="field-sizing-fixed"
+                        rows={5}
+                        placeholder="Descreva os objetivos acordados com a pessoa atendida, a conduta planejada, os procedimentos técnico-científicos e os critérios de acompanhamento e reavaliação, conforme as necessidades do caso."
+                        value={therapeuticPlan.objectivesAndPlan}
+                        onChange={(event) =>
+                          updateTherapeuticPlan(
+                            "objectivesAndPlan",
+                            event.target.value
+                          )
+                        }
+                      />
                     </div>
-                  )}
-                  <div className="border-t pt-3">
-                    <Label>Motivo</Label>
-                    <Select>
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Selecione o motivo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="alta">Alta / Conclusão</SelectItem>
-                        <SelectItem value="desistencia">Desistência</SelectItem>
-                        <SelectItem value="abandono">Abandono</SelectItem>
-                        <SelectItem value="transferencia">
-                          Transferência
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Label className="mt-3 block">Data</Label>
-                    <Input className="mt-1" type="date" />
-                    <Label className="mt-3 block">Síntese final</Label>
-                    <Textarea className="mt-1" rows={5} />
-                    <Button size="sm" className="mt-3">
-                      Salvar encerramento
-                    </Button>
                   </div>
+                </section>
+                <div className="flex flex-wrap items-center gap-2 print:hidden">
+                  <Button type="submit" variant="outline" size="sm">
+                    <Save className="h-4 w-4" aria-hidden="true" />
+                    Salvar plano terapêutico
+                  </Button>
+                  <p
+                    role="status"
+                    aria-atomic="true"
+                    className="text-muted-foreground min-w-0 text-xs"
+                  >
+                    {planUpdatedAt && (
+                      <>
+                        Plano atualizado em{" "}
+                        <time dateTime={planUpdatedAt.toISOString()}>
+                          {planUpdatedAt.toLocaleString("pt-BR", {
+                            dateStyle: "short",
+                            timeStyle: "short",
+                          })}
+                        </time>
+                        . Apenas nesta página, sem gravação permanente.
+                      </>
+                    )}
+                  </p>
                 </div>
-              </section>
+              </form>
             </TabsContent>
+            <SessionEvolutionTab
+              key={data.patient.id}
+              sessions={data.sessions}
+              professional={data.professional}
+            />
+            <RecordClosingTab key={data.patient.id} />
             <TabsContent
               value="documents"
               forceMount

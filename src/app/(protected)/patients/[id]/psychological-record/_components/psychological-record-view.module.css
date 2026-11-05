@@ -4,6 +4,11 @@
   display: none;
 }
 
+.sessionRecord[data-filtered="true"],
+.sessionBody[data-collapsed="true"] {
+  display: none;
+}
+
 @media print {
   .privatePanel {
     display: none !important;
@@ -16,6 +21,11 @@
 
   .officialSection {
     margin-top: 1rem;
+  }
+
+  .sessionRecord,
+  .sessionBody {
+    display: block !important;
   }
 
   .officialPanel button,
