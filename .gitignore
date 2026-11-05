@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+/ANALISE_SISTEMA_LAYOUT_PARA_IA.md
 
 # debug
 npm-debug.log*
