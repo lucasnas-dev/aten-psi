@@ -343,70 +343,85 @@ export function PsychologicalRecordView({
     );
   return (
     <div
-      className={`${styles.record} w-full max-w-5xl min-w-0 space-y-3 print:max-w-none print:p-0`}
+      className={`${styles.record} flex h-full min-h-0 w-full max-w-5xl min-w-0 flex-col print:block print:h-auto print:max-w-none print:p-0`}
     >
-      <header className="flex flex-wrap items-center justify-between gap-2 print:hidden">
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <h2 className="text-base font-semibold sm:text-lg">
-            {data.patient.socialName?.trim() || data.patient.name}
-          </h2>
-          <Button size="sm" variant="outline" asChild>
-            <Link href={`/patients/${data.patient.id}`}>
-              Detalhes do paciente
-            </Link>
-          </Button>
+      <Tabs defaultValue="official" className="min-h-0 flex-1 gap-3">
+        <div className="bg-background sticky top-0 z-20 shrink-0 space-y-3 print:hidden">
+          <header className="flex flex-wrap items-center justify-between gap-2 print:hidden">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <h2 className="text-base font-semibold sm:text-lg">
+                {data.patient.socialName?.trim() || data.patient.name}
+              </h2>
+              <Button size="sm" variant="outline" asChild>
+                <Link href={`/patients/${data.patient.id}`}>
+                  Detalhes do paciente
+                </Link>
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => window.print()}
+              >
+                <Printer className="mr-2 h-4 w-4" />
+                Imprimir / PDF
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => window.print()}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Exportar PDF
+              </Button>
+            </div>
+          </header>
+          <TabsList
+            aria-label="Áreas do prontuário"
+            className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 print:hidden"
+          >
+            <TabsTrigger value="official" className="gap-2 px-3 py-1 text-sm">
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              Prontuário Psicológico
+            </TabsTrigger>
+            <TabsTrigger value="private" className="gap-2 px-3 py-1 text-sm">
+              <Lock className="h-4 w-4" aria-hidden="true" />
+              Registros do Psicólogo
+            </TabsTrigger>
+          </TabsList>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button size="sm" variant="outline" onClick={() => window.print()}>
-            <Printer className="mr-2 h-4 w-4" />
-            Imprimir / PDF
-          </Button>
-          <Button size="sm" variant="outline" onClick={() => window.print()}>
-            <Download className="mr-2 h-4 w-4" />
-            Exportar PDF
-          </Button>
-        </div>
-      </header>
-      <Tabs defaultValue="official" className="space-y-3">
-        <TabsList
-          aria-label="Áreas do prontuário"
-          className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 print:hidden"
-        >
-          <TabsTrigger value="official" className="gap-2 px-3 py-1 text-sm">
-            <FileText className="h-4 w-4" aria-hidden="true" />
-            Prontuário Psicológico
-          </TabsTrigger>
-          <TabsTrigger value="private" className="gap-2 px-3 py-1 text-sm">
-            <Lock className="h-4 w-4" aria-hidden="true" />
-            Registros do Psicólogo
-          </TabsTrigger>
-        </TabsList>
         <TabsContent
           value="official"
           forceMount
-          className={`${styles.officialPanel} mt-0`}
+          className={`${styles.officialPanel} mt-0 flex min-h-0 flex-col`}
         >
-          <Tabs defaultValue="identification" className="space-y-3">
-            <TabsList
-              aria-label="Seções do prontuário oficial"
-              className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 lg:grid-cols-5 print:hidden"
-            >
-              <TabsTrigger className="py-1 text-sm" value="identification">
-                1. Identificação
-              </TabsTrigger>
-              <TabsTrigger className="py-1 text-sm" value="plan">
-                2. Demanda e plano
-              </TabsTrigger>
-              <TabsTrigger className="py-1 text-sm" value="sessions">
-                3. Evolução e sessões
-              </TabsTrigger>
-              <TabsTrigger className="py-1 text-sm" value="closing">
-                4. Encerramento
-              </TabsTrigger>
-              <TabsTrigger className="py-1 text-sm" value="documents">
-                5. Documentos
-              </TabsTrigger>
-            </TabsList>
+          <Tabs
+            defaultValue="identification"
+            className={`${styles.scrollTabs} min-h-0 flex-1 gap-3`}
+          >
+            <div className="border-border bg-background sticky top-0 z-20 shrink-0 border-b pb-4 print:hidden">
+              <TabsList
+                aria-label="Seções do prontuário oficial"
+                className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 lg:grid-cols-5 print:hidden"
+              >
+                <TabsTrigger className="py-1 text-sm" value="identification">
+                  1. Identificação
+                </TabsTrigger>
+                <TabsTrigger className="py-1 text-sm" value="plan">
+                  2. Demanda e plano
+                </TabsTrigger>
+                <TabsTrigger className="py-1 text-sm" value="sessions">
+                  3. Evolução e sessões
+                </TabsTrigger>
+                <TabsTrigger className="py-1 text-sm" value="closing">
+                  4. Encerramento
+                </TabsTrigger>
+                <TabsTrigger className="py-1 text-sm" value="documents">
+                  5. Documentos
+                </TabsTrigger>
+              </TabsList>
+            </div>
             <PatientIdentificationTab
               key={data.patient.id}
               patient={data.patient}
@@ -663,7 +678,7 @@ export function PsychologicalRecordView({
         <TabsContent
           value="private"
           forceMount
-          className={`${styles.privatePanel} mt-0 print:hidden`}
+          className={`${styles.privatePanel} mt-0 flex min-h-0 flex-col print:hidden`}
         >
           <PsychologistPrivateRecords
             key={data.patient.id}

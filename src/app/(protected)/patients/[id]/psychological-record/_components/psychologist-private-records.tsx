@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { RecordData } from "./psychological-record-view";
+import styles from "./psychological-record-view.module.css";
 import { formatDate } from "./record-utils";
 
 type FreeNote = { id: string; date: string; content: string };
@@ -50,8 +51,8 @@ export function PsychologistPrivateRecords({
   const [files, setFiles] = useState<InstrumentFile[]>([]);
 
   return (
-    <div className="space-y-3 text-sm print:hidden">
-      <div className="space-y-1">
+    <div className="flex min-h-0 flex-1 flex-col gap-3 text-sm print:hidden">
+      <div className="shrink-0 space-y-1">
         <p className="flex items-center gap-2 font-medium">
           <Lock className="h-4 w-4" aria-hidden="true" />
           Uso exclusivo do profissional
@@ -66,39 +67,47 @@ export function PsychologistPrivateRecords({
         </p>
       </div>
 
-      <Tabs defaultValue="triage" className="space-y-3">
-        <TabsList
-          aria-label="Seções dos registros do psicólogo"
-          className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 xl:grid-cols-5"
-        >
-          <TabsTrigger
-            value="triage"
-            className="py-1 text-sm whitespace-normal"
+      <Tabs
+        defaultValue="triage"
+        className={`${styles.scrollTabs} min-h-0 flex-1 gap-3`}
+      >
+        <div className="border-border bg-background sticky top-0 z-20 shrink-0 border-b pb-4 print:hidden">
+          <TabsList
+            aria-label="Seções dos registros do psicólogo"
+            className="border-border grid h-auto w-full grid-cols-1 gap-1 rounded-lg border p-1 sm:grid-cols-2 xl:grid-cols-5"
           >
-            Triagem
-          </TabsTrigger>
-          <TabsTrigger
-            value="anamnesis"
-            className="py-1 text-sm whitespace-normal"
-          >
-            Anamnese
-          </TabsTrigger>
-          <TabsTrigger
-            value="analysis"
-            className="py-1 text-sm whitespace-normal"
-          >
-            Hipóteses e análise clínica
-          </TabsTrigger>
-          <TabsTrigger value="notes" className="py-1 text-sm whitespace-normal">
-            Anotações privadas das sessões
-          </TabsTrigger>
-          <TabsTrigger
-            value="instruments"
-            className="py-1 text-sm whitespace-normal"
-          >
-            Testes e instrumentos (SATEPSI)
-          </TabsTrigger>
-        </TabsList>
+            <TabsTrigger
+              value="triage"
+              className="py-1 text-sm whitespace-normal"
+            >
+              Triagem
+            </TabsTrigger>
+            <TabsTrigger
+              value="anamnesis"
+              className="py-1 text-sm whitespace-normal"
+            >
+              Anamnese
+            </TabsTrigger>
+            <TabsTrigger
+              value="analysis"
+              className="py-1 text-sm whitespace-normal"
+            >
+              Hipóteses e análise clínica
+            </TabsTrigger>
+            <TabsTrigger
+              value="notes"
+              className="py-1 text-sm whitespace-normal"
+            >
+              Anotações privadas das sessões
+            </TabsTrigger>
+            <TabsTrigger
+              value="instruments"
+              className="py-1 text-sm whitespace-normal"
+            >
+              Testes e instrumentos (SATEPSI)
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="triage" className="mt-0 space-y-3">
           <div>

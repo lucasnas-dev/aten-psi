@@ -9,6 +9,44 @@
   display: none;
 }
 
+/* Apenas o prontuário ocupa a altura disponível do shell protegido. */
+@media screen {
+  :global(.app-shell):has(.record) {
+    height: 100vh;
+    height: -webkit-fill-available;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  :global(.app-shell):has(.record) > :global(div) {
+    min-height: 0;
+  }
+
+  :global(.app-shell):has(.record) > :global(.sidebar-shell) {
+    flex-shrink: 0;
+  }
+
+  :global(main):has(.record) {
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+/* As listas de abas ficam fora da área rolável, nos seus contextos originais. */
+.scrollTabs > [data-slot="tabs-content"] {
+  position: relative;
+  min-height: 0;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollTabs > [data-slot="tabs-content"] {
+    scroll-behavior: auto;
+  }
+}
+
 @media print {
   .privatePanel {
     display: none !important;
@@ -21,6 +59,16 @@
 
   .officialSection {
     margin-top: 1rem;
+  }
+
+  .scrollTabs {
+    display: block;
+  }
+
+  .scrollTabs > [data-slot="tabs-content"] {
+    height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .sessionRecord,
