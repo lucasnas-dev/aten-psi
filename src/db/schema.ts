@@ -2,13 +2,17 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   date,
+  index,
   integer,
   json,
+  jsonb,
   pgTable,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+
+import type { DeclarationSnapshot } from "@/lib/documents/declaration";
 
 // ===== TENANTS TABLE =====
 export const tenants = pgTable("tenants", {
@@ -135,6 +139,47 @@ export const consultations = pgTable("consultations", {
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
 });
+
+// Documentos emitidos guardam um retrato do conteúdo e da identificação na emissão.
+// Não há ação de edição/exclusão; correções exigem uma nova emissão.
+export const issuedDocuments = pgTable(
+  "issued_documents",
+  {
+    id: varchar("id", { length: 255 }).primaryKey(),
+    tenantId: varchar("tenant_id", { length: 255 })
+      .notNull()
+      .references(() => tenants.id, { onDelete: "restrict" }),
+    patientId: varchar("patient_id", { length: 255 })
+      .notNull()
+      .references(() => patients.id, { onDelete: "restrict" }),
+    professionalId: text("professional_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "restrict" }),
+    type: varchar("type", { length: 32, enum: ["declaration"] })
+      .notNull()
+      .default("declaration"),
+    purpose: text("purpose").notNull(),
+    recipient: varchar("recipient", { length: 255 }).notNull(),
+    content: jsonb("content").$type<DeclarationSnapshot>().notNull(),
+    issuedAt: timestamp("issued_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    issuedOn: date("issued_on").notNull(),
+    feedbackStatus: varchar("feedback_status", {
+      length: 32,
+      enum: ["not_applicable"],
+    })
+      .notNull()
+      .default("not_applicable"),
+  },
+  (table) => [
+    index("issued_documents_tenant_patient_date_idx").on(
+      table.tenantId,
+      table.patientId,
+      table.issuedAt
+    ),
+  ]
+);
 
 // ===== RELATIONS =====
 export const tenantsRelations = relations(tenants, ({ many }) => ({

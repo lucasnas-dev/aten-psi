@@ -3,7 +3,6 @@
 import {
   AlertCircle,
   Download,
-  FileCheck2,
   FileText,
   Lock,
   Printer,
@@ -20,10 +19,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import type { IssuedDocumentSummary } from "@/lib/documents/declaration";
 
 import styles from "./psychological-record-view.module.css";
 import { PsychologistPrivateRecords } from "./psychologist-private-records";
 import { RecordClosingTab } from "./record-closing-tab";
+import { RecordDocumentsTab } from "./record-documents-tab";
 import { formatDate } from "./record-utils";
 import { SessionEvolutionTab } from "./session-evolution-tab";
 
@@ -58,24 +59,9 @@ export type RecordData = {
     signed: boolean;
   }>;
   professional: { name: string; crp: string };
+  issuedDocuments: IssuedDocumentSummary[];
+  documentLoadError?: string;
 };
-const documents = [
-  "Declaração",
-  "Atestado",
-  "Relatório Psicológico",
-  "Relatório Multiprofissional",
-  "Laudo",
-  "Parecer",
-];
-const documentFields = [
-  "Solicitante",
-  "Finalidade",
-  "Descrição da Demanda",
-  "Procedimentos",
-  "Análise",
-  "Conclusão",
-  "Referências",
-];
 const value = (text?: string | null) => text?.trim() || "Não informado";
 
 const therapeuticPlanFields = [
@@ -304,11 +290,6 @@ export function PsychologicalRecordView({
   data: RecordData | null;
   loadError?: string;
 }) {
-  const [documentFieldValues, setDocumentFieldValues] = useState<
-    Record<string, string>
-  >({});
-  const [cidAuthorized, setCidAuthorized] = useState(false);
-  const [document, setDocument] = useState(documents[0]);
   const planId = useId();
   const [therapeuticPlan, setTherapeuticPlan] = useState({
     demandOrigin: "",
@@ -423,7 +404,7 @@ export function PsychologicalRecordView({
               </TabsList>
             </div>
             <PatientIdentificationTab
-              key={data.patient.id}
+              key={`identification-${data.patient.id}`}
               patient={data.patient}
               professional={data.professional}
             />
@@ -571,104 +552,18 @@ export function PsychologicalRecordView({
               </form>
             </TabsContent>
             <SessionEvolutionTab
-              key={data.patient.id}
+              key={`sessions-${data.patient.id}`}
               sessions={data.sessions}
               professional={data.professional}
             />
-            <RecordClosingTab key={data.patient.id} />
-            <TabsContent
-              value="documents"
-              forceMount
-              className={`${styles.officialSection} mt-0`}
-            >
-              <section>
-                <div className="space-y-3">
-                  <div className="space-y-3 print:hidden">
-                    <div className="grid gap-2 sm:grid-cols-3">
-                      {documents.map((item) => (
-                        <Button
-                          size="sm"
-                          key={item}
-                          variant={document === item ? "default" : "outline"}
-                          onClick={() => setDocument(item)}
-                          className="h-auto min-h-8 min-w-0 whitespace-normal"
-                        >
-                          <FileText className="mr-2 h-4 w-4" />
-                          {item}
-                        </Button>
-                      ))}
-                    </div>
-                    <div className="rounded border p-4">
-                      <p className="font-medium">Emitir {document}</p>
-                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                        {documentFields.map((field) => (
-                          <div
-                            key={field}
-                            className={
-                              field === "Descrição da Demanda" ||
-                              field === "Procedimentos" ||
-                              field === "Análise" ||
-                              field === "Conclusão" ||
-                              field === "Referências"
-                                ? "sm:col-span-2"
-                                : ""
-                            }
-                          >
-                            <Label htmlFor={`document-${field}`}>{field}</Label>
-                            <Textarea
-                              id={`document-${field}`}
-                              className="mt-1"
-                              rows={field === "Solicitante" ? 2 : 3}
-                              value={documentFieldValues[field] || ""}
-                              onChange={(event) =>
-                                setDocumentFieldValues({
-                                  ...documentFieldValues,
-                                  [field]: event.target.value,
-                                })
-                              }
-                              required
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      {document === "Atestado" && (
-                        <label className="mt-3 flex items-center gap-2 text-sm">
-                          <input
-                            type="checkbox"
-                            checked={cidAuthorized}
-                            onChange={(event) =>
-                              setCidAuthorized(event.target.checked)
-                            }
-                          />
-                          Autorização do paciente para uso de CID
-                        </label>
-                      )}
-                      <Button size="sm" className="mt-3">
-                        <FileCheck2 className="mr-2 h-4 w-4" />
-                        Emitir documento
-                      </Button>
-                    </div>
-                  </div>
-                  <table className="w-full text-left text-sm">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="p-2">Data de emissão</th>
-                        <th className="p-2">Finalidade</th>
-                        <th className="p-2">Destinatário</th>
-                        <th className="p-2">Status de devolutiva</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="text-muted-foreground p-2" colSpan={4}>
-                          Nenhum documento emitido.
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-            </TabsContent>
+            <RecordClosingTab key={`closing-${data.patient.id}`} />
+            <RecordDocumentsTab
+              key={`documents-${data.patient.id}`}
+              patient={data.patient}
+              professional={data.professional}
+              initialDocuments={data.issuedDocuments}
+              loadError={data.documentLoadError}
+            />
           </Tabs>
           <p className="text-muted-foreground hidden text-center text-xs print:block">
             Profissional: {data.professional.name} · CRP:{" "}

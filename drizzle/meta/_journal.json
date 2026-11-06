@@ -106,6 +106,13 @@
       "when": 1793666729634,
       "tag": "0014_patient_emergency_contact",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1793930234533,
+      "tag": "0015_issued_declarations",
+      "breakpoints": true
     }
   ]
 }

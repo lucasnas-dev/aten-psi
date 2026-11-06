@@ -3,8 +3,15 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 import { db } from "@/db";
-import { consultations, patients, users, userSettings } from "@/db/schema";
+import {
+  consultations,
+  issuedDocuments,
+  patients,
+  users,
+  userSettings,
+} from "@/db/schema";
 import { auth } from "@/lib/auth";
+import type { IssuedDocumentSummary } from "@/lib/documents/declaration";
 
 import {
   PsychologicalRecordView,
@@ -30,7 +37,7 @@ export default async function PsychologicalRecordPage({
       where: and(eq(patients.id, id), eq(patients.tenant_id, user.tenant_id)),
     });
     if (!patient) notFound();
-    const [sessions, professional] = await Promise.all([
+    const [sessions, professional, documentHistory] = await Promise.all([
       db.query.consultations.findMany({
         where: and(
           eq(consultations.patient_id, id),
@@ -44,6 +51,43 @@ export default async function PsychologicalRecordPage({
           eq(userSettings.tenantId, user.tenant_id)
         ),
       }),
+      db.query.issuedDocuments
+        .findMany({
+          where: and(
+            eq(issuedDocuments.tenantId, user.tenant_id),
+            eq(issuedDocuments.patientId, id),
+            eq(issuedDocuments.type, "declaration")
+          ),
+          columns: {
+            id: true,
+            type: true,
+            issuedAt: true,
+            issuedOn: true,
+            purpose: true,
+            recipient: true,
+            feedbackStatus: true,
+          },
+          orderBy: [desc(issuedDocuments.issuedAt), desc(issuedDocuments.id)],
+        })
+        .then((rows) => ({
+          documents: rows.map(
+            (row): IssuedDocumentSummary => ({
+              ...row,
+              issuedAt: row.issuedAt.toISOString(),
+            })
+          ),
+          error: undefined as string | undefined,
+        }))
+        .catch((error: unknown) => {
+          console.error(
+            "Falha ao carregar documentos emitidos:",
+            error instanceof Error ? error.name : "UnknownError"
+          );
+          return {
+            documents: [] as IssuedDocumentSummary[],
+            error: "Não foi possível carregar o histórico de documentos.",
+          };
+        }),
     ]);
     const record: RecordData = {
       patient: {
@@ -87,6 +131,8 @@ export default async function PsychologicalRecordPage({
         name: professional?.name ?? session.user.name ?? "",
         crp: professional?.crp ?? "",
       },
+      issuedDocuments: documentHistory.documents,
+      documentLoadError: documentHistory.error,
     };
     return <PsychologicalRecordView data={record} />;
   } catch (error) {
